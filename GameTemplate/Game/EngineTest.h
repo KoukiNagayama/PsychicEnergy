@@ -11,8 +11,10 @@ public:
 private:
 	void Move();
 	void Rotation();
+	void CamUpdate();
 private:
 	ModelRender		m_testModel;
+	ModelRender		m_bgModel;
 	Vector3			m_modelPos = Vector3::Zero;
 	Vector3			m_modelSca = Vector3::One;
 	Quaternion		m_modelRot = Quaternion::Identity;

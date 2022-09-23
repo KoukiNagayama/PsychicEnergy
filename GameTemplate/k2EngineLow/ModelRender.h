@@ -1,4 +1,5 @@
 #pragma once
+
 namespace nsK2EngineLow
 {
 	class ModelRender
@@ -18,6 +19,7 @@ namespace nsK2EngineLow
 			AnimationClip* animationClips = nullptr,
 			int numAnimationClips = 0,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
+			bool isDrawOutLine = false,
 			int maxInstance = 0
 		);
 		/// <summary>
@@ -130,7 +132,7 @@ namespace nsK2EngineLow
 		/// <returns>モデル</returns>
 		Model& GetModel()
 		{
-			return m_forwardRenderModel;
+			return m_model;
 		}
 	private:
 		/// <summary>
@@ -154,12 +156,29 @@ namespace nsK2EngineLow
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
 		);
 		/// <summary>
+		/// PBRを利用して描画する背景モデルを初期化
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <param name="enModelUpAxis"></param>
+		void InitBackGroundModelWithPBR(const char* filePath,
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
+		);
+		/// <summary>
+		/// キャラクターのモデルを初期化
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <param name="enModelUpAxis"></param>
+		void InitModelWithOutLine(const char* filePath,
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
+		);
+		/// <summary>
 		/// ワールド行列の更新
 		/// </summary>
 		void UpdateWorldMatrix();
 
 	private:
-		Model									m_forwardRenderModel;							// フォワードレンダリングで描画されるモデル
+		Model									m_model;							// フォワードレンダリングで描画されるモデル
+		Model									m_frontCullingModel;							// フロントカリングモデル
 		Skeleton								m_skeleton;										// スケルトン
 		Animation								m_animation;									// アニメーション
 		AnimationClip*							m_animationClips = nullptr;						// アニメーションクリップ

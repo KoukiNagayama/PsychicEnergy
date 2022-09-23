@@ -7,6 +7,7 @@ namespace nsK2EngineLow
 		AnimationClip* animationClips,
 		int numAnimationClips,
 		EnModelUpAxis enModelUpAxis,
+		bool isDrawOutLine,
 		int maxInstance
 	)
 	{
@@ -14,8 +15,19 @@ namespace nsK2EngineLow
 		InitSkeleton(filePath);
 		// アニメーションを初期化。
 		InitAnimation(animationClips, numAnimationClips);
-		// フォワードレンダリング用のモデルを初期化。
-		InitForwardRenderingModel(filePath, enModelUpAxis);
+
+		InitBackGroundModelWithPBR(filePath, enModelUpAxis);
+
+		if (isDrawOutLine == true) {
+			InitModelWithOutLine(filePath, enModelUpAxis);
+		}
+		//else {
+		//	// フォワードレンダリング用のモデルを初期化。
+		//	InitForwardRenderingModel(filePath, enModelUpAxis);
+		//	// 
+
+		//}
+
 	}
 
 	void ModelRender::InitSkeleton(const char* filePath)
@@ -68,9 +80,67 @@ namespace nsK2EngineLow
 		modelInitData.m_modelUpAxis = enModelUpAxis;
 		// 音源データを定数バッファとして設定する
 		// 作成した初期化データをもとにモデルを初期化する。
-		m_forwardRenderModel.Init(modelInitData);
+		m_model.Init(modelInitData);
 	}
 
+	void ModelRender::InitBackGroundModelWithPBR(const char* filePath,
+		EnModelUpAxis enModelUpAxis
+	)
+	{
+		ModelInitData modelInitData;
+
+		// モデルのtkmファイルパスを指定。
+		modelInitData.m_tkmFilePath = filePath;
+		// シェーダーのfxファイルパスを指定。
+		modelInitData.m_fxFilePath = "Assets/shader/pbr.fx";
+		// モデルの上方向を指定。
+		modelInitData.m_modelUpAxis = enModelUpAxis;
+		// エントリーポイントを指定する。
+		if (m_animationClips != nullptr) {
+			//スケルトンを指定する。
+			modelInitData.m_skeleton = &m_skeleton;
+			//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
+			modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+		}
+		else {
+			//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
+			modelInitData.m_vsEntryPointFunc = "VSMain";
+		}
+
+		modelInitData.m_expandConstantBuffer = &g_renderingEngine->GetSceneLight().GetLightData();
+		modelInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetSceneLight().GetLightData());
+
+		m_model.Init(modelInitData);
+	}
+
+	void ModelRender::InitModelWithOutLine(const char* filePath,
+		EnModelUpAxis enModelUpAxis
+	)
+	{
+		// モデルの初期化データ
+		ModelInitData modelInitData;
+		// モデルのtkmファイルパスを指定。
+		modelInitData.m_tkmFilePath = filePath;
+		// シェーダーのfxファイルパスを指定。
+		modelInitData.m_fxFilePath = "Assets/shader/backModel.fx";
+		// カリングモードを指定。フロントカリングを使用。
+		modelInitData.m_cullMode = D3D12_CULL_MODE_FRONT;
+		// モデルの上方向を指定。
+		modelInitData.m_modelUpAxis = enModelUpAxis;
+		// エントリーポイントを指定する。
+		if (m_animationClips != nullptr) {
+			//スケルトンを指定する。
+			modelInitData.m_skeleton = &m_skeleton;
+			//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
+			modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+		}
+		else {
+			//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
+			modelInitData.m_vsEntryPointFunc = "VSMain";
+		}
+		// 初期化データをもとにモデルを初期化。
+		m_frontCullingModel.Init(modelInitData);
+	}
 
 	void ModelRender::UpdateInstancingData(const Vector3& pos, const Quaternion& rot, const Vector3& scale)
 	{
@@ -78,7 +148,7 @@ namespace nsK2EngineLow
 		if (!m_isEnableInstancingDraw) {
 			return;
 		}
-		auto wlorldMatrix = m_forwardRenderModel.CalcWorldMatrix(pos, rot, scale);
+		auto wlorldMatrix = m_model.CalcWorldMatrix(pos, rot, scale);
 
 		// インスタンシング描画を行う。
 		m_worldMatrixArray[m_numInstance] = wlorldMatrix;
@@ -97,12 +167,12 @@ namespace nsK2EngineLow
 
 	void ModelRender::Update()
 	{
-
+		// ワールド座標の更新
 		UpdateWorldMatrix();
 
 		if (m_skeleton.IsInited()) {
 			// スケルトンを更新
-			m_skeleton.Update(m_forwardRenderModel.GetWorldMatrix());
+			m_skeleton.Update(m_model.GetWorldMatrix());
 		}
 
 		// アニメーションを更新
@@ -111,17 +181,27 @@ namespace nsK2EngineLow
 
 	void ModelRender::UpdateWorldMatrix()
 	{
-		if (m_forwardRenderModel.IsInited())
+		// モデルのワールド座標の更新。
+		if (m_model.IsInited())
 		{
-			m_forwardRenderModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+			m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+		}
+		if (m_frontCullingModel.IsInited())
+		{
+			m_frontCullingModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 		}
 	}
 
 	void ModelRender::Draw(RenderContext& rc)
 	{
-		if (m_forwardRenderModel.IsInited())
+		// モデルを描画パスに追加
+		if (m_model.IsInited())
 		{
-			g_renderingEngine.Add3DModelToForwardRenderPass(m_forwardRenderModel);
+			g_renderingEngine->Add3DModelToForwardRenderPass(m_model);
+		}
+		if (m_frontCullingModel.IsInited())
+		{
+			g_renderingEngine->Add3DModelToRenderingModelsForOutLine(m_frontCullingModel);
 		}
 	}
 }

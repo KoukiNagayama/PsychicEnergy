@@ -26,7 +26,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	auto engineTest = NewGO<EngineTest>(0, "engineTest");
 
 	// レンダリングエンジンを初期化
-	g_renderingEngine.Init();
+	g_renderingEngine = new RenderingEngine;
+	g_renderingEngine->Init();
 
 
 	// ここからゲームループ。
@@ -41,7 +42,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
 
-		g_renderingEngine.Execute(renderContext);
+		g_renderingEngine->Execute(renderContext);
 
 		// デバッグ描画処理を実行する。
 		g_k2EngineLow->DebubDrawWorld();

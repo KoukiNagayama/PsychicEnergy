@@ -608,7 +608,7 @@ namespace nsK2EngineLow {
 		/// <summary>
 		/// ƒxƒNƒgƒ‹‚Ì’·‚³‚ðŽæ“¾
 		/// </summary>
-		float Length()
+		float Length() const
 		{
 			DirectX::XMVECTOR xmv = DirectX::XMLoadFloat4(&vec);
 			return DirectX::XMVector4Length(xmv).m128_f32[0];

@@ -5,8 +5,11 @@ namespace nsK2EngineLow
 {
 	void RenderingEngine::Init()
 	{
+		m_sceneLight.Init();
 		InitMainRenderTarget();
 		InitCopyMainRenderTargetToFrameBufferSprite();
+		m_postEffect.Init(m_mainRenderTarget);
+
 	}
 
 	void RenderingEngine::InitMainRenderTarget()
@@ -40,15 +43,24 @@ namespace nsK2EngineLow
 
 	void RenderingEngine::Execute(RenderContext& rc)
 	{
+		m_sceneLight.Update();
+
 		// フォワードレンダリング
 		ForwardRendering(rc);
+
+		RenderingModelsForOutLine(rc);
+
+		// ポストエフェクト
+		m_postEffect.Render(rc, m_mainRenderTarget);
 
 		// メインレンダリングターゲットの内容をフレームバッファにコピー
 		CopyMainRenderTargetToFrameBuffer(rc);
 
 		// 登録されたオブジェクトの情報をクリア
 		m_forwardRenderModels.clear();
+		m_frontCullingModels.clear();
 	}
+
 
 	void RenderingEngine::ForwardRendering(RenderContext& rc)
 	{
@@ -62,6 +74,23 @@ namespace nsK2EngineLow
 		rc.ClearRenderTargetView(m_mainRenderTarget);
 
 		for (auto& model : m_forwardRenderModels)
+		{
+			// モデルを描画
+			model->Draw(rc);
+		}
+		// 書き込み終了待ち
+		rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
+	}
+
+	void RenderingEngine::RenderingModelsForOutLine(RenderContext& rc)
+	{
+		// レンダリングターゲットとして利用可能になるまで待つ
+		rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
+
+		// レンダリングターゲットを設定する
+		rc.SetRenderTargetAndViewport(m_mainRenderTarget);
+
+		for (auto& model : m_frontCullingModels)
 		{
 			// モデルを描画
 			model->Draw(rc);
@@ -89,5 +118,5 @@ namespace nsK2EngineLow
 		rc.SetViewportAndScissor(viewport);
 		m_copyMainRtToFrameBufferSprite.Draw(rc);
 	}
-	RenderingEngine g_renderingEngine;
+	RenderingEngine* g_renderingEngine = nullptr;
 }

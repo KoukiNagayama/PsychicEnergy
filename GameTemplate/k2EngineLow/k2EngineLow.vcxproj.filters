@@ -227,6 +227,9 @@
     </ClCompile>
     <ClCompile Include="ModelRender.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
+    <ClCompile Include="Fxaa.cpp" />
+    <ClCompile Include="PostEffect.cpp" />
+    <ClCompile Include="SceneLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -503,6 +506,9 @@
     </ClInclude>
     <ClInclude Include="ModelRender.h" />
     <ClInclude Include="RenderingEngine.h" />
+    <ClInclude Include="Fxaa.h" />
+    <ClInclude Include="PostEffect.h" />
+    <ClInclude Include="SceneLight.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
