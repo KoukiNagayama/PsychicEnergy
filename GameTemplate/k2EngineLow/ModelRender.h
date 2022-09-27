@@ -168,7 +168,15 @@ namespace nsK2EngineLow
 		/// </summary>
 		/// <param name="filePath"></param>
 		/// <param name="enModelUpAxis"></param>
-		void InitModelWithOutLine(const char* filePath,
+		void InitModelForBackWithOutLine(const char* filePath,
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
+		);
+		/// <summary>
+		/// 深度値記録用モデルを初期化
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <param name="enModelUpAxis"></param>
+		void InitDepthModel(const char* filePath,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
 		);
 		/// <summary>
@@ -179,6 +187,7 @@ namespace nsK2EngineLow
 	private:
 		Model									m_model;							// フォワードレンダリングで描画されるモデル
 		Model									m_frontCullingModel;							// フロントカリングモデル
+		Model									m_depthModel;
 		Skeleton								m_skeleton;										// スケルトン
 		Animation								m_animation;									// アニメーション
 		AnimationClip*							m_animationClips = nullptr;						// アニメーションクリップ

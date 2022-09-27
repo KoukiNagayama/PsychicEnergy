@@ -7,8 +7,9 @@ namespace nsK2EngineLow
 	{
 		m_sceneLight.Init();
 		InitMainRenderTarget();
+		InitDepthForOutLineRenderTarget();
 		InitCopyMainRenderTargetToFrameBufferSprite();
-		m_postEffect.Init(m_mainRenderTarget);
+		m_postEffect.Init(m_mainRenderTarget, m_depthForOutLineRenderTarget);
 
 	}
 
@@ -22,6 +23,22 @@ namespace nsK2EngineLow
 			1,
 			DXGI_FORMAT_R32G32B32A32_FLOAT,
 			DXGI_FORMAT_D32_FLOAT
+		);
+	}
+
+	void RenderingEngine::InitDepthForOutLineRenderTarget()
+	{
+		// レンダリングターゲットとなるテクスチャを埋める値
+		//float clearColor[4] = { 10000.0f,10000.0f,10000.0f,1.0f };
+		// 深度値記録用のレンダリングターゲットを作成
+		m_depthForOutLineRenderTarget.Create(
+			m_mainRenderTarget.GetWidth(),
+			m_mainRenderTarget.GetHeight(),
+			1,
+			1,
+			DXGI_FORMAT_R32_FLOAT,
+			DXGI_FORMAT_D32_FLOAT
+			//clearColor
 		);
 	}
 
@@ -43,11 +60,16 @@ namespace nsK2EngineLow
 
 	void RenderingEngine::Execute(RenderContext& rc)
 	{
+		// シーンライトの更新
 		m_sceneLight.Update();
+
+		// ポストエフェクト的な輪郭線描画に使用する深度を抽出
+		DepthForOutLine(rc);
 
 		// フォワードレンダリング
 		ForwardRendering(rc);
 
+		// 背面押し出しでの輪郭線描画に使用する背面用モデルを描画
 		RenderingModelsForOutLine(rc);
 
 		// ポストエフェクト
@@ -59,13 +81,14 @@ namespace nsK2EngineLow
 		// 登録されたオブジェクトの情報をクリア
 		m_forwardRenderModels.clear();
 		m_frontCullingModels.clear();
+		m_depthForOutLineModels.clear();
 	}
 
 
 	void RenderingEngine::ForwardRendering(RenderContext& rc)
 	{
 		// レンダリングターゲットとして利用可能になるまで待つ
-		rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
+		rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
 
 		// レンダリングターゲットを設定する
 		rc.SetRenderTargetAndViewport(m_mainRenderTarget);
@@ -85,7 +108,7 @@ namespace nsK2EngineLow
 	void RenderingEngine::RenderingModelsForOutLine(RenderContext& rc)
 	{
 		// レンダリングターゲットとして利用可能になるまで待つ
-		rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
+		rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
 
 		// レンダリングターゲットを設定する
 		rc.SetRenderTargetAndViewport(m_mainRenderTarget);
@@ -97,6 +120,24 @@ namespace nsK2EngineLow
 		}
 		// 書き込み終了待ち
 		rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
+	}
+
+	void RenderingEngine::DepthForOutLine(RenderContext& rc)
+	{
+		rc.WaitUntilToPossibleSetRenderTarget(m_depthForOutLineRenderTarget);
+
+		rc.SetRenderTargetAndViewport(m_depthForOutLineRenderTarget);
+
+		// レンダリングターゲットをクリア
+		rc.ClearRenderTargetView(m_depthForOutLineRenderTarget);
+
+
+		for (auto& model : m_depthForOutLineModels)
+		{
+			model->Draw(rc);
+		}
+
+		rc.WaitUntilFinishDrawingToRenderTarget(m_depthForOutLineRenderTarget);
 	}
 
 	void RenderingEngine::CopyMainRenderTargetToFrameBuffer(RenderContext& rc)

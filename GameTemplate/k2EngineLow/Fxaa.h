@@ -24,7 +24,7 @@ namespace nsK2EngineLow
 		};
 		RenderTarget m_fxaaRt;		// FXAAを行うレンダリングターゲット。
 		Sprite m_finalSprite;		// 最終合成用のスプライト
-		Sprite m_copyMainRtSprite;  // 　
+		Sprite m_copyMainRtSprite;  // メインレンダリングターゲットに対してコピーを行うためのスプライト　
 		FaxxBuffer m_cB;			// 解像度をGPUに送るための定数バッファ―。
 	};
 }

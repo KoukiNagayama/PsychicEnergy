@@ -15,11 +15,13 @@ namespace nsK2EngineLow
 		InitSkeleton(filePath);
 		// アニメーションを初期化。
 		InitAnimation(animationClips, numAnimationClips);
-
+		// 背景用モデルを初期化。
 		InitBackGroundModelWithPBR(filePath, enModelUpAxis);
 
 		if (isDrawOutLine == true) {
-			InitModelWithOutLine(filePath, enModelUpAxis);
+			// モデルの背面用モデルを初期化。
+			InitModelForBackWithOutLine(filePath, enModelUpAxis);
+			InitDepthModel(filePath, enModelUpAxis);
 		}
 		//else {
 		//	// フォワードレンダリング用のモデルを初期化。
@@ -113,7 +115,7 @@ namespace nsK2EngineLow
 		m_model.Init(modelInitData);
 	}
 
-	void ModelRender::InitModelWithOutLine(const char* filePath,
+	void ModelRender::InitModelForBackWithOutLine(const char* filePath,
 		EnModelUpAxis enModelUpAxis
 	)
 	{
@@ -140,6 +142,32 @@ namespace nsK2EngineLow
 		}
 		// 初期化データをもとにモデルを初期化。
 		m_frontCullingModel.Init(modelInitData);
+	}
+
+	void ModelRender::InitDepthModel(const char* filePath,
+		EnModelUpAxis enModelUpAxis
+	)
+	{
+		ModelInitData modelInitData;
+		// モデルの上方向を指定する
+		modelInitData.m_modelUpAxis = enModelUpAxis;
+		// シェーダーファイルのファイルパスを指定する
+		modelInitData.m_fxFilePath = "Assets/shader/depthForOutLine.fx";
+		// エントリーポイントを指定する。
+		if (m_animationClips != nullptr) {
+			//スケルトンを指定する。
+			modelInitData.m_skeleton = &m_skeleton;
+			//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
+			modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+		}
+		else {
+			//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
+			modelInitData.m_vsEntryPointFunc = "VSMain";
+		}
+		// tkmファイルのファイルパスを指定する
+		modelInitData.m_tkmFilePath = filePath;
+		// 初期化データをもとにモデルを初期化
+		m_depthModel.Init(modelInitData);
 	}
 
 	void ModelRender::UpdateInstancingData(const Vector3& pos, const Quaternion& rot, const Vector3& scale)
@@ -190,6 +218,10 @@ namespace nsK2EngineLow
 		{
 			m_frontCullingModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 		}
+		if (m_depthModel.IsInited())
+		{
+			m_depthModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+		}
 	}
 
 	void ModelRender::Draw(RenderContext& rc)
@@ -202,6 +234,10 @@ namespace nsK2EngineLow
 		if (m_frontCullingModel.IsInited())
 		{
 			g_renderingEngine->Add3DModelToRenderingModelsForOutLine(m_frontCullingModel);
+		}
+		if (m_depthModel.IsInited())
+		{
+			g_renderingEngine->Add3DModelToDepthForOutLinePass(m_depthModel);
 		}
 	}
 }

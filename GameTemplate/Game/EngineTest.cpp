@@ -55,10 +55,10 @@ void EngineTest::Rotation()
 void EngineTest::CamUpdate()
 {
 	if (g_pad[0]->IsTrigger(enButtonA)) {
-		g_camera3D->SetPosition({ 0.0f, 100.0f, -100.0f });
+		g_camera3D->SetPosition({ 0.0f, 70.0f, -100.0f });
 	}
 	else if (g_pad[0]->IsTrigger(enButtonB)) {
-		g_camera3D->SetPosition({ 0.0f,100.0f,100.0f });
+		g_camera3D->SetPosition({ 0.0f,70.0f,100.0f });
 	}
 }
 

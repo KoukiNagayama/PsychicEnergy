@@ -1,5 +1,6 @@
 #pragma once
 #include "Fxaa.h"
+#include "OutLine.h"
 
 namespace nsK2EngineLow
 {
@@ -10,7 +11,7 @@ namespace nsK2EngineLow
 		/// 初期化
 		/// </summary>
 		/// <param name="mainRenderTarget">メインレンダリングターゲット</param>
-		void Init(RenderTarget& mainRenderTarget);
+		void Init(RenderTarget& mainRenderTarget, RenderTarget& depthRenderTarget);
 		/// <summary>
 		/// 描画
 		/// </summary>
@@ -18,7 +19,8 @@ namespace nsK2EngineLow
 		/// <param name="mainRenderTarget">メインレンダリングターゲット</param>
 		void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
 	private:
-		Fxaa			m_fxaa;
+		Fxaa			m_fxaa;				// FXAA
+		OutLine			m_outLine;			// 輪郭線
 	};
 }
 

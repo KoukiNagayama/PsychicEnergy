@@ -5,7 +5,7 @@
 
 namespace nsK2EngineLow
 {
-	class RenderingEngine
+	class RenderingEngine : public Noncopyable
 	{
 	public:
 		RenderingEngine() {};
@@ -29,7 +29,7 @@ namespace nsK2EngineLow
 			m_forwardRenderModels.push_back(&model);
 		}
 		/// <summary>
-		/// 輪郭線用モデルの描画パスにモデルを追加。
+		/// 背面押し出しでの輪郭線描画用背面モデルの描画パスにモデルを追加。
 		/// </summary>
 		/// <param name="model"></param>
 		void Add3DModelToRenderingModelsForOutLine(Model& model)
@@ -37,18 +37,38 @@ namespace nsK2EngineLow
 			m_frontCullingModels.push_back(&model);
 		}
 		/// <summary>
-		/// 
+		/// ポストエフェクト的な輪郭線描画に使用する深度を抽出するため描画パスにモデルを追加。
+		/// </summary>
+		/// <param name="model"></param>
+		void Add3DModelToDepthForOutLinePass(Model& model)
+		{
+			m_depthForOutLineModels.push_back(&model);
+		}
+		/// <summary>
+		/// シーンライトを取得。
 		/// </summary>
 		/// <returns></returns>
 		SceneLight& GetSceneLight()
 		{
 			return m_sceneLight;
 		}
+		/// <summary>
+/// 深度値記録用のレンダリングターゲットを取得
+/// </summary>
+/// <returns>深度値記録用レンダリングターゲット</returns>
+		RenderTarget& GetDepthValue()
+		{
+			return m_depthForOutLineRenderTarget;
+		}
 	private:
 		/// <summary>
 		/// メインレンダリングターゲットを初期化
 		/// </summary>
 		void InitMainRenderTarget();
+		/// <summary>
+		/// 輪郭線描画に使用する深度値記録用のレンダリングターゲットを初期化
+		/// </summary>
+		void InitDepthForOutLineRenderTarget();
 		/// <summary>
 		/// メインレンダリングターゲットのカラーバッファの内容をフレームバッファにコピーするためのスプライトを初期化
 		/// </summary>
@@ -63,14 +83,21 @@ namespace nsK2EngineLow
 		/// <param name="rc">レンダリングコンテキスト</param>
 		void ForwardRendering(RenderContext& rc);
 		/// <summary>
+		/// 深度値記録パス
+		/// </summary>
+		/// <param name="rc"></param>
+		void DepthForOutLine(RenderContext& rc);
+		/// <summary>
 		/// メインレンダリングターゲットの内容をフレームバッファにコピー
 		/// </summary>
 		/// <param name="rc">レンダリングコンテキスト</param>
 		void CopyMainRenderTargetToFrameBuffer(RenderContext& rc);
 	private:
 		std::vector<Model*>		m_forwardRenderModels;					// フォワードレンダリングの描画パスで描画されるモデル
-		std::vector<Model*>		m_frontCullingModels;
+		std::vector<Model*>		m_frontCullingModels;					// フロントカリングされたモデル
+		std::vector<Model*>     m_depthForOutLineModels;				// 深度値を記録するためのモデル
 		RenderTarget			m_mainRenderTarget;						// メインレンダリングターゲット
+		RenderTarget			m_depthForOutLineRenderTarget;			// 輪郭線用の深度値レンダリングターゲット
 		Sprite					m_copyMainRtToFrameBufferSprite;		// メインレンダリングターゲットの内容をフレームバッファにコピーするためのスプライト
 		PostEffect				m_postEffect;							// ポストエフェクト
 		SceneLight				m_sceneLight;

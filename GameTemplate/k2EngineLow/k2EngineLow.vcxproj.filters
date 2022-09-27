@@ -230,6 +230,7 @@
     <ClCompile Include="Fxaa.cpp" />
     <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="SceneLight.cpp" />
+    <ClCompile Include="OutLine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -509,6 +510,7 @@
     <ClInclude Include="Fxaa.h" />
     <ClInclude Include="PostEffect.h" />
     <ClInclude Include="SceneLight.h" />
+    <ClInclude Include="OutLine.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

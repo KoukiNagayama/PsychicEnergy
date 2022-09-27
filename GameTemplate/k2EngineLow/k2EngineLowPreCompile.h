@@ -78,6 +78,8 @@ using namespace Microsoft::WRL;
 
 #include "ModelRender.h"
 #include "PostEffect.h"
+//#include "Fxaa.h"
+//#include "OutLine.h"
 #include "RenderingEngine.h"
 
 const UINT FRAME_BUFFER_W = 1600;	// フレームバッファの幅。
