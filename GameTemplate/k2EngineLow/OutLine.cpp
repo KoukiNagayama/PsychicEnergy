@@ -5,9 +5,9 @@ namespace nsK2EngineLow
 {
 	void OutLine::Init(RenderTarget& mainRenderTarget, RenderTarget& depthRenderTarget)
 	{
-		// スプライトの初期化データ
+		// エッジ抽出用スプライトの初期化データ
 		SpriteInitData edgeSpriteInitData;
-		// テクスチャはメインレンダリングターゲットのものを使用。
+		// テクスチャは深度記録用のレンダリングターゲットのものを使用。
 		edgeSpriteInitData.m_textures[0] = &depthRenderTarget.GetRenderTargetTexture();
 		// レンダリングターゲットの幅を指定。
 		edgeSpriteInitData.m_width = mainRenderTarget.GetWidth();
@@ -22,7 +22,7 @@ namespace nsK2EngineLow
 
 
 
-		// 
+		// アウトライン描画用のレンダリングターゲットを作成。
 		m_outLineRenderTarget.Create(
 			mainRenderTarget.GetWidth(),
 			mainRenderTarget.GetHeight(),
@@ -32,27 +32,22 @@ namespace nsK2EngineLow
 			DXGI_FORMAT_UNKNOWN
 		);
 
-		// 
-		SpriteInitData spriteInitData;
-		//spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
-		spriteInitData.m_textures[0] = &m_outLineRenderTarget.GetRenderTargetTexture();
-		spriteInitData.m_width = mainRenderTarget.GetWidth();
-		spriteInitData.m_height = mainRenderTarget.GetHeight();
-		spriteInitData.m_fxFilePath = "Assets/shader/postEffect/outLine.fx";
-		spriteInitData.m_vsEntryPointFunc = "VSMain";
-		spriteInitData.m_psEntryPoinFunc = "PSOutLineFinal";
-		spriteInitData.m_alphaBlendMode = AlphaBlendMode_Multiply;
-		m_sprite.Init(spriteInitData);
-
-
-/*		
-		spriteInitData.m_width = mainRenderTarget.GetWidth();
-		spriteInitData.m_height = mainRenderTarget.GetHeight();
-		spriteInitData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
-		spriteInitData.m_textures[0] = &m_outLineRenderTarget.GetRenderTargetTexture();
-		spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
-
-		m_copyMainRtSprite.Init(spriteInitData); */ 
+		// 最終合成用のスプライトの初期化データ。
+		SpriteInitData finalSpriteInitData;
+		// テクスチャはアウトライン描画用のレンダリングターゲットのものを使用。
+		finalSpriteInitData.m_textures[0] = &m_outLineRenderTarget.GetRenderTargetTexture();
+		// スプライトの幅を指定。
+		finalSpriteInitData.m_width = mainRenderTarget.GetWidth();
+		finalSpriteInitData.m_height = mainRenderTarget.GetHeight();
+		// シェーダーのfxファイルパスを指定。
+		finalSpriteInitData.m_fxFilePath = "Assets/shader/postEffect/outLine.fx";
+		// エントリーポイントを指定。
+		finalSpriteInitData.m_vsEntryPointFunc = "VSMain";
+		finalSpriteInitData.m_psEntryPoinFunc = "PSOutLineFinal";
+		// アルファブレンディングモードを乗算合成に指定。
+		finalSpriteInitData.m_alphaBlendMode = AlphaBlendMode_Multiply;
+		// 初期化データをもとにスプライトを初期化。
+		m_finalSprite.Init(finalSpriteInitData);
 
 	}
 
@@ -62,7 +57,7 @@ namespace nsK2EngineLow
 		rc.WaitUntilToPossibleSetRenderTarget(m_outLineRenderTarget);
 		// レンダリングターゲットを設定
 		rc.SetRenderTargetAndViewport(m_outLineRenderTarget);
-		//描画。
+		// エッジ検出を行う。
 		m_edgeSprite.Draw(rc);
 		// レンダリングターゲットへの書き込み終了待ち
 		//メインレンダ―ターゲットをRENDERTARGETからPRESENTへ。
@@ -72,8 +67,8 @@ namespace nsK2EngineLow
 		rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
 		// レンダリングターゲットを設定
 		rc.SetRenderTargetAndViewport(mainRenderTarget);
-		// ポストエフェクトの結果をメインレンダリングターゲットに反映。
-		m_sprite.Draw(rc);
+		// 乗算合成する。
+		m_finalSprite.Draw(rc);
 		// レンダリングターゲットへの書き込み終了待ち
 		rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 	}

@@ -1,5 +1,6 @@
 #pragma once
-
+#include "ToonMap.h"
+#include "MyRenderer.h"
 namespace nsK2EngineLow
 {
 	class ModelRender
@@ -15,11 +16,15 @@ namespace nsK2EngineLow
 		/// <param name="animationClips">アニメーションクリップ。</param>
 		/// <param name="numAnimationClips">アニメーションクリップの数。</param>
 		/// <param name="enModelUpAxis">モデルの上方向。</param>
+		/// <param name="isDrawOutLine">輪郭線を描画するか。</param>
+		/// <param name="isCharacterModel">キャラクターのモデルか。</param>
 		void Init(const char* filePath,
 			AnimationClip* animationClips = nullptr,
 			int numAnimationClips = 0,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
 			bool isDrawOutLine = false,
+			bool isCharacterModel = false,
+			bool isShadowCaster = true,
 			int maxInstance = 0
 		);
 		/// <summary>
@@ -180,14 +185,24 @@ namespace nsK2EngineLow
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
 		);
 		/// <summary>
+		/// シャドウマップに描画するモデルを初期化
+		/// </summary>
+		/// <param name="filePath">ファイルパス</param>
+		/// <param name="enModelUpAxis">モデルの上方向</param>
+		void InitShadowMapModel(const char* filePath,
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
+		);
+		/// <summary>
 		/// ワールド行列の更新
 		/// </summary>
 		void UpdateWorldMatrix();
 
 	private:
-		Model									m_model;							// フォワードレンダリングで描画されるモデル
+		Model									m_model;										// フォワードレンダリングで描画されるモデル
 		Model									m_frontCullingModel;							// フロントカリングモデル
-		Model									m_depthModel;
+		Model									m_depthModel;									// 深度値抽出用モデル
+		Model									m_shadowMapModel[NUM_SHADOW_MAP];				// シャドウマップに描画するモデル
+		
 		Skeleton								m_skeleton;										// スケルトン
 		Animation								m_animation;									// アニメーション
 		AnimationClip*							m_animationClips = nullptr;						// アニメーションクリップ
@@ -202,6 +217,7 @@ namespace nsK2EngineLow
 		bool									m_isEnableInstancingDraw = false;							// インスタンシング描画が有効？
 		std::unique_ptr<Matrix[]>				m_worldMatrixArray;											// ワールド行列の配列。
 		StructuredBuffer						m_worldMatrixArraySB;										// ワールド行列の配列のストラクチャードバッファ。
+		ToonMap									m_toonMap;
 	};
 }
 

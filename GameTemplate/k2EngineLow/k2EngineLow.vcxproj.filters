@@ -231,6 +231,9 @@
     <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="SceneLight.cpp" />
     <ClCompile Include="OutLine.cpp" />
+    <ClCompile Include="ToonMap.cpp" />
+    <ClCompile Include="ShadowMapRender.cpp" />
+    <ClCompile Include="CascadeShadowMapMatrix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -511,6 +514,10 @@
     <ClInclude Include="PostEffect.h" />
     <ClInclude Include="SceneLight.h" />
     <ClInclude Include="OutLine.h" />
+    <ClInclude Include="ToonMap.h" />
+    <ClInclude Include="ShadowMapRender.h" />
+    <ClInclude Include="CascadeShadowMapMatrix.h" />
+    <ClInclude Include="MyRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

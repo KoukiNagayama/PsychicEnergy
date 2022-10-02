@@ -1,4 +1,6 @@
 #pragma once
+#include "MyRenderer.h"
+
 namespace nsK2EngineLow
 {
 	const int NUM_DIRECTIONAL_LIGHT = 4;
@@ -17,7 +19,7 @@ namespace nsK2EngineLow
 	/// </summary>
 	struct Light
 	{
-		DirectionalLight directionalLight[NUM_DIRECTIONAL_LIGHT];		// ディレクションライト
+		DirectionalLight directionalLight[MAX_DIRECTIONAL_LIGHT];		// ディレクションライト
 		Vector3 eyePos;							// カメラの位置
 		float specPow;							// スペキュラの絞り
 		Vector3 ambientLight;					// 環境光

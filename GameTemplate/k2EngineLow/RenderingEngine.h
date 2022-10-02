@@ -2,6 +2,7 @@
 #include "Fxaa.h"
 #include "PostEffect.h"
 #include "SceneLight.h"
+#include "ShadowMapRender.h"
 
 namespace nsK2EngineLow
 {
@@ -45,6 +46,20 @@ namespace nsK2EngineLow
 			m_depthForOutLineModels.push_back(&model);
 		}
 		/// <summary>
+		/// シャドウマップ描画のパスにモデルを追加
+		/// </summary>
+		/// <param name="model">モデル</param>
+		/// <param name="areaNo">カスケードシャドウで分割されたエリア</param>
+		void Add3DModelToRenderToShadowMapPass(Model& model, int areaNo)
+		{
+			m_shadowMapModels[areaNo].push_back(&model);
+		}
+
+		 std::vector<Model*>& GetShadowMapModel(int areaNo)  
+		{
+			return m_shadowMapModels[areaNo];
+		}
+		/// <summary>
 		/// シーンライトを取得。
 		/// </summary>
 		/// <returns></returns>
@@ -53,9 +68,9 @@ namespace nsK2EngineLow
 			return m_sceneLight;
 		}
 		/// <summary>
-/// 深度値記録用のレンダリングターゲットを取得
-/// </summary>
-/// <returns>深度値記録用レンダリングターゲット</returns>
+		/// 深度値記録用のレンダリングターゲットを取得
+		/// </summary>
+		/// <returns>深度値記録用レンダリングターゲット</returns>
 		RenderTarget& GetDepthValue()
 		{
 			return m_depthForOutLineRenderTarget;
@@ -73,6 +88,12 @@ namespace nsK2EngineLow
 		/// メインレンダリングターゲットのカラーバッファの内容をフレームバッファにコピーするためのスプライトを初期化
 		/// </summary>
 		void InitCopyMainRenderTargetToFrameBufferSprite();
+		void InitShadowMapRender();
+		/// <summary>
+		/// シャドウマップにモデルを描画
+		/// </summary>
+		/// <param name="rc">レンダリングコンテキスト</param>
+		void RenderToShadowMap(RenderContext& rc);
 		/// <summary>
 		/// 輪郭線用モデルを描画
 		/// </summary>
@@ -96,11 +117,13 @@ namespace nsK2EngineLow
 		std::vector<Model*>		m_forwardRenderModels;					// フォワードレンダリングの描画パスで描画されるモデル
 		std::vector<Model*>		m_frontCullingModels;					// フロントカリングされたモデル
 		std::vector<Model*>     m_depthForOutLineModels;				// 深度値を記録するためのモデル
+		std::vector<Model*>		m_shadowMapModels[NUM_SHADOW_MAP];
 		RenderTarget			m_mainRenderTarget;						// メインレンダリングターゲット
 		RenderTarget			m_depthForOutLineRenderTarget;			// 輪郭線用の深度値レンダリングターゲット
 		Sprite					m_copyMainRtToFrameBufferSprite;		// メインレンダリングターゲットの内容をフレームバッファにコピーするためのスプライト
 		PostEffect				m_postEffect;							// ポストエフェクト
 		SceneLight				m_sceneLight;
+		ShadowMapRender			m_shadowMapRender;
 	};
 
 	extern RenderingEngine* g_renderingEngine;

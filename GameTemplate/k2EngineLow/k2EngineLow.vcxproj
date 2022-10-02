@@ -254,6 +254,7 @@
     <ClCompile Include="AI\PathFinding\NaviMesh.cpp" />
     <ClCompile Include="AI\PathFinding\Path.cpp" />
     <ClCompile Include="AI\PathFinding\PathFinding.cpp" />
+    <ClCompile Include="CascadeShadowMapMatrix.cpp" />
     <ClCompile Include="Fxaa.cpp" />
     <ClCompile Include="gameObject\Gameobjectmanager.cpp" />
     <ClCompile Include="gameObject\IGameObject.cpp" />
@@ -328,6 +329,7 @@
     <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="SceneLight.cpp" />
+    <ClCompile Include="ShadowMapRender.cpp" />
     <ClCompile Include="sound\SoundEngine.cpp" />
     <ClCompile Include="sound\SoundSource.cpp" />
     <ClCompile Include="sound\WaveFile.cpp" />
@@ -336,12 +338,14 @@
     <ClCompile Include="tkFile\TkmFile.cpp" />
     <ClCompile Include="tkFile\TknFile.cpp" />
     <ClCompile Include="tkFile\TksFile.cpp" />
+    <ClCompile Include="ToonMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\PathFinding\Cell.h" />
     <ClInclude Include="AI\PathFinding\NaviMesh.h" />
     <ClInclude Include="AI\PathFinding\Path.h" />
     <ClInclude Include="AI\PathFinding\PathFinding.h" />
+    <ClInclude Include="CascadeShadowMapMatrix.h" />
     <ClInclude Include="dbg\MyAssert.h" />
     <ClInclude Include="dbg\MyLog.h" />
     <ClInclude Include="Fxaa.h" />
@@ -407,6 +411,7 @@
     <ClInclude Include="math\Matrix.h" />
     <ClInclude Include="math\Vector.h" />
     <ClInclude Include="ModelRender.h" />
+    <ClInclude Include="MyRenderer.h" />
     <ClInclude Include="online\SyncOnlineTwoPlayerMatchEngine.h" />
     <ClInclude Include="OutLine.h" />
     <ClInclude Include="physics\BoxCollider.h" />
@@ -424,6 +429,7 @@
     <ClInclude Include="PostEffect.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="SceneLight.h" />
+    <ClInclude Include="ShadowMapRender.h" />
     <ClInclude Include="sound\SoundEngine.h" />
     <ClInclude Include="sound\SoundSource.h" />
     <ClInclude Include="sound\WaveFile.h" />
@@ -435,6 +441,7 @@
     <ClInclude Include="tkFile\TkmFile.h" />
     <ClInclude Include="tkFile\TknFile.h" />
     <ClInclude Include="tkFile\TksFile.h" />
+    <ClInclude Include="ToonMap.h" />
     <ClInclude Include="util\TResourceBank.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

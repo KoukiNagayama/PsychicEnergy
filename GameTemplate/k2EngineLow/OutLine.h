@@ -19,7 +19,7 @@ namespace nsK2EngineLow
 	private:
 		RenderTarget	m_outLineRenderTarget;	
 		Sprite			m_edgeSprite;       //
-		Sprite			m_sprite;
+		Sprite			m_finalSprite;
 		Sprite			m_copyMainRtSprite;  //
 	};
 }

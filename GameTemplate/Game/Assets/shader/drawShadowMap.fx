@@ -1,11 +1,8 @@
 /*!
- * @brief 背面押し出しによる輪郭線用モデルシェーダー
+ * @brief シャドウマップ描画用のシェーダー
  */
 
-////////////////////////////////////////////////
-// 定数バッファ。
-////////////////////////////////////////////////
-//モデル用の定数バッファ
+// モデル用の定数バッファー
 cbuffer ModelCb : register(b0)
 {
     float4x4 mWorld;
@@ -13,42 +10,33 @@ cbuffer ModelCb : register(b0)
     float4x4 mProj;
 };
 
-////////////////////////////////////////////////
-// 構造体
-////////////////////////////////////////////////
-//スキニング用の頂点データをひとまとめ。
 struct SSkinVSIn
 {
     int4 Indices : BLENDINDICES0;
     float4 Weights : BLENDWEIGHT0;
 };
-//頂点シェーダーへの入力。
+
+// 頂点シェーダーへの入力
 struct SVSIn
 {
-    float4 pos : POSITION; //モデルの頂点座標。
-    float2 uv : TEXCOORD0; //UV座標。
+    float4 pos : POSITION; // モデルの頂点座標
     float3 normal : NORMAL; // 法線
-    SSkinVSIn skinVert; //スキン用のデータ。
+    SSkinVSIn skinVert;
+    float2 uv : TEXCOORD0; // UV座標
 };
-//ピクセルシェーダーへの入力。
+
+// ピクセルシェーダーへの入力
 struct SPSIn
 {
-    float4 pos : SV_POSITION; //スクリーン空間でのピクセルの座標。
-    float2 uv : TEXCOORD0; //uv座標。
+    float4 pos : SV_POSITION; // スクリーン空間でのピクセルの座標
+    float3 normal : NORMAL; // 法線
+    float2 uv : TEXCOORD0; // uv座標
 };
 
-////////////////////////////////////////////////
-// グローバル変数。
-////////////////////////////////////////////////
-Texture2D<float4> g_albedo : register(t0); //アルベドマップ
-Texture2D<float4> g_normalMap : register(t1); // 法線マップ
-StructuredBuffer<float4x4> g_boneMatrix : register(t3); //ボーン行列。
-sampler g_sampler : register(s0); //サンプラステート。
-
-////////////////////////////////////////////////
-// 関数定義。
-////////////////////////////////////////////////
-
+///////////////////////////////////////////////////
+// グローバル変数
+///////////////////////////////////////////////////
+StructuredBuffer<float4x4> g_boneMatrix : register(t3);
 /// <summary>
 //スキン行列を計算する。
 /// </summary>
@@ -67,13 +55,11 @@ float4x4 CalcSkinMatrix(SSkinVSIn skinVert)
 	
     return skinning;
 }
-
 /// <summary>
 /// 頂点シェーダーのコア関数。
 /// </summary>
 SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 {
-    
     SPSIn psIn;
     float4x4 m;
     if (hasSkin)
@@ -84,14 +70,10 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
     {
         m = mWorld;
     }
-    
-    // 法線方向に拡張
-    vsIn.pos += float4(vsIn.normal * 0.5f, 0.0f);
-    
     psIn.pos = mul(m, vsIn.pos);
     psIn.pos = mul(mView, psIn.pos);
     psIn.pos = mul(mProj, psIn.pos);
-
+    psIn.normal = normalize(mul(m, vsIn.normal));
     psIn.uv = vsIn.uv;
 
     return psIn;
@@ -111,11 +93,12 @@ SPSIn VSSkinMain(SVSIn vsIn)
 {
     return VSMainCore(vsIn, true);
 }
+
 /// <summary>
-/// ピクセルシェーダーのエントリー関数。
+/// シャドウマップ描画用のピクセルシェーダー
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
-    // 黒色で出力
-    return float4(0.0f, 0.0f, 0.0f, 1.0f);
+    //return float4(0.5f, 0.5f, 0.5f, 1.0f);
+    return float4(psIn.pos.z, psIn.pos.z, psIn.pos.z, 1.0f);
 }

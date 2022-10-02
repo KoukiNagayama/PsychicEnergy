@@ -24,9 +24,10 @@ namespace nsK2EngineLow
         spriteInitData.m_expandConstantBuffer = (void*)&m_cB;
         spriteInitData.m_expandConstantBufferSize = sizeof(FaxxBuffer) +
             (16 - (sizeof(FaxxBuffer) % 16));
-        // 
+        // 初期化データをもとにスプライトを初期化。
         m_finalSprite.Init(spriteInitData);
 
+        // FXAAを行うレンダリングターゲットを作成。
         m_fxaaRt.Create(
             mainRenderTarget.GetWidth(),
             mainRenderTarget.GetHeight(),
@@ -36,12 +37,18 @@ namespace nsK2EngineLow
             DXGI_FORMAT_UNKNOWN
         );
 
+        // メインレンダリングターゲットにコピーするためのスプライトの初期化データ。
         SpriteInitData initData;
+        // スプライトの幅を指定。
         initData.m_width = mainRenderTarget.GetWidth();
         initData.m_height = mainRenderTarget.GetHeight();
+        // カラーバッファのフォーマットを指定。
         initData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
+        // シェーダーのfxファイルパスを指定。
         initData.m_fxFilePath = "Assets/shader/Sprite.fx";
+        // テクスチャはFXAAを行ったレンダリングターゲットのものを使用。
         initData.m_textures[0] = &m_fxaaRt.GetRenderTargetTexture();
+        // 初期化データをもとにスプライトを初期化。
         m_copyMainRtSprite.Init(initData);
     }
 

@@ -6,7 +6,7 @@ namespace nsK2EngineLow {
 	/// <summary>
 	/// カメラクラス。
 	/// </summary>
-	class Camera : public Noncopyable {
+	class Camera  : public Noncopyable {
 	public:
 		/// <summary>
 		/// 射影行列の更新方法。

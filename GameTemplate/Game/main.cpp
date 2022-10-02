@@ -17,7 +17,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// k2EngineLowの初期化。
 	g_k2EngineLow = new K2EngineLow();
 	g_k2EngineLow->Init(g_hWnd, FRAME_BUFFER_W, FRAME_BUFFER_H);
-	g_camera3D->SetPosition({ 0.0f, 70.0f, -200.0f });
+	g_camera3D->SetPosition({ 0.0f, 70.0f, 200.0f });
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 
 	// レンダリングコンテキスト
@@ -42,6 +42,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
 
+		// レンダリングエンジンの描画処理を実行。
 		g_renderingEngine->Execute(renderContext);
 
 		// デバッグ描画処理を実行する。
@@ -51,6 +52,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_k2EngineLow->EndFrame();
 	}
 
+	delete g_renderingEngine;
 	delete g_k2EngineLow;
 
 	return 0;

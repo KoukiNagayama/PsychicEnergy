@@ -10,7 +10,7 @@ namespace nsK2EngineLow
 		InitDepthForOutLineRenderTarget();
 		InitCopyMainRenderTargetToFrameBufferSprite();
 		m_postEffect.Init(m_mainRenderTarget, m_depthForOutLineRenderTarget);
-
+		InitShadowMapRender();
 	}
 
 	void RenderingEngine::InitMainRenderTarget()
@@ -58,10 +58,17 @@ namespace nsK2EngineLow
 		m_copyMainRtToFrameBufferSprite.Init(spriteInitData);
 	}
 
+	void RenderingEngine::InitShadowMapRender()
+	{
+		m_shadowMapRender.Init();
+	}
+
 	void RenderingEngine::Execute(RenderContext& rc)
 	{
 		// シーンライトの更新
 		m_sceneLight.Update();
+
+		RenderToShadowMap(rc);
 
 		// ポストエフェクト的な輪郭線描画に使用する深度を抽出
 		DepthForOutLine(rc);
@@ -82,6 +89,18 @@ namespace nsK2EngineLow
 		m_forwardRenderModels.clear();
 		m_frontCullingModels.clear();
 		m_depthForOutLineModels.clear();
+		for (int i = 0; i < NUM_SHADOW_MAP; i++) {
+			m_shadowMapModels[i].clear();
+		}
+	}
+
+	void RenderingEngine::RenderToShadowMap(RenderContext& rc)
+	{
+		m_shadowMapRender.Render(
+			rc,
+			1,
+			m_sceneLight.GetLightData().directionalLight[0].direction
+		);
 	}
 
 

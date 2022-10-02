@@ -13,15 +13,22 @@ bool EngineTest::Start()
 		m_animationClips,
 		enAnimationClip_Num,
 		enModelUpAxisY,
+		true,
 		true
 	);
 	m_testModel.SetTRS(m_modelPos, m_modelRot, m_modelSca);
 
 	// ”wŒi
-	m_bgModel.Init("Assets/modelData/bg.tkm");
+	m_bgModel.Init(
+		"Assets/modelData/bg.tkm",
+		nullptr,
+		0,
+		enModelUpAxisZ,
+		false,
+		false,
+		false
+	);
 	m_bgModel.SetPosition(Vector3({ 0.0f,0.0f,0.0f }));
-
-	
 
 	return true;
 }
@@ -40,8 +47,8 @@ void EngineTest::Update()
 
 void EngineTest::Move()
 {
-	m_modelPos.x += g_pad[0]->GetLStickXF();
-	m_modelPos.z += g_pad[0]->GetLStickYF();
+	m_modelPos.x -= g_pad[0]->GetLStickXF();
+	m_modelPos.z -= g_pad[0]->GetLStickYF();
 
 	m_testModel.SetPosition(m_modelPos);
 }
@@ -55,10 +62,10 @@ void EngineTest::Rotation()
 void EngineTest::CamUpdate()
 {
 	if (g_pad[0]->IsTrigger(enButtonA)) {
-		g_camera3D->SetPosition({ 0.0f, 70.0f, -100.0f });
+		g_camera3D->SetPosition({ 0.0f, 70.0f, -200.0f });
 	}
 	else if (g_pad[0]->IsTrigger(enButtonB)) {
-		g_camera3D->SetPosition({ 0.0f,70.0f,100.0f });
+		g_camera3D->SetPosition({ 0.0f,70.0f,200.0f });
 	}
 }
 

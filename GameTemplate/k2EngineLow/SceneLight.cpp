@@ -6,9 +6,9 @@ namespace nsK2EngineLow
 	void SceneLight::Init()
 	{
 		// ディレクションライトの初期化
-		m_light.directionalLight[0].direction.x = 2.0f;
-		m_light.directionalLight[0].direction.y = -1.0f;
-		m_light.directionalLight[0].direction.z = 3.0f;
+		m_light.directionalLight[0].direction.x = -0.577f;
+		m_light.directionalLight[0].direction.y = -0.577f;
+		m_light.directionalLight[0].direction.z = -0.577f;
 		m_light.directionalLight[0].direction.Normalize();
 
 		m_light.directionalLight[0].color.x = 3.0f;

@@ -1,17 +1,9 @@
 /*!
- * @brief 背面押し出しによる輪郭線用モデルシェーダー
+ * @brief	シンプルなモデルシェーダー。
  */
 
-////////////////////////////////////////////////
-// 定数バッファ。
-////////////////////////////////////////////////
-//モデル用の定数バッファ
-cbuffer ModelCb : register(b0)
-{
-    float4x4 mWorld;
-    float4x4 mView;
-    float4x4 mProj;
-};
+static const int NUM_DIRECTIONAL_LIGHT = 4; // ディレクションライトの本数
+
 
 ////////////////////////////////////////////////
 // 構造体
@@ -27,24 +19,49 @@ struct SVSIn
 {
     float4 pos : POSITION; //モデルの頂点座標。
     float2 uv : TEXCOORD0; //UV座標。
-    float3 normal : NORMAL; // 法線
     SSkinVSIn skinVert; //スキン用のデータ。
+    float3 normal : NORMAL;
 };
 //ピクセルシェーダーへの入力。
 struct SPSIn
 {
     float4 pos : SV_POSITION; //スクリーン空間でのピクセルの座標。
     float2 uv : TEXCOORD0; //uv座標。
+    float3 normal : NORMAL;
+};
+// ディレクションライト
+struct DirectionalLight
+{
+    float3 direction; // ライトの方向
+    float4 color; // ライトの色
+};
+
+////////////////////////////////////////////////
+// 定数バッファ。
+////////////////////////////////////////////////
+//モデル用の定数バッファ
+cbuffer ModelCb : register(b0)
+{
+    float4x4 mWorld;
+    float4x4 mView;
+    float4x4 mProj;
+};
+// ライト用の定数バッファー
+cbuffer LightCb : register(b1)
+{
+    DirectionalLight directionalLight[NUM_DIRECTIONAL_LIGHT];
+    float3 eyePos; // カメラの視点
+    float specPow; // スペキュラの絞り
+    float3 ambientLight; // 環境光
 };
 
 ////////////////////////////////////////////////
 // グローバル変数。
 ////////////////////////////////////////////////
-Texture2D<float4> g_albedo : register(t0); //アルベドマップ
-Texture2D<float4> g_normalMap : register(t1); // 法線マップ
-StructuredBuffer<float4x4> g_boneMatrix : register(t3); //ボーン行列。
-sampler g_sampler : register(s0); //サンプラステート。
-
+Texture2D<float4> g_albedoTexture : register(t0);       // アルベドマップ
+StructuredBuffer<float4x4> g_boneMatrix : register(t3); // ボーン行列。
+sampler g_sampler : register(s0);                       // サンプラステート。
+Texture2D<float4> g_toonTexture : register(t10);        // トゥーンマップ
 ////////////////////////////////////////////////
 // 関数定義。
 ////////////////////////////////////////////////
@@ -73,7 +90,6 @@ float4x4 CalcSkinMatrix(SSkinVSIn skinVert)
 /// </summary>
 SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 {
-    
     SPSIn psIn;
     float4x4 m;
     if (hasSkin)
@@ -84,14 +100,10 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
     {
         m = mWorld;
     }
-    
-    // 法線方向に拡張
-    vsIn.pos += float4(vsIn.normal * 0.5f, 0.0f);
-    
     psIn.pos = mul(m, vsIn.pos);
     psIn.pos = mul(mView, psIn.pos);
     psIn.pos = mul(mProj, psIn.pos);
-
+    psIn.normal = normalize(mul(m, vsIn.normal));
     psIn.uv = vsIn.uv;
 
     return psIn;
@@ -116,6 +128,19 @@ SPSIn VSSkinMain(SVSIn vsIn)
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
-    // 黒色で出力
-    return float4(0.0f, 0.0f, 0.0f, 1.0f);
+    //モデルのテクスチャから色をフェッチする
+    float4 albedoColor = g_albedoTexture.Sample(g_sampler, psIn.uv);
+
+    //ハーフランバート拡散照明によるライティング計算
+    float p = dot(psIn.normal * -1.0f, directionalLight[0].direction.xyz);
+    p = p * 0.5f + 0.5f;
+    p = p * p;
+
+    //計算結果よりトゥーンシェーダー用のテクスチャから色をフェッチする
+    float4 Col = g_toonTexture.Sample(g_sampler, float2(p, 0.0f));
+
+    albedoColor.x *= Col.x;
+    albedoColor.y *= Col.y;
+    albedoColor.z *= Col.z;
+    return albedoColor;
 }

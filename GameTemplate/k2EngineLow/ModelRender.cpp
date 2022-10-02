@@ -8,27 +8,36 @@ namespace nsK2EngineLow
 		int numAnimationClips,
 		EnModelUpAxis enModelUpAxis,
 		bool isDrawOutLine,
+		bool isCharacterModel,
+		bool isShadowCaster,
 		int maxInstance
 	)
 	{
+
 		// スケルトンを初期化。
 		InitSkeleton(filePath);
 		// アニメーションを初期化。
 		InitAnimation(animationClips, numAnimationClips);
-		// 背景用モデルを初期化。
-		InitBackGroundModelWithPBR(filePath, enModelUpAxis);
 
 		if (isDrawOutLine == true) {
 			// モデルの背面用モデルを初期化。
 			InitModelForBackWithOutLine(filePath, enModelUpAxis);
 			InitDepthModel(filePath, enModelUpAxis);
 		}
-		//else {
-		//	// フォワードレンダリング用のモデルを初期化。
-		//	InitForwardRenderingModel(filePath, enModelUpAxis);
-		//	// 
 
-		//}
+		if (isCharacterModel == true) {
+			// トゥーンマップを初期化。
+			m_toonMap.Init();
+			//フォワードレンダリング用のモデルを初期化。
+			InitForwardRenderingModel(filePath, enModelUpAxis);
+		}
+		else {
+			// 背景用モデルを初期化。
+			InitBackGroundModelWithPBR(filePath, enModelUpAxis);
+		}
+		if (isShadowCaster) {
+			InitShadowMapModel(filePath, enModelUpAxis);
+		}
 
 	}
 
@@ -60,11 +69,12 @@ namespace nsK2EngineLow
 		EnModelUpAxis enModelUpAxis
 	)
 	{
+		// モデルの初期化データ。
 		ModelInitData modelInitData;
 		// tkmファイルのファイルパスを指定する。
 		modelInitData.m_tkmFilePath = filePath;
 		// シェーダーファイルのファイルパスを指定する。
-		modelInitData.m_fxFilePath = "Assets/shader/model.fx";
+		modelInitData.m_fxFilePath = "Assets/shader/toonModel.fx";
 		// エントリーポイントを指定する。
 		if (m_animationClips != nullptr) {
 			//スケルトンを指定する。
@@ -78,17 +88,24 @@ namespace nsK2EngineLow
 		}
 		// カラーバッファのフォーマットを指定する。
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		// 拡張SRVにトゥーンマップを設定。
+		modelInitData.m_expandShaderResoruceView[0] = &m_toonMap.GetToonMap();
+		// 定数バッファを設定。
+		modelInitData.m_expandConstantBuffer = &g_renderingEngine->GetSceneLight().GetLightData();
+		modelInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetSceneLight().GetLightData());
 		// モデルの上方向を指定する。
 		modelInitData.m_modelUpAxis = enModelUpAxis;
 		// 音源データを定数バッファとして設定する
 		// 作成した初期化データをもとにモデルを初期化する。
 		m_model.Init(modelInitData);
+
 	}
 
 	void ModelRender::InitBackGroundModelWithPBR(const char* filePath,
 		EnModelUpAxis enModelUpAxis
 	)
 	{
+		// モデルの初期化データ。
 		ModelInitData modelInitData;
 
 		// モデルのtkmファイルパスを指定。
@@ -108,10 +125,10 @@ namespace nsK2EngineLow
 			//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
 			modelInitData.m_vsEntryPointFunc = "VSMain";
 		}
-
+		// 定数バッファを設定。
 		modelInitData.m_expandConstantBuffer = &g_renderingEngine->GetSceneLight().GetLightData();
 		modelInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetSceneLight().GetLightData());
-
+		// 初期化データをもとにモデルを初期化。
 		m_model.Init(modelInitData);
 	}
 
@@ -148,6 +165,7 @@ namespace nsK2EngineLow
 		EnModelUpAxis enModelUpAxis
 	)
 	{
+		// モデルの初期化データ。
 		ModelInitData modelInitData;
 		// モデルの上方向を指定する
 		modelInitData.m_modelUpAxis = enModelUpAxis;
@@ -168,6 +186,53 @@ namespace nsK2EngineLow
 		modelInitData.m_tkmFilePath = filePath;
 		// 初期化データをもとにモデルを初期化
 		m_depthModel.Init(modelInitData);
+	}
+
+	void ModelRender::InitShadowMapModel(const char* filePath,
+		EnModelUpAxis enModelUpAxis
+	)
+	{
+		//// モデルの初期化データ。
+		//ModelInitData modelInitData;
+		//// モデルのtkmファイルパスを指定する。
+		//modelInitData.m_tkmFilePath = filePath;
+		//// シェーダーのfxファイルパスを指定する。
+		//modelInitData.m_fxFilePath = "Assets/shader/drawShadowMap.fx";
+		//// カラーバッファのフォーマットを指定する。
+		//modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
+		//// エントリーポイントを指定する。
+		//if (m_animationClips != nullptr) {
+		//	//スケルトンを指定する。
+		//	modelInitData.m_skeleton = &m_skeleton;
+		//	//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
+		//	modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+		//}
+		//else {
+		//	//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
+		//	modelInitData.m_vsEntryPointFunc = "VSMain";
+		//}
+		//// 初期化データをもとにモデルを初期化する。
+		//m_shadowMapModel.Init(modelInitData);
+		for (int i = 0; i < NUM_SHADOW_MAP; i++) {
+			// モデルの初期化データ。
+			ModelInitData modelInitData;
+			// モデルのファイルパスを指定する。
+			modelInitData.m_tkmFilePath = filePath;
+			// シェーダーのfxファイルパスを指定する。
+			modelInitData.m_fxFilePath = "Assets/shader/drawShadowMap.fx";
+			// カラーバッファのフォーマットを指定する。
+			modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
+			// エントリーポイントを指定する。
+			if (m_animationClips != nullptr) {
+				modelInitData.m_skeleton = &m_skeleton;
+				modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+			}
+			else {
+				modelInitData.m_vsEntryPointFunc = "VSMain";
+			}
+			// 初期化データをもとに初期化する。
+			m_shadowMapModel[i].Init(modelInitData);
+		}
 	}
 
 	void ModelRender::UpdateInstancingData(const Vector3& pos, const Quaternion& rot, const Vector3& scale)
@@ -222,6 +287,13 @@ namespace nsK2EngineLow
 		{
 			m_depthModel.UpdateWorldMatrix(m_position, m_rotation, m_scale);
 		}
+		for (int i = 0; i < NUM_SHADOW_MAP; i++) {
+			if (m_shadowMapModel[i].IsInited())
+			{
+				m_shadowMapModel[i].UpdateWorldMatrix(m_position, m_rotation, m_scale);
+			}
+		}
+
 	}
 
 	void ModelRender::Draw(RenderContext& rc)
@@ -238,6 +310,12 @@ namespace nsK2EngineLow
 		if (m_depthModel.IsInited())
 		{
 			g_renderingEngine->Add3DModelToDepthForOutLinePass(m_depthModel);
+		}
+		for (int i = 0; i < NUM_SHADOW_MAP; i++) {
+			if (m_shadowMapModel[i].IsInited())
+			{
+				g_renderingEngine->Add3DModelToRenderToShadowMapPass(m_shadowMapModel[i], i);
+			}
 		}
 	}
 }
