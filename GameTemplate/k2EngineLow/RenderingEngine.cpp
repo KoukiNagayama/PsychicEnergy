@@ -67,7 +67,13 @@ namespace nsK2EngineLow
 	{
 		// シーンライトの更新
 		m_sceneLight.Update();
-
+		m_sLightingCb.m_light = m_sceneLight.GetLightData();
+		// ライトビュープロジェクション行列を取得。
+		for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++)
+		{
+			m_sLightingCb.m_lvp[areaNo] = m_shadowMapRender.GetLVPMatrix(areaNo);
+		}
+		// シャドウマップへモデルを描画
 		RenderToShadowMap(rc);
 
 		// ポストエフェクト的な輪郭線描画に使用する深度を抽出

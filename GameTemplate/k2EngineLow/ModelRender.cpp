@@ -91,8 +91,8 @@ namespace nsK2EngineLow
 		// 拡張SRVにトゥーンマップを設定。
 		modelInitData.m_expandShaderResoruceView[0] = &m_toonMap.GetToonMap();
 		// 定数バッファを設定。
-		modelInitData.m_expandConstantBuffer = &g_renderingEngine->GetSceneLight().GetLightData();
-		modelInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetSceneLight().GetLightData());
+		modelInitData.m_expandConstantBuffer = &g_renderingEngine->GetLightingCB();
+		modelInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetLightingCB());
 		// モデルの上方向を指定する。
 		modelInitData.m_modelUpAxis = enModelUpAxis;
 		// 音源データを定数バッファとして設定する
@@ -126,8 +126,12 @@ namespace nsK2EngineLow
 			modelInitData.m_vsEntryPointFunc = "VSMain";
 		}
 		// 定数バッファを設定。
-		modelInitData.m_expandConstantBuffer = &g_renderingEngine->GetSceneLight().GetLightData();
-		modelInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetSceneLight().GetLightData());
+		modelInitData.m_expandConstantBuffer = &g_renderingEngine->GetLightingCB();
+		modelInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetLightingCB());
+
+		for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++) {
+			modelInitData.m_expandShaderResoruceView[areaNo] = &g_renderingEngine->GetShadowMap(areaNo);
+		}
 		// 初期化データをもとにモデルを初期化。
 		m_model.Init(modelInitData);
 	}

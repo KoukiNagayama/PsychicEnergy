@@ -8,6 +8,11 @@ namespace nsK2EngineLow
 {
 	class RenderingEngine : public Noncopyable
 	{
+		struct SLightingCB
+		{
+			Light m_light;						// ライト
+			Matrix m_lvp[NUM_SHADOW_MAP];		// ライトビュープロジェクション行列
+		};
 	public:
 		RenderingEngine() {};
 		~RenderingEngine() {};
@@ -55,9 +60,13 @@ namespace nsK2EngineLow
 			m_shadowMapModels[areaNo].push_back(&model);
 		}
 
-		 std::vector<Model*>& GetShadowMapModel(int areaNo)  
+		const std::vector<Model*>& GetShadowMapModel(int areaNo) const 
 		{
 			return m_shadowMapModels[areaNo];
+		}
+		Texture& GetShadowMap(int areaNo)
+		{
+			return m_shadowMapRender.GetShadowMap(areaNo);
 		}
 		/// <summary>
 		/// シーンライトを取得。
@@ -66,6 +75,14 @@ namespace nsK2EngineLow
 		SceneLight& GetSceneLight()
 		{
 			return m_sceneLight;
+		}
+		/// <summary>
+		/// モデル描画時に使用する定数バッファ用構造体を取得
+		/// </summary>
+		/// <returns></returns>
+		SLightingCB& GetLightingCB()
+		{
+			return m_sLightingCb;
 		}
 		/// <summary>
 		/// 深度値記録用のレンダリングターゲットを取得
@@ -124,6 +141,7 @@ namespace nsK2EngineLow
 		PostEffect				m_postEffect;							// ポストエフェクト
 		SceneLight				m_sceneLight;
 		ShadowMapRender			m_shadowMapRender;
+		SLightingCB				m_sLightingCb;
 	};
 
 	extern RenderingEngine* g_renderingEngine;

@@ -1,12 +1,9 @@
-/*!
- * @brief ディズニーベースの物理ベースシェーダ
- */
-
 ///////////////////////////////////////////////////
 // 定数
 ///////////////////////////////////////////////////
 static const int NUM_DIRECTIONAL_LIGHT = 4; // ディレクションライトの本数
 static const float PI = 3.1415926f; // π
+static const int NUM_SHADOW_MAP = 3;
 
 ///////////////////////////////////////////////////
 // 構造体
@@ -33,6 +30,7 @@ cbuffer LightCb : register(b1)
     float3 eyePos; // カメラの視点
     float specPow; // スペキュラの絞り
     float3 ambientLight; // 環境光
+    float4x4 lvp[NUM_SHADOW_MAP];
 };
 
 //スキニング用の頂点データをひとまとめ。
@@ -62,19 +60,21 @@ struct SPSIn
     float3 biNormal : BINORMAL;
     float2 uv : TEXCOORD0; // uv座標
     float3 worldPos : TEXCOORD1; // ワールド空間でのピクセルの座標
+    float4 posInLVP[3] : TEXCOORD2;
 };
 
 ///////////////////////////////////////////////////
 // グローバル変数
 ///////////////////////////////////////////////////
-
-// 各種マップにアクセスするための変数を追加
 Texture2D<float4> g_albedo : register(t0); // アルベドマップ
 Texture2D<float4> g_normalMap : register(t1); // 法線マップ
 Texture2D<float4> g_metallicSmoothMap : register(t2); // メタリックスムースマップ。rにメタリック、aにスムース
 StructuredBuffer<float4x4> g_boneMatrix : register(t3); //ボーン行列。
-// サンプラーステート
-sampler g_sampler : register(s0);
+sampler g_sampler : register(s0); // サンプラーステート
+Texture2D<float4> g_shadowMap_0 : register(t10);
+Texture2D<float4> g_shadowMap_1 : register(t11);
+Texture2D<float4> g_shadowMap_2 : register(t12);
+
 
 ///////////////////////////////////////////////////
 // 関数
@@ -231,6 +231,7 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 
     psIn.pos = mul(m, vsIn.pos);
     psIn.worldPos = psIn.pos;
+    float4 worldPos = psIn.pos;
     psIn.pos = mul(mView, psIn.pos);
     psIn.pos = mul(mProj, psIn.pos);
     psIn.normal = normalize(mul(m, vsIn.normal));
@@ -238,6 +239,9 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
     psIn.biNormal = normalize(mul(m, vsIn.biNormal));
     psIn.uv = vsIn.uv;
 
+    psIn.posInLVP[0] = mul(lvp[0], worldPos);
+    psIn.posInLVP[1] = mul(lvp[1], worldPos);
+    psIn.posInLVP[2] = mul(lvp[2], worldPos);
     return psIn;
 }
 
@@ -313,7 +317,41 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     // 環境光による底上げ
     lig += ambientLight * albedoColor;
 
+    Texture2D<float4> shadowMapArray[3];
+    shadowMapArray[0] = g_shadowMap_0;
+    shadowMapArray[1] = g_shadowMap_1;
+    shadowMapArray[2] = g_shadowMap_2;
+    
     float4 finalColor = 1.0f;
     finalColor.xyz = lig;
+    for (int cascadeIndex = 0; cascadeIndex < 3; cascadeIndex++)
+    {
+        // ライトビュースクリーン空間でのZ値を計算する
+        float zInLVP = psIn.posInLVP[cascadeIndex].z / psIn.posInLVP[cascadeIndex].w;
+        if (zInLVP >= 0.0f && zInLVP <= 1.0f)
+        {
+            // Zの値を見て、このピクセルがこのシャドウマップに含まれているか判定
+            float2 shadowMapUV = psIn.posInLVP[cascadeIndex].xy / psIn.posInLVP[cascadeIndex].w;
+            shadowMapUV *= float2(0.5f, -0.5f);
+            shadowMapUV += 0.5f;
+
+            // シャドウマップUVが範囲内か判定
+            if (shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f
+                && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
+            {
+                // シャドウマップから値をサンプリング
+                float2 shadowValue = shadowMapArray[cascadeIndex].Sample(g_sampler, shadowMapUV).xy;
+
+                // まずこのピクセルが遮蔽されているか調べる
+                if (zInLVP >= shadowValue.r)
+                {
+                    finalColor.xyz *= 0.5f;
+
+                    // 影を落とせたので終了
+                    break;
+                }
+            }
+        }
+    }
     return finalColor;
 }

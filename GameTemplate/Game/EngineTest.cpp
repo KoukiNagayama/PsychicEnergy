@@ -47,8 +47,8 @@ void EngineTest::Update()
 
 void EngineTest::Move()
 {
-	m_modelPos.x -= g_pad[0]->GetLStickXF();
-	m_modelPos.z -= g_pad[0]->GetLStickYF();
+	m_modelPos.x -= g_pad[0]->GetLStickXF() * 5.0f;
+	m_modelPos.z -= g_pad[0]->GetLStickYF() * 5.0f;
 
 	m_testModel.SetPosition(m_modelPos);
 }
@@ -62,7 +62,7 @@ void EngineTest::Rotation()
 void EngineTest::CamUpdate()
 {
 	if (g_pad[0]->IsTrigger(enButtonA)) {
-		g_camera3D->SetPosition({ 0.0f, 70.0f, -200.0f });
+		g_camera3D->SetPosition({ 500.0f, 500.0f, -500.0f });
 	}
 	else if (g_pad[0]->IsTrigger(enButtonB)) {
 		g_camera3D->SetPosition({ 0.0f,70.0f,200.0f });

@@ -7,15 +7,17 @@ namespace nsK2EngineLow {
         float cascadeAreaRateTbl[NUM_SHADOW_MAP],
         Camera& lightCamera
     )
-    {
-        float cascadeAreaTbl[NUM_SHADOW_MAP] = {
-            500,
-            2000,
-            g_camera3D->GetFar(),
-        };
+    {   
         const auto& lvpMatrix = lightCamera.GetViewProjectionMatrix();
+        float maxFar = g_camera3D->GetFar() * cascadeAreaRateTbl[NUM_SHADOW_MAP -1];
+        float cascadeAreaTbl[NUM_SHADOW_MAP] = {
+            maxFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_NEAR],      // 近影を映す最大深度値
+            maxFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_MIDDLE],    // 中影を映す最大深度値
+            maxFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_FAR]        // 遠影を映す最大深度値
+        };
+        
 
-        // step-6 カメラの前方向、右方向、上方向を求める
+        // カメラの前方向、右方向、上方向を求める
         const auto& cameraForward = g_camera3D->GetForward();
         const auto& cameraRight = g_camera3D->GetRight();
 
@@ -26,7 +28,7 @@ namespace nsK2EngineLow {
         float nearDepth = g_camera3D->GetNear();
         for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++)
         {
-            // step-7 エリアを内包する視錐台の8頂点を求める
+            // エリアを内包する視錐台の8頂点を求める
             // エリアの近平面の中心からの上面、下面までの距離を求める
             float nearY = tanf(g_camera3D->GetViewAngle() * 0.5f) * nearDepth;
 
@@ -69,9 +71,9 @@ namespace nsK2EngineLow {
                 vMax.Max(v);
                 vMin.Min(v);
             }
-            // step-9 クロップ行列を求める
+            // クロップ行列を求める
             float xScale = 2.0f / (vMax.x - vMin.x);
-            float yScale = 2.0f / (vMin.y - vMin.y);
+            float yScale = 2.0f / (vMax.y - vMin.y);
             float xOffset = (vMax.x + vMin.x) * -0.5f * xScale;
             float yOffset = (vMax.y + vMin.y) * -0.5f * yScale;
             Matrix clopMatrix;
@@ -80,7 +82,7 @@ namespace nsK2EngineLow {
             clopMatrix.m[3][0] = xOffset;
             clopMatrix.m[3][1] = yOffset;
 
-            // step-10 ライトビュープロジェクション行列にクロップ行列を乗算する
+            // ライトビュープロジェクション行列にクロップ行列を乗算する
             m_lvpcMatrix[areaNo] = lvpMatrix * clopMatrix;
 
             // 次のエリアの近平面までの距離を代入する

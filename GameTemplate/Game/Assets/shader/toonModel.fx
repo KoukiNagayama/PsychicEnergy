@@ -3,7 +3,7 @@
  */
 
 static const int NUM_DIRECTIONAL_LIGHT = 4; // ディレクションライトの本数
-
+static const int NUM_SHADOW_MAP = 3;
 
 ////////////////////////////////////////////////
 // 構造体
@@ -47,12 +47,14 @@ cbuffer ModelCb : register(b0)
     float4x4 mProj;
 };
 // ライト用の定数バッファー
-cbuffer LightCb : register(b1)
+cbuffer LightingCb : register(b1)
 {
     DirectionalLight directionalLight[NUM_DIRECTIONAL_LIGHT];
     float3 eyePos; // カメラの視点
     float specPow; // スペキュラの絞り
     float3 ambientLight; // 環境光
+    float pad;
+    float4x4 lvp[NUM_SHADOW_MAP];
 };
 
 ////////////////////////////////////////////////

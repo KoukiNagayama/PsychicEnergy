@@ -23,6 +23,7 @@ namespace nsK2EngineLow
 		Vector3 eyePos;							// カメラの位置
 		float specPow;							// スペキュラの絞り
 		Vector3 ambientLight;					// 環境光
+		float pad;
 	};
 
 	/// <summary>

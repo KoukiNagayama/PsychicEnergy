@@ -42,14 +42,17 @@ namespace nsK2EngineLow
 			depthFormat,
 			clearColor
 		);
+		
 
 		// ライトまでのベクトル
+		Vector3 camPos = g_camera3D->GetPosition();
 		Vector3 toLigDir = { 1, 2, 1 };
 		toLigDir.Normalize();
 		toLigDir *= 5000.0f;    // ライトまでの距離
+		camPos += toLigDir;
 
 		// カメラの位置を設定。これはライトの位置
-		m_lightCamera.SetPosition(toLigDir);
+		m_lightCamera.SetPosition(camPos);
 
 		// カメラの注視点を設定。これがライトが照らしている場所
 		m_lightCamera.SetTarget({ 0, 0, 0 });
@@ -73,8 +76,16 @@ namespace nsK2EngineLow
 		Vector3& lightDirection
 	)
 	{
+		Vector3 lightPos = g_camera3D->GetPosition();
+		m_lightCamera.SetTarget(g_camera3D->GetPosition());
+		// ライトの高さは50m決め打ち。
+		float lightMaxHeight = 5000.0f;
+		lightPos += (lightDirection) * (lightMaxHeight / lightDirection.y);
+		m_lightCamera.SetPosition(lightPos);
+		m_lightCamera.Update();
+
 		if (lightDirection.LengthSq() < 0.001f){
-			//return;
+			return;
 		}
 
 		// シャドウマップに描画するモデルの配列
