@@ -73,11 +73,18 @@ namespace nsK2EngineLow
 		{
 			m_sLightingCb.m_lvp[areaNo] = m_shadowMapRender.GetLVPMatrix(areaNo);
 		}
+
 		// シャドウマップへモデルを描画
 		RenderToShadowMap(rc);
 
 		// ポストエフェクト的な輪郭線描画に使用する深度を抽出
 		DepthForOutLine(rc);
+
+		// ファークリップを取得。
+		for (int i = 0; i < NUM_SHADOW_MAP; i++) {
+			m_sLightingCb.m_farList[i] = m_shadowMapRender.GetFarClip(i);
+			//m_sLightingCb.m_farList[i] = 0.5f;
+		}
 
 		// フォワードレンダリング
 		ForwardRendering(rc);

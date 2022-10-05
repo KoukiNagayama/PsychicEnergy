@@ -234,6 +234,12 @@
     <ClCompile Include="ToonMap.cpp" />
     <ClCompile Include="ShadowMapRender.cpp" />
     <ClCompile Include="CascadeShadowMapMatrix.cpp" />
+    <ClCompile Include="LevelRender.cpp" />
+    <ClCompile Include="MapChipRender.cpp" />
+    <ClCompile Include="SpringCamera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraCollisionSolver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -518,6 +524,12 @@
     <ClInclude Include="ShadowMapRender.h" />
     <ClInclude Include="CascadeShadowMapMatrix.h" />
     <ClInclude Include="MyRenderer.h" />
+    <ClInclude Include="LevelRender.h" />
+    <ClInclude Include="MapChipRender.h" />
+    <ClInclude Include="SpringCamera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraCollisionSolver.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
@@ -576,6 +588,9 @@
     </Filter>
     <Filter Include="AI\PathFinding">
       <UniqueIdentifier>{72d94fe6-e599-4523-8e54-81df808c96fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{b1f23b47-137d-419c-a06c-31b8f7dc1bff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

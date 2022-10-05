@@ -81,6 +81,10 @@ using namespace Microsoft::WRL;
 //#include "Fxaa.h"
 //#include "OutLine.h"
 #include "RenderingEngine.h"
+//#include "CameraCollisionSolver.h"
+//#include "SpringCamera.h"
+//#include "LevelRender.h"
+//#include "MapChipRender.h"
 
 const UINT FRAME_BUFFER_W = 1600;	// フレームバッファの幅。
 const UINT FRAME_BUFFER_H = 900;	// フレームバッファの高さ。

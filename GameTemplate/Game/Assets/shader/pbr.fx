@@ -31,6 +31,10 @@ cbuffer LightCb : register(b1)
     float specPow; // スペキュラの絞り
     float3 ambientLight; // 環境光
     float4x4 lvp[NUM_SHADOW_MAP];
+    //float farClip[NUM_SHADOW_MAP];
+    float farClip1;
+    float farClip2;
+    float farClip3;
 };
 
 //スキニング用の頂点データをひとまとめ。
@@ -61,6 +65,7 @@ struct SPSIn
     float2 uv : TEXCOORD0; // uv座標
     float3 worldPos : TEXCOORD1; // ワールド空間でのピクセルの座標
     float4 posInLVP[3] : TEXCOORD2;
+    float4 posInCamera : TEXCOORD5;
 };
 
 ///////////////////////////////////////////////////
@@ -233,6 +238,7 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
     psIn.worldPos = psIn.pos;
     float4 worldPos = psIn.pos;
     psIn.pos = mul(mView, psIn.pos);
+    psIn.posInCamera = psIn.pos;
     psIn.pos = mul(mProj, psIn.pos);
     psIn.normal = normalize(mul(m, vsIn.normal));
     psIn.tangent = normalize(mul(m, vsIn.tangent));
@@ -324,34 +330,45 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     
     float4 finalColor = 1.0f;
     finalColor.xyz = lig;
+    float farClip[3];
+    farClip[0] = farClip1;
+    farClip[1] = farClip2;
+    farClip[2] = farClip3;
     for (int cascadeIndex = 0; cascadeIndex < 3; cascadeIndex++)
     {
-        // ライトビュースクリーン空間でのZ値を計算する
-        float zInLVP = psIn.posInLVP[cascadeIndex].z / psIn.posInLVP[cascadeIndex].w;
-        if (zInLVP >= 0.0f && zInLVP <= 1.0f)
+        
+        if (farClip[cascadeIndex] > psIn.posInCamera.z)
         {
-            // Zの値を見て、このピクセルがこのシャドウマップに含まれているか判定
-            float2 shadowMapUV = psIn.posInLVP[cascadeIndex].xy / psIn.posInLVP[cascadeIndex].w;
-            shadowMapUV *= float2(0.5f, -0.5f);
-            shadowMapUV += 0.5f;
-
-            // シャドウマップUVが範囲内か判定
-            if (shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f
-                && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
+            // ライトビュースクリーン空間でのZ値を計算する
+            float zInLVP = psIn.posInLVP[cascadeIndex].z / psIn.posInLVP[cascadeIndex].w;
+            if (zInLVP >= 0.0f && zInLVP <= 1.0f)
             {
-                // シャドウマップから値をサンプリング
-                float2 shadowValue = shadowMapArray[cascadeIndex].Sample(g_sampler, shadowMapUV).xy;
+                // Zの値を見て、このピクセルがこのシャドウマップに含まれているか判定
+                float2 shadowMapUV = psIn.posInLVP[cascadeIndex].xy / psIn.posInLVP[cascadeIndex].w;
+                shadowMapUV *= float2(0.5f, -0.5f);
+                shadowMapUV += 0.5f;
 
-                // まずこのピクセルが遮蔽されているか調べる
-                if (zInLVP >= shadowValue.r)
+                // シャドウマップUVが範囲内か判定
+                if (shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f
+                    && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
                 {
-                    finalColor.xyz *= 0.5f;
+                    // シャドウマップから値をサンプリング
+                    float2 shadowValue = shadowMapArray[cascadeIndex].Sample(g_sampler, shadowMapUV).xy;
 
-                    // 影を落とせたので終了
+                    // まずこのピクセルが遮蔽されているか調べる
+                    if (zInLVP >= shadowValue.r + 0.002f)
+                    {
+                        finalColor.xyz *= 0.5f;
+
+                        // 影を落とせたので終了
+                        //break;
+                    }
+                    
                     break;
                 }
             }
         }
     }
+    
     return finalColor;
 }

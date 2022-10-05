@@ -55,6 +55,7 @@ cbuffer LightingCb : register(b1)
     float3 ambientLight; // ŠÂ‹«Œõ
     float pad;
     float4x4 lvp[NUM_SHADOW_MAP];
+    float farClip[NUM_SHADOW_MAP];
 };
 
 ////////////////////////////////////////////////

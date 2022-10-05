@@ -85,6 +85,8 @@ namespace nsK2EngineLow {
             // ライトビュープロジェクション行列にクロップ行列を乗算する
             m_lvpcMatrix[areaNo] = lvpMatrix * clopMatrix;
 
+            m_far[areaNo] = cascadeAreaTbl[areaNo];
+
             // 次のエリアの近平面までの距離を代入する
             nearDepth = cascadeAreaTbl[areaNo];
         }

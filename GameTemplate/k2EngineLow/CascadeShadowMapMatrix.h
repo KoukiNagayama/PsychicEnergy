@@ -24,6 +24,11 @@ namespace nsK2EngineLow
         {
             return m_lvpcMatrix[shadowMapNo];
         }
+
+        const float& GetFarClip(int shadowMapNo) const
+        {
+            return m_far[shadowMapNo];
+        }
     private:
         Matrix      m_lvpcMatrix[NUM_SHADOW_MAP];	//ライトビュークロップ行列
         float       m_near[NUM_SHADOW_MAP];

@@ -12,6 +12,7 @@ namespace nsK2EngineLow
 		{
 			Light m_light;						// ライト
 			Matrix m_lvp[NUM_SHADOW_MAP];		// ライトビュープロジェクション行列
+			float m_farList[NUM_SHADOW_MAP];	
 		};
 	public:
 		RenderingEngine() {};

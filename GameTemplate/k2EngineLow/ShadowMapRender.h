@@ -14,6 +14,10 @@ namespace nsK2EngineLow
             int ligNo,
             Vector3& lightDirection
         );
+        const float& GetFarClip(int areaNo) const
+        {
+            return m_cascadeShadowMapMatrix.GetFarClip(areaNo);
+        }
         /// <summary>
         /// シャドウマップを取得
         /// </summary>

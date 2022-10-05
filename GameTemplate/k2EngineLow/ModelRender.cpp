@@ -196,25 +196,7 @@ namespace nsK2EngineLow
 		EnModelUpAxis enModelUpAxis
 	)
 	{
-		//// モデルの初期化データ。
-		//ModelInitData modelInitData;
-		//// モデルのtkmファイルパスを指定する。
-		//modelInitData.m_tkmFilePath = filePath;
-		//// シェーダーのfxファイルパスを指定する。
-		//modelInitData.m_fxFilePath = "Assets/shader/drawShadowMap.fx";
-		//// カラーバッファのフォーマットを指定する。
-		//modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
-		//// エントリーポイントを指定する。
-		//if (m_animationClips != nullptr) {
-		//	//スケルトンを指定する。
-		//	modelInitData.m_skeleton = &m_skeleton;
-		//	//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
-		//	modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
-		//}
-		//else {
-		//	//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
-		//	modelInitData.m_vsEntryPointFunc = "VSMain";
-		//}
+		
 		//// 初期化データをもとにモデルを初期化する。
 		//m_shadowMapModel.Init(modelInitData);
 		for (int i = 0; i < NUM_SHADOW_MAP; i++) {
