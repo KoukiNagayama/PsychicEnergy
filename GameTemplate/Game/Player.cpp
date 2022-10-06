@@ -17,6 +17,8 @@ bool Player::Start()
 		true
 	);
 
+	m_currentModelUpAxis = Vector3::AxisY;
+
 	m_model.SetTRS(m_position, m_rotation, m_scale);
 	return true;
 }
@@ -24,6 +26,8 @@ bool Player::Start()
 void Player::Update()
 {
 	Move();
+
+	TestRotation();
 
 	m_model.Update();
 }
@@ -34,6 +38,17 @@ void Player::Move()
 	m_position.z -= g_pad[0]->GetLStickYF() * 5.0f;
 
 	m_model.SetPosition(m_position);
+}
+
+void Player::TestRotation()
+{
+	if (g_pad[0]->IsTrigger(enButtonA)) {
+		m_rotation.AddRotationDegX(50.0f);
+		m_model.SetRotation(m_rotation);
+
+		m_rotation.Apply(m_currentModelUpAxis);
+		m_currentModelUpAxis.Normalize();
+	}
 }
 
 void Player::Render(RenderContext& rc)

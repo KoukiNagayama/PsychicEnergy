@@ -24,9 +24,14 @@ public:
 	{
 		return m_position;
 	}
+	const Vector3& GetCurrentModelUpAxis() const
+	{
+		return m_currentModelUpAxis;
+	}
 private:
 	void Init();
 	void Move();
+	void TestRotation();
 private:
 	ModelRender m_model;
 	Vector3 m_position = Vector3::Zero;
@@ -38,5 +43,6 @@ private:
 		enAnimationClip_Num
 	};
 	AnimationClip	m_animationClips[enAnimationClip_Num];
+	Vector3 m_currentModelUpAxis;
 };
 

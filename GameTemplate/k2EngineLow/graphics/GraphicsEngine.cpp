@@ -336,7 +336,7 @@ namespace nsK2EngineLow {
 
 		//カメラを更新する。
 		m_camera2D.Update();
-		m_camera3D.Update();
+		//m_camera3D.Update();
 
 		//コマンドアロケータををリセット。
 		m_commandAllocator[m_frameIndex]->Reset();

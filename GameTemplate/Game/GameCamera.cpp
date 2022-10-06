@@ -33,23 +33,61 @@ void GameCamera::Init()
 		TO_CAMERA_POS_Z_FROM_TARGET
 	);
 
-	// 近平面と遠平面までの距離を設定。
-	g_camera3D->SetFar(FAR_CLIP);
-	g_camera3D->SetNear(NEAR_CLIP);
-
-	// ばねカメラを初期化。
+	//ばねカメラを初期化。
 	m_springCamera.Init(
 		*g_camera3D,
 		CAMERA_MAX_MOVE_SPEED,
 		true,
 		CAMERA_COLLISION_RADIUS
 	);
+
+	// 近平面と遠平面までの距離を設定。
+	m_springCamera.SetFar(FAR_CLIP);
+	m_springCamera.SetNear(NEAR_CLIP);
 }
 
 void GameCamera::Update()
 {
+	//Vector3 target = m_player->GetPosition();
+	//target.y += 7.0f;
+
+	//Vector3 toCameraPosOld = m_toCameraPos;
+
+	//float x = g_pad[0]->GetRStickXF();
+	//float y = g_pad[0]->GetRStickYF();
+
+	//Quaternion qRot;
+	//qRot.SetRotationDeg(Vector3::AxisY, 2.5f * x);
+	//qRot.Apply(m_toCameraPos);
+
+	//Vector3 axisX;
+	//axisX.Cross(Vector3::AxisY, m_toCameraPos);
+	//axisX.Normalize();
+	//qRot.SetRotationDeg(axisX, 1.3f * y);
+	//qRot.Apply(m_toCameraPos);
+
+	//Vector3 toPosDir = m_toCameraPos;
+	//toPosDir.Normalize();
+	//if (toPosDir.y < -2.0f) {
+	//	m_toCameraPos = toCameraPosOld;
+	//}
+	//else if (toPosDir.y > 0.9f) {
+	//	m_toCameraPos = toCameraPosOld;
+	//}
+
+	//Vector3 position = target + m_toCameraPos;
+
+	//m_springCamera.SetPosition(position);
+	//m_springCamera.SetTarget(target);
+	////g_camera3D->SetPosition(position);
+	////g_camera3D->SetTarget(target);
+	////g_camera3D->Update();
+	//m_springCamera.Update();
+
+	// 現在の上方向
+	Vector3 currentModelUpAxis = m_player->GetCurrentModelUpAxis();
+
 	Vector3 target = m_player->GetPosition();
-	target.y += 7.0f;
 
 	Vector3 toCameraPosOld = m_toCameraPos;
 
@@ -57,21 +95,26 @@ void GameCamera::Update()
 	float y = g_pad[0]->GetRStickYF();
 
 	Quaternion qRot;
-	qRot.SetRotationDeg(Vector3::AxisY, 2.5f * x);
+	qRot.SetRotationDeg(currentModelUpAxis, 2.5f * x);
 	qRot.Apply(m_toCameraPos);
 
 	Vector3 axisX;
-	axisX.Cross(Vector3::AxisY, m_toCameraPos);
+	axisX.Cross(currentModelUpAxis, m_toCameraPos);
 	axisX.Normalize();
 	qRot.SetRotationDeg(axisX, 1.3f * y);
 	qRot.Apply(m_toCameraPos);
 
 	Vector3 toPosDir = m_toCameraPos;
 	toPosDir.Normalize();
-	if (toPosDir.y < -2.0f) {
+
+	toPosDir.x = toPosDir.x - currentModelUpAxis.x;
+	toPosDir.y = toPosDir.y - currentModelUpAxis.y;
+	toPosDir.z = toPosDir.z - currentModelUpAxis.z;
+
+	if (toPosDir.x < -0.9f || toPosDir.y < -0.9f || toPosDir.z < -0.9f) {
 		m_toCameraPos = toCameraPosOld;
 	}
-	else if (toPosDir.y > 0.9f) {
+	else if (toPosDir.x > 0.9f || toPosDir.y > 0.9f || toPosDir.z > 0.9f) {
 		m_toCameraPos = toCameraPosOld;
 	}
 
@@ -79,6 +122,5 @@ void GameCamera::Update()
 
 	m_springCamera.SetPosition(position);
 	m_springCamera.SetTarget(target);
-
 	m_springCamera.Update();
 }
