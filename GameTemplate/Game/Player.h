@@ -28,6 +28,14 @@ public:
 	{
 		return m_currentModelUpAxis;
 	}
+	const Quaternion& GetRotation() const
+	{
+		return m_rotation;
+	}
+	const bool& IsPlayerTouchObject() const
+	{
+		return m_isTouchObject;
+	}
 private:
 	void Init();
 	void Move();
@@ -44,5 +52,6 @@ private:
 	};
 	AnimationClip	m_animationClips[enAnimationClip_Num];
 	Vector3 m_currentModelUpAxis;
+	bool	m_isTouchObject = true;
 };
 

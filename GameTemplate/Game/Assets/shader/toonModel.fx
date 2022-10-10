@@ -126,8 +126,9 @@ SPSIn VSSkinMain(SVSIn vsIn)
 {
     return VSMainCore(vsIn, true);
 }
+
 /// <summary>
-/// ピクセルシェーダーのエントリー関数。
+/// ピクセルシェーダー。
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
@@ -138,6 +139,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     float p = dot(psIn.normal * -1.0f, directionalLight[0].direction.xyz);
     p = p * 0.5f + 0.5f;
     p = p * p;
+
 
     //計算結果よりトゥーンシェーダー用のテクスチャから色をフェッチする
     float4 Col = g_toonTexture.Sample(g_sampler, float2(p, 0.0f));

@@ -216,7 +216,7 @@ namespace nsK2EngineLow {
 		float		m_targetDampingRate = 1.0f;				//減衰率。値が大きいほどカメラが遅れ付いてくる。
 		float		m_dampingRate = 1.0f;					//減衰率。
 		float		m_dampingRateVel = 0.0f;
-		bool		m_isEnableCollisionSolver = false;		//コリジョン処理が有効？
+		bool		m_isEnableCollisionSolver = true;		//コリジョン処理が有効？
 		bool		m_isRefresh = true;						//リフレッシュが必要？
 		CameraCollisionSolver m_cameraCollisionSolver;
 	};

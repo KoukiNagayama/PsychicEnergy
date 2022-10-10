@@ -17,7 +17,7 @@ namespace nsK2EngineLow
 			return m_toonMap;
 		}
 	private:
-		Texture m_toonMap;		// トゥーンマップ
+		Texture				m_toonMap;		// トゥーンマップ
 	};
 }
 

@@ -7,6 +7,5 @@ namespace nsK2EngineLow
 	{
 		// DDSファイルからテクスチャを初期化。
 		m_toonMap.InitFromDDSFile(L"Assets/shader/toonMap.DDS");
-
 	}
 }

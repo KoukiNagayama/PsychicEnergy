@@ -37,9 +37,12 @@ void GameCamera::Init()
 	m_springCamera.Init(
 		*g_camera3D,
 		CAMERA_MAX_MOVE_SPEED,
-		true,
+		false,
 		CAMERA_COLLISION_RADIUS
 	);
+
+	// ばねカメラのばねの減衰率を設定。
+	m_springCamera.SetDampingRate(1.0f);
 
 	// 近平面と遠平面までの距離を設定。
 	m_springCamera.SetFar(FAR_CLIP);
@@ -48,79 +51,121 @@ void GameCamera::Init()
 
 void GameCamera::Update()
 {
-	//Vector3 target = m_player->GetPosition();
-	//target.y += 7.0f;
+	bool isOnGround = m_player->IsPlayerTouchObject();
 
-	//Vector3 toCameraPosOld = m_toCameraPos;
+	if (isOnGround) {
+		UpdateTouchingObject();
+	}
+	else {
+		UpdateOnAirspace();
+	}
+}
 
-	//float x = g_pad[0]->GetRStickXF();
-	//float y = g_pad[0]->GetRStickYF();
-
-	//Quaternion qRot;
-	//qRot.SetRotationDeg(Vector3::AxisY, 2.5f * x);
-	//qRot.Apply(m_toCameraPos);
-
-	//Vector3 axisX;
-	//axisX.Cross(Vector3::AxisY, m_toCameraPos);
-	//axisX.Normalize();
-	//qRot.SetRotationDeg(axisX, 1.3f * y);
-	//qRot.Apply(m_toCameraPos);
-
-	//Vector3 toPosDir = m_toCameraPos;
-	//toPosDir.Normalize();
-	//if (toPosDir.y < -2.0f) {
-	//	m_toCameraPos = toCameraPosOld;
-	//}
-	//else if (toPosDir.y > 0.9f) {
-	//	m_toCameraPos = toCameraPosOld;
-	//}
-
-	//Vector3 position = target + m_toCameraPos;
-
-	//m_springCamera.SetPosition(position);
-	//m_springCamera.SetTarget(target);
-	////g_camera3D->SetPosition(position);
-	////g_camera3D->SetTarget(target);
-	////g_camera3D->Update();
-	//m_springCamera.Update();
-
+void GameCamera::UpdateTouchingObject()
+{
 	// 現在の上方向
 	Vector3 currentModelUpAxis = m_player->GetCurrentModelUpAxis();
+	// 回転
+	Quaternion rotation = m_player->GetRotation();
+	// カメラの上方向を更新。
+	g_camera3D->SetUp(currentModelUpAxis);
+
+	// 注視点
+	Vector3 target = m_player->GetPosition();
+	target.y += 7.0f;
+
+	// 更新前の注視点から視点へのベクトル
+	Vector3 toCameraPosOld = m_toCameraPos;
+
+	// 右スティックのX軸の入力量
+	float x = g_pad[0]->GetRStickXF();
+	// 右スティックのY軸の入力量
+	float y = g_pad[0]->GetRStickYF();
+
+	// 入力量から回転量を計算
+	m_degreeX += x * 2.5f;
+	m_degreeY += y * 1.3f;
+
+	// 相対的なカメラとプレイヤーの位置関係がずれないように補正する
+	m_toCameraPos.Set(
+		TO_CAMERA_POS_X_FROM_TARGET,
+		TO_CAMERA_POS_Y_FROM_TARGET,
+		TO_CAMERA_POS_Z_FROM_TARGET
+	);
+	rotation.Apply(m_toCameraPos);
+
+	// Y軸回りの回転
+	Quaternion qRot;
+	qRot.SetRotationDeg(currentModelUpAxis, m_degreeX);
+	qRot.Apply(m_toCameraPos);
+
+	// X軸回りの回転
+	Vector3 axisX;
+	axisX.Cross(currentModelUpAxis, m_toCameraPos);
+	axisX.Normalize();
+	qRot.SetRotationDeg(axisX, m_degreeY);
+	qRot.Apply(m_toCameraPos);
+
+	// カメラの回転範囲の上限値を超えないように補正する
+	if (m_degreeY < -50.0f) {
+		m_degreeY += 1.0f;
+		m_toCameraPos = toCameraPosOld;
+	}
+	else if (m_degreeY > 60.0f) {
+		m_degreeY -= 1.0f;
+		m_toCameraPos = toCameraPosOld;
+	}
+
+	// 最終的なカメラの座標を指定する。
+	Vector3 position = target + m_toCameraPos;
+
+	// カメラの情報を更新。
+	m_springCamera.SetPosition(position);
+	m_springCamera.SetTarget(target);
+	m_springCamera.Update();
+}
+
+void GameCamera::UpdateOnAirspace()
+{
+	// カメラの正面方向
+	Vector3 forward = g_camera3D->GetForward();
+	// カメラの右方向
+	Vector3 right = g_camera3D->GetRight();
+	// カメラの上方向
+	Vector3 cameraUpAxis;
+	cameraUpAxis.Cross(forward, right);
+	cameraUpAxis.Normalize();
+	g_camera3D->SetUp(cameraUpAxis);
 
 	Vector3 target = m_player->GetPosition();
+	target.y += 7.0f;
 
 	Vector3 toCameraPosOld = m_toCameraPos;
 
 	float x = g_pad[0]->GetRStickXF();
 	float y = g_pad[0]->GetRStickYF();
 
+	// 入力量から回転量を計算
+	m_degreeX = x * 2.5f;
+	m_degreeY = y * 1.3f;
+
 	Quaternion qRot;
-	qRot.SetRotationDeg(currentModelUpAxis, 2.5f * x);
+	qRot.SetRotationDeg(cameraUpAxis, m_degreeX);
 	qRot.Apply(m_toCameraPos);
 
 	Vector3 axisX;
-	axisX.Cross(currentModelUpAxis, m_toCameraPos);
+	axisX.Cross(cameraUpAxis, m_toCameraPos);
 	axisX.Normalize();
-	qRot.SetRotationDeg(axisX, 1.3f * y);
+	qRot.SetRotationDeg(axisX, m_degreeY);
 	qRot.Apply(m_toCameraPos);
 
 	Vector3 toPosDir = m_toCameraPos;
 	toPosDir.Normalize();
 
-	toPosDir.x = toPosDir.x - currentModelUpAxis.x;
-	toPosDir.y = toPosDir.y - currentModelUpAxis.y;
-	toPosDir.z = toPosDir.z - currentModelUpAxis.z;
-
-	if (toPosDir.x < -0.9f || toPosDir.y < -0.9f || toPosDir.z < -0.9f) {
-		m_toCameraPos = toCameraPosOld;
-	}
-	else if (toPosDir.x > 0.9f || toPosDir.y > 0.9f || toPosDir.z > 0.9f) {
-		m_toCameraPos = toCameraPosOld;
-	}
-
 	Vector3 position = target + m_toCameraPos;
 
 	m_springCamera.SetPosition(position);
 	m_springCamera.SetTarget(target);
+
 	m_springCamera.Update();
 }

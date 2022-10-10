@@ -8,7 +8,8 @@ namespace nsK2EngineLow {
 		float CalcSpringScalar(
 			float positionNow,
 			float positionTarget,
-			float& moveSpeed)
+			float& moveSpeed
+		)
 		{
 			float deltaTime = g_gameTime->GetFrameDeltaTime();
 
@@ -141,7 +142,7 @@ namespace nsK2EngineLow {
 		}
 		if (m_isRefresh) {
 			//リフレッシュが必要なら、カメラの座標を一気に目標座標にする。
-			//シーンの切り替わり時など、一気にカメラを変更する必要があるときに使用してください。
+			//シーンの切り替わり時など、一気にカメラを変更する必要があるときに使用する。
 			m_camera->SetTarget(m_target);
 			m_camera->SetPosition(m_position);
 			m_isRefresh = false;

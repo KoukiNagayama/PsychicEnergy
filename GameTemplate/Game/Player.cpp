@@ -29,6 +29,15 @@ void Player::Update()
 
 	TestRotation();
 
+	if (g_pad[0]->IsTrigger(enButtonB)) {
+		if (m_isTouchObject == true) {
+			m_isTouchObject = false;
+		}
+		else {
+			m_isTouchObject = true;
+		}
+	}
+
 	m_model.Update();
 }
 
@@ -42,10 +51,10 @@ void Player::Move()
 
 void Player::TestRotation()
 {
-	if (g_pad[0]->IsTrigger(enButtonA)) {
-		m_rotation.AddRotationDegX(50.0f);
+	if (g_pad[0]->IsPress(enButtonA)) {
+		m_rotation.AddRotationDegZ(5.0f);
 		m_model.SetRotation(m_rotation);
-
+		m_currentModelUpAxis = Vector3::AxisY;
 		m_rotation.Apply(m_currentModelUpAxis);
 		m_currentModelUpAxis.Normalize();
 	}

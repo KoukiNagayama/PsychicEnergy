@@ -77,7 +77,7 @@ void EngineTest::Update()
 {
 	//Move();
 	//Rotation();
-	CamUpdate();
+	//CamUpdate();
 
 	/*m_unityChan.PlayAnimation(enAnimationClip_Idle);
 
