@@ -107,7 +107,7 @@ namespace nsK2EngineLow {
 	}
 
 
-	void CharacterController::Init(float radius, float height, const Vector3& position)
+	void CharacterController::Init(float radius, float height, const Vector3& position, Vector3& rotation)
 	{
 		m_position = position;
 		//コリジョン作成。
@@ -123,13 +123,58 @@ namespace nsK2EngineLow {
 		btTransform& trans = m_rigidBody.GetBody()->getWorldTransform();
 		//剛体の位置を更新。
 		trans.setOrigin(btVector3(position.x, position.y + m_height * 0.5f + m_radius, position.z));
-		//@todo 未対応。trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
+		
+		m_rotation.x = Math::DegToRad(rotation.x);
+		m_rotation.y = Math::DegToRad(rotation.y);
+		m_rotation.z = Math::DegToRad(rotation.z);
+
+		trans.setRotation(btQuaternion(m_rotation.x, m_rotation.y, m_rotation.z));
+		//trans.setRotation(btQuaternion(0.0f, Math::DegToRad(90.0f), 0.0f));
+		//trans.setRotation(btQuaternion(0, 90, 0));
 		m_rigidBody.GetBody()->setUserIndex(enCollisionAttr_Character);
 		m_rigidBody.GetBody()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 
 		m_isInited = true;
 	}
-	const Vector3& CharacterController::Execute(Vector3& moveSpeed, float deltaTime)
+	//const Vector3& CharacterController::Execute(Vector3& moveSpeed, float deltaTime, Quaternion& rotation)
+	//{
+
+
+
+	//	Vector3 nextPosition = m_position;
+	//	//移動確定。
+	//	m_position = nextPosition;
+	//	btRigidBody* btBody = m_rigidBody.GetBody();
+	//	//剛体を動かす。
+	//	btBody->setActivationState(DISABLE_DEACTIVATION);
+	//	btTransform& trans = btBody->getWorldTransform();
+	//	
+	//	//剛体の位置を更新。
+	//	trans.setOrigin(btVector3(m_position.x, m_position.y + m_height * 0.5f + m_radius, m_position.z));
+	//	Quaternion rot;
+	//	rot.SetRotationDegZ(180.0f);
+	//	//trans.setRotation(btQuaternion(rot.x, rot.y, rot.z, rot.w));
+	//	trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
+	//	return m_position;
+	//}
+
+	const Vector3& CharacterController::Float(Vector3& moveSpeed, float deltaTime)
+	{
+		return m_position;
+	}
+	/*!
+	* @brief	死亡したことを通知。
+	*/
+	void CharacterController::RemoveRigidBoby()
+	{
+		PhysicsWorld::GetInstance()->RemoveRigidBody(m_rigidBody);
+	}
+}
+
+
+
+
+const Vector3& CharacterController::Execute(Vector3& moveSpeed, float deltaTime, Vector3& rotation)
 	{
 		if (moveSpeed.y > 0.0f) {
 			//吹っ飛び中にする。
@@ -288,15 +333,41 @@ namespace nsK2EngineLow {
 		btBody->setActivationState(DISABLE_DEACTIVATION);
 		btTransform& trans = btBody->getWorldTransform();
 		//剛体の位置を更新。
-		trans.setOrigin(btVector3(m_position.x, m_position.y + m_height * 0.5f + m_radius, m_position.z));
+		Vector3 a1 = Vector3::Up;
+		a1.Scale(m_height * 0.5f + m_radius);
+		auto a = m_position + a1;
+		trans.setOrigin(btVector3(m_position.x, m_position.y /*+ m_height * 0.5f + m_radius*/, m_position.z));
 		//@todo 未対応。 trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
+		
+		//m_rotation.x = rotation.x * (Math::PI / 180.0f);
+		//m_rotation.y = rotation.y * (Math::PI / 180.0f);
+		//m_rotation.z = rotation.z * (Math::PI / 180.0f);
+
+	/*	m_rotation.x = Math::DegToRad(rotation.x);
+		m_rotation.y = Math::DegToRad(rotation.y);
+		m_rotation.z = Math::DegToRad(rotation.z);*/
+
+		m_rotation.x = rotation.x;
+		m_rotation.y = rotation.y;
+		m_rotation.z = rotation.z;
+		
+		trans.setRotation(btQuaternion(m_rotation.x, m_rotation.y, m_rotation.z));
+		Vector3 up = Vector3::Up;
+		Quaternion qRot = {
+			trans.getRotation().getX(),
+			trans.getRotation().getY() ,
+			trans.getRotation().getZ() ,
+			trans.getRotation().getW()
+		};
+		qRot.Apply(up);
+		up.Normalize();
+		up.Scale(m_height * 0.5f + m_radius);
+		auto fPos = m_position + up;
+		auto rot = trans.getRotation();
+		trans.setOrigin(btVector3(fPos.x, fPos.y , fPos.z));
+
+		//trans.setRotation(btQuaternion(0.0f, Math::PI / 2.0f, 0.0f));
+		
 		return m_position;
 	}
-	/*!
-	* @brief	死亡したことを通知。
-	*/
-	void CharacterController::RemoveRigidBoby()
-	{
-		PhysicsWorld::GetInstance()->RemoveRigidBody(m_rigidBody);
-	}
-}
+

@@ -27,11 +27,15 @@ bool TestModel::Start()
 	);
 
 	m_model.SetTRS(m_pos, m_rot, m_sca);
+	m_model.Update();
 
 	m_physicsStaticObject.CreateFromModel(
 		m_model.GetModel(),
 		m_model.GetModel().GetWorldMatrix()
 	);
+
+	// デバッグ用　当たり判定描画
+	PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
 	return true;
 }

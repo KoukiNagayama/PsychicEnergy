@@ -2,6 +2,10 @@
 #include "SpringCamera.h"
 
 class Player;
+
+/// <summary>
+/// ゲームカメラクラス
+/// </summary>
 class GameCamera : public IGameObject
 {
 public:

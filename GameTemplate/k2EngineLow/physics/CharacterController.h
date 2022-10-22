@@ -30,14 +30,15 @@ namespace nsK2EngineLow {
 			*@param[in]	height		カプセルコライダーの高さ。
 			*@param[in]	position	初期位置。
 			*/
-		void Init(float radius, float height, const Vector3& position);
+		void Init(float radius, float height, const Vector3& position, Vector3& rotation);
 		/*!
 			* @brief	実行。
 			*@param[in, out]	moveSpeed		移動速度。
 			*@param[in]	deltaTime		経過時間。単位は秒。デフォルトでは、１フレームの経過時間が渡されています。
 			*@return 移動後のキャラクターの座標。
 			*/
-		const Vector3& Execute(Vector3& moveSpeed, float deltaTime);
+		const Vector3& Execute(Vector3& moveSpeed, float deltaTime, Vector3& rotation);
+		const Vector3& Float(Vector3& moveSpeed, float deltaTime);
 		/*!
 			* @brief	座標を取得。
 			*/
@@ -94,5 +95,7 @@ namespace nsK2EngineLow {
 		float				m_radius = 0.0f;				//!<カプセルコライダーの半径。
 		float				m_height = 0.0f;				//!<カプセルコライダーの高さ。
 		RigidBody			m_rigidBody;					//剛体。
+		bool				m_isFloating = true;
+		Vector3				m_rotation;
 	};
 }

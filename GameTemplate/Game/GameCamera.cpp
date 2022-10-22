@@ -9,8 +9,13 @@ namespace
 	const float TO_CAMERA_POS_Z_FROM_TARGET = 300.0f;		// カメラの注視点から視点へのベクトルのZ値
 	const float FAR_CLIP = 10000.0f;						// 遠平面までの距離
 	const float NEAR_CLIP = 2.0f;							// 近平面までの距離
-	const float CAMERA_MAX_MOVE_SPEED = 1000.0f;			// カメラの移動の最高速度
+	const float CAMERA_MAX_MOVE_SPEED = 10000.0f;			// カメラの移動の最高速度
 	const float CAMERA_COLLISION_RADIUS = 1.5f;				// カメラに使用するコリジョンの半径の値
+	const float CAMERA_UP_ROTATION_LIMIT = 70.0f;			// カメラの上回転の上限
+	const float CAMERA_DOWN_ROTATION_LIMIT = -55.0f;		// カメラの下回転の上限
+	const float COMPENSATION_OF_ROTATION_RANGE = 1.5f;		// カメラの回転範囲の補正
+	const float TARGET_Y = 40.0f;							// 注視点の高さを上げる値
+
 }
 
 
@@ -37,7 +42,7 @@ void GameCamera::Init()
 	m_springCamera.Init(
 		*g_camera3D,
 		CAMERA_MAX_MOVE_SPEED,
-		false,
+		true,
 		CAMERA_COLLISION_RADIUS
 	);
 
@@ -51,14 +56,21 @@ void GameCamera::Init()
 
 void GameCamera::Update()
 {
-	bool isOnGround = m_player->IsPlayerTouchObject();
+	// プレイヤーがオブジェクトに触れているか
+	bool isTouchObject = m_player->IsPlayerTouchObject();
 
-	if (isOnGround) {
+	// カメラ操作を切り替え
+	if (isTouchObject) {
 		UpdateTouchingObject();
 	}
 	else {
 		UpdateOnAirspace();
 	}
+
+
+	m_springCamera.SetPosition(m_position);
+	m_springCamera.SetTarget(m_target);
+	m_springCamera.Update();
 }
 
 void GameCamera::UpdateTouchingObject()
@@ -71,8 +83,10 @@ void GameCamera::UpdateTouchingObject()
 	g_camera3D->SetUp(currentModelUpAxis);
 
 	// 注視点
-	Vector3 target = m_player->GetPosition();
-	target.y += 7.0f;
+	m_target = m_player->GetPosition();
+
+	// 注視点を上げる　※要調整　壁に張り付いた際にズレる可能性
+	m_target.y += TARGET_Y;
 
 	// 更新前の注視点から視点へのベクトル
 	Vector3 toCameraPosOld = m_toCameraPos;
@@ -86,7 +100,7 @@ void GameCamera::UpdateTouchingObject()
 	m_degreeX += x * 2.5f;
 	m_degreeY += y * 1.3f;
 
-	// 相対的なカメラとプレイヤーの位置関係がずれないように補正する
+	// 相対的にカメラとプレイヤーの位置関係がずれないように補正する
 	m_toCameraPos.Set(
 		TO_CAMERA_POS_X_FROM_TARGET,
 		TO_CAMERA_POS_Y_FROM_TARGET,
@@ -94,12 +108,12 @@ void GameCamera::UpdateTouchingObject()
 	);
 	rotation.Apply(m_toCameraPos);
 
-	// Y軸回りの回転
+	// 上向きの軸回りの回転
 	Quaternion qRot;
 	qRot.SetRotationDeg(currentModelUpAxis, m_degreeX);
 	qRot.Apply(m_toCameraPos);
 
-	// X軸回りの回転
+	// 右向きの軸回りの回転
 	Vector3 axisX;
 	axisX.Cross(currentModelUpAxis, m_toCameraPos);
 	axisX.Normalize();
@@ -107,22 +121,17 @@ void GameCamera::UpdateTouchingObject()
 	qRot.Apply(m_toCameraPos);
 
 	// カメラの回転範囲の上限値を超えないように補正する
-	if (m_degreeY < -50.0f) {
-		m_degreeY += 1.0f;
+	if (m_degreeY < CAMERA_DOWN_ROTATION_LIMIT) {
+		m_degreeY += COMPENSATION_OF_ROTATION_RANGE;
 		m_toCameraPos = toCameraPosOld;
 	}
-	else if (m_degreeY > 60.0f) {
-		m_degreeY -= 1.0f;
+	else if (m_degreeY > CAMERA_UP_ROTATION_LIMIT) {
+		m_degreeY -= COMPENSATION_OF_ROTATION_RANGE;
 		m_toCameraPos = toCameraPosOld;
 	}
 
 	// 最終的なカメラの座標を指定する。
-	Vector3 position = target + m_toCameraPos;
-
-	// カメラの情報を更新。
-	m_springCamera.SetPosition(position);
-	m_springCamera.SetTarget(target);
-	m_springCamera.Update();
+	m_position = m_target + m_toCameraPos;
 }
 
 void GameCamera::UpdateOnAirspace()
@@ -137,10 +146,11 @@ void GameCamera::UpdateOnAirspace()
 	cameraUpAxis.Normalize();
 	g_camera3D->SetUp(cameraUpAxis);
 
-	Vector3 target = m_player->GetPosition();
-	target.y += 7.0f;
-
-	Vector3 toCameraPosOld = m_toCameraPos;
+	// 注視点
+	m_target = m_player->GetPosition();
+	
+	// 注視点を上げる　※要調整　壁に張り付いた際にズレる可能性
+	m_target.y += TARGET_Y;
 
 	float x = g_pad[0]->GetRStickXF();
 	float y = g_pad[0]->GetRStickYF();
@@ -149,6 +159,7 @@ void GameCamera::UpdateOnAirspace()
 	m_degreeX = x * 2.5f;
 	m_degreeY = y * 1.3f;
 
+	// 
 	Quaternion qRot;
 	qRot.SetRotationDeg(cameraUpAxis, m_degreeX);
 	qRot.Apply(m_toCameraPos);
@@ -162,10 +173,5 @@ void GameCamera::UpdateOnAirspace()
 	Vector3 toPosDir = m_toCameraPos;
 	toPosDir.Normalize();
 
-	Vector3 position = target + m_toCameraPos;
-
-	m_springCamera.SetPosition(position);
-	m_springCamera.SetTarget(target);
-
-	m_springCamera.Update();
+	m_position = m_target + m_toCameraPos;
 }

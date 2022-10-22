@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "GameCamera.h"
 
+
 bool EngineTest::Start()
 {
 	m_animationClips[enAnimationClip_Idle].Load("Assets/animData/idle.tka");
@@ -21,17 +22,17 @@ bool EngineTest::Start()
 	//);
 	//m_unityChan.SetTRS(m_modelPos, m_modelRot, m_modelSca);
 
-	//// îwåi
-	//m_bgModel.Init(
-	//	"Assets/modelData/bg.tkm",
-	//	nullptr,
-	//	0,
-	//	enModelUpAxisZ,
-	//	false,
-	//	false,
-	//	false
-	//);
-	//m_bgModel.SetPosition(Vector3({ 0.0f,0.0f,0.0f }));
+	// îwåi
+	/*m_bgModel.Init(
+		"Assets/modelData/box.tkm",
+		nullptr,
+		0,
+		enModelUpAxisZ,
+		false,
+		false,
+		false
+	);
+	m_bgModel.SetPosition(Vector3({ 0.0f,0.0f,0.0f }));*/
 
 	m_levelRender.Init("Assets/level3D/testLevel.tkl", [&](LevelObjectData& objData)
 		{
@@ -70,6 +71,8 @@ bool EngineTest::Start()
 		});
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
+	//std::vector<nsK2EngineLow::TkmFile::SPolygon> polygons = m_bgModel.GetModel().GetTkmFile().GetPolygon();
+
 	return true;
 }
 
@@ -83,6 +86,7 @@ void EngineTest::Update()
 
 	m_unityChan.Update();*/
 	//m_bgModel.Update();
+
 }
 
 void EngineTest::Move()
@@ -112,5 +116,6 @@ void EngineTest::CamUpdate()
 void EngineTest::Render(RenderContext& rc)
 {
 	//m_unityChan.Draw(rc);
+	//
 	//m_bgModel.Draw(rc);
 }

@@ -396,6 +396,48 @@ namespace nsK2EngineLow {
 			}
 		}
 	}
+
+	void TkmFile::RegisterPolygon()
+	{
+		for (auto& mesh : m_meshParts) {
+			for (auto& indexBuffer : mesh.indexBuffer16Array) {
+				BuildPolygon(mesh, indexBuffer);
+			}
+			for (auto& indexBuffer : mesh.indexBuffer32Array) {
+				BuildPolygon(mesh, indexBuffer);
+			}
+		}
+	}
+
+	template <class IndexBuffer>
+	void TkmFile::BuildPolygon(TkmFile::SMesh& mesh, const IndexBuffer& indexBuffer)
+	{
+		auto numPolygon = indexBuffer.indices.size() / 3;
+
+		for (auto polyNo = 0; polyNo < numPolygon; polyNo++) {
+			auto no = polyNo * 3;
+			auto vertNo_0 = indexBuffer.indices[no];
+			auto vertNo_1 = indexBuffer.indices[no + 1];
+			auto vertNo_2 = indexBuffer.indices[no + 2];
+
+			SPolygon polygon;
+			auto& vert_0 = mesh.vertexBuffer[vertNo_0];
+			auto& vert_1 = mesh.vertexBuffer[vertNo_1];
+			auto& vert_2 = mesh.vertexBuffer[vertNo_2];
+
+			polygon.s_vertexPos[0] = vert_0.pos;
+			polygon.s_vertexPos[1] = vert_1.pos;
+			polygon.s_vertexPos[2] = vert_2.pos;
+
+			Vector3 v0tov1 = polygon.s_vertexPos[1] - polygon.s_vertexPos[0];
+			Vector3 v0tov2 = polygon.s_vertexPos[2] - polygon.s_vertexPos[0];
+			polygon.s_normal = Cross(v0tov1, v0tov2);
+			polygon.s_normal.Normalize();
+
+			m_polygon.push_back(polygon);
+		}
+	}
+
 	bool TkmFile::Load(const char* filePath, bool isOptimize, bool isLoadTexture, bool isOutputErrorCodeTTY)
 	{
 		FILE* fp = fopen(filePath, "rb");
@@ -505,6 +547,8 @@ namespace nsK2EngineLow {
 
 		// 接ベクトルと従ベクトルを構築する。
 		BuildTangentAndBiNormal();
+
+		RegisterPolygon();
 		
 		if (isOptimize) {
 			// 最適化を行う。

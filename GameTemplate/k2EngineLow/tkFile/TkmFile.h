@@ -74,6 +74,10 @@ namespace nsK2EngineLow {
 			std::vector<SIndexBuffer32> indexBuffer32Array;		// インデックスバッファの配列。マテリアルの数分だけインデックスバッファはあるよ。
 			std::vector< SIndexbuffer16> indexBuffer16Array;
 		};
+		struct SPolygon {
+			Vector3		s_vertexPos[3];
+			Vector3		s_normal;
+		};
 
 		/// <summary>
 		/// 3Dモデルをロード。
@@ -119,6 +123,10 @@ namespace nsK2EngineLow {
 		{
 			return (int)(m_meshParts.size());
 		}
+		const std::vector<SPolygon>& GetPolygon() const
+		{
+			return m_polygon;
+		}
 	private:
 		/// <summary>
 		/// テクスチャ名をロード。
@@ -143,6 +151,15 @@ namespace nsK2EngineLow {
 		/// 3dsMaxScriptでやるべきなんだろうけど、デバッグしたいので今はこちらでやる。
 		/// </remarks>
 		void BuildTangentAndBiNormal();
+		/// <summary>
+		/// ポリゴン情報を計算する。
+		/// </summary>
+		template <class IndexBuffer>
+		void BuildPolygon(TkmFile::SMesh& mesh, const IndexBuffer& indexBuffer);
+		/// <summary>
+		/// ポリゴン情報を登録する。
+		/// </summary>
+		void RegisterPolygon();
 	private:
 		/// <summary>
 		/// TKMファイルの最適化。
@@ -151,5 +168,6 @@ namespace nsK2EngineLow {
 	private:
 		BSP m_bpsOnVertexPosition;				// 頂点座標を使ったBSPツリー。
 		std::vector< SMesh >	m_meshParts;		// メッシュパーツ。
+		std::vector< SPolygon>	m_polygon;
 	};
 }
