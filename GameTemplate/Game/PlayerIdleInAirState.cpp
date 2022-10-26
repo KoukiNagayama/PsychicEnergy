@@ -14,12 +14,12 @@ void PlayerIdleInAirState::Enter(Player* player)
 PlayerState* PlayerIdleInAirState::HandleInput(Player* player)
 {
 	if (g_pad[0]->IsTrigger(enButtonRB1)) {
-		// 通常の待機状態に遷移する。
+		// 空中での落下ステートに遷移する。
 		return new PlayerFallInAirState();
 	}
 	if (g_pad[0]->IsTrigger(enButtonLB1)) {
-		// 
-		return nullptr;
+		// 通常の待機ステートに遷移する。
+		return new PlayerIdleState();
 	}
 	// ここまで来たらステートを遷移しない。
 	return nullptr;

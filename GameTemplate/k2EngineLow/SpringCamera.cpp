@@ -158,8 +158,10 @@ namespace nsK2EngineLow {
 	void SpringCamera::Update()
 	{
 		UpdateSpringCamera();
+		/*
 		if (m_isEnableCollisionSolver) {
 			Vector3 result;
+
 			m_cameraCollisionSolver.Execute(
 				result,
 				m_camera->GetPosition(),
@@ -167,6 +169,7 @@ namespace nsK2EngineLow {
 			);
 			m_camera->SetPosition(result);
 		}
+		*/
 		UpdateCamera();
 	}
 }

@@ -20,7 +20,7 @@ void PlayerIdleState::Enter(Player* player)
 PlayerState* PlayerIdleState::HandleInput(Player* player)
 {
 	if (g_pad[0]->IsTrigger(enButtonRB1)) {
-		// 空中でのステートに遷移する。
+		// 空中での待機ステートに遷移する。
 		return new PlayerIdleInAirState();
 	}
 	if (fabsf(g_pad[0]->GetLStickXF()) !=  0.0f || fabsf(g_pad[0]->GetLStickYF()) !=  0.0f) {
@@ -34,5 +34,5 @@ PlayerState* PlayerIdleState::HandleInput(Player* player)
 
 void PlayerIdleState::Update(Player* player)
 {
-
+	//player->WalkOnGround();
 }

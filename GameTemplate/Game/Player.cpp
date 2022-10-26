@@ -61,7 +61,7 @@ void Player::Update()
 	m_playerState->Update(this);
 
 	// モデルを更新する。
-	m_model.SetPosition(m_position);
+
 	m_model.Update();
 
 
@@ -99,11 +99,11 @@ void Player::WalkOnGround()
 	m_moveSpeed += right + forward;
 
 	// モデルの下方向に落下 ※要調整
-	m_moveSpeed += m_currentModelUpAxis * -1.0f * 100.0f;
+	//m_moveSpeed += m_currentModelUpAxis * -1.0f * 100.0f;
 
-	// 移動
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime(), m_yawPitchRoll);
 
+	m_model.SetPosition(m_position);
 }
 
 void Player::DecideMoveDirection()
@@ -121,19 +121,19 @@ void Player::MoveOnAirspace()
 	m_moveSpeed += m_moveVectorInAir * 1500.0f;
 	
 	// 移動する。
-	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime(), m_yawPitchRoll);
-	// 座標の更新。
+	m_position = m_charaCon.Float(m_moveSpeed, g_gameTime->GetFrameDeltaTime(), m_yawPitchRoll);
+
 	m_model.SetPosition(m_position);
 }
 
 void Player::TestRotation()
 {
 	if (g_pad[0]->IsPress(enButtonA)) {
-		Vector3 rotationAxis = Vector3(1.0f,1.0f,0.0f);
+		Vector3 rotationAxis = Vector3::AxisZ;
 		rotationAxis.Normalize();
 
-		m_rotation.AddRotationDeg(rotationAxis,5.0f);
-		A(m_yawPitchRoll, rotationAxis, 5.0f, m_rotation);
+		m_rotation.AddRotationDeg(rotationAxis,-5.0f);
+		A(m_yawPitchRoll, rotationAxis, -5.0f, m_rotation);
 
 		m_model.SetRotation(m_rotation);
 
