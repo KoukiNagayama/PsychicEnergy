@@ -217,23 +217,25 @@ namespace nsK2EngineLow {
 					Vector3 vMerikomi;
 					vMerikomi.Subtract(vT0, vT1);
 					
-					Vector3 v2n = v2;
-					v2n.Normalize();
-					float dot = vMerikomi.Dot(v2n);
-					vMerikomi = v2n * dot;
-					
 					//XZ平面での衝突した壁の法線を求める。。
 					Vector3 hitNormal = callback.hitNormal;
 					hitNormal.Normalize();
+					Vector3 hitNormalHorizontal = callback.hitNormal;
+					hitNormalHorizontal = Cross(hitNormalHorizontal, m_up);
+					Quaternion rot;
+					rot.SetRotationDeg(m_up, 90.0f);
+					rot.Apply(hitNormalHorizontal);
+					hitNormalHorizontal.Normalize();
+
 					//めり込みベクトルを壁の法線に射影する。
 					float fT0 = hitNormal.Dot(vMerikomi);
 					//押し戻し返すベクトルを求める。
 					//押し返すベクトルは壁の法線に射影されためり込みベクトル+半径。
 					Vector3 vOffset;
-					vOffset = hitNormal;
+					vOffset = hitNormalHorizontal;
 					vOffset.Scale(-fT0 + m_radius);
 					
-					vOffset = v2 * vOffset.Dot(v2);
+					//vOffset = v2 * vOffset.Dot(v2);
 					nextPosition.Add(vOffset);
 
 					Vector3 currentDir;
@@ -242,7 +244,7 @@ namespace nsK2EngineLow {
 					if (currentDir.Dot(originalDir) < 0.0f) {
 						//角に入った時のキャラクタの振動を防止するために、
 						//移動先が逆向きになったら移動をキャンセルする。
-						nextPosition = m_position;
+						//nextPosition = m_position;
 						break;
 					}
 				}
@@ -256,7 +258,13 @@ namespace nsK2EngineLow {
 				}
 			}
 		}
-		m_position = nextPosition;
+		// 下の要素以外を代入する。
+		Vector3 a = nextPosition;
+		a -= (m_up * -1.0f) * addPos.Dot(m_up * -1.0f);
+		m_position = a;
+		//m_position = nextPosition;
+		
+		// 下方向
 		{
 			Vector3 addPos;
 			addPos.Subtract(nextPosition, m_position);
@@ -280,22 +288,22 @@ namespace nsK2EngineLow {
 
 			
 			if (m_isOnGround == false) {
-				if ((up * addPos.Dot(up)).LengthSq() > 0.0f) {
+				if ((m_up * addPos.Dot(m_up)).LengthSq() > 0.01f) {
 					//ジャンプ中とかで上昇中。
 					//上昇中でも横方向に移動した結果めり込んでいる可能性があるので下を調べる。
 					/*endPos.y -= addPos.y * 0.01f;*/
-					endPos -= up * addPos.Dot(up) * 0.01f;
+					endPos -= m_up * addPos.Dot(m_up) * 0.01f;
 				}
 				else {
 					//落下している場合はそのまま下を調べる。
 					//endPos.y += addPos.y;
-					endPos += up * addPos.Dot(up);
+					endPos -= m_up * addPos.Dot(m_up);
 				}
 			}
 			else {
 				//地面上にいない場合は1m下を見る。
 				//endPos.y -= 100.0f;
-				endPos -= up * 100.0f;
+				endPos -= m_up * 100.0f;
 			}
 			end.setOrigin(btVector3(endPos.x, endPos.y, endPos.z));
 			SweepResultGround callback;
@@ -308,12 +316,14 @@ namespace nsK2EngineLow {
 				PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_collider.GetBody(), start, end, callback);
 				if (callback.isHit) {
 					//当たった。
-					moveSpeed.y = 0.0f;
+					// ベクトルの下要素を消す
+					float downVectorLength = (m_up * -1.0f).Dot(moveSpeed);
+					moveSpeed -= (m_up * -1.0f) * downVectorLength;
 					m_isJump = false;
 					m_isOnGround = true;
-					nextPosition.y = callback.hitPos.y;
+					nextPosition = callback.hitPos;
 				}
-				else {
+				else{
 					//地面上にいない。
 					m_isOnGround = false;
 			

@@ -26,6 +26,8 @@ bool Player::Start()
 		true,
 		true
 	);
+
+	m_position.y += 30.0f;
 	m_model.SetTRS(m_position, m_rotation, m_scale);
 	// キャラクターコントローターを初期化。
 	m_charaCon.Init(
@@ -85,8 +87,8 @@ void Player::WalkOnGround()
 	// カメラの右方向
 	Vector3 right = g_camera3D->GetRight();
 
-	forward.y = 0.0f;
-	right.y = 0.0f;
+	//forward.y = 0.0f;
+	//right.y = 0.0f;
 
 	forward.Normalize();
 	right.Normalize();
@@ -128,12 +130,12 @@ void Player::MoveOnAirspace()
 
 void Player::TestRotation()
 {
-	if (g_pad[0]->IsPress(enButtonA)) {
+	if (g_pad[0]->IsTrigger(enButtonA)) {
 		Vector3 rotationAxis = Vector3::AxisZ;
 		rotationAxis.Normalize();
 
-		m_rotation.AddRotationDeg(rotationAxis,-5.0f);
-		A(m_yawPitchRoll, rotationAxis, -5.0f, m_rotation);
+		m_rotation.AddRotationDeg(rotationAxis,-180.0f);
+		A(m_yawPitchRoll, rotationAxis, -180.0f, m_rotation);
 
 		m_model.SetRotation(m_rotation);
 
