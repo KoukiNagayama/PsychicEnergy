@@ -15,15 +15,18 @@ void PlayerIdleState::Enter(Player* player)
 
 	// フラグをオブジェクトに触れているように設定する。
 	player->SetIsTouchObject(true);
+
+	// スライドをリセットする。
+	player->ResetSlide();
 }
 
-PlayerState* PlayerIdleState::HandleInput(Player* player)
+PlayerState* PlayerIdleState::StateChange(Player* player)
 {
 	if (g_pad[0]->IsTrigger(enButtonRB1)) {
 		// 空中での待機ステートに遷移する。
 		return new PlayerIdleInAirState();
 	}
-	if (fabsf(g_pad[0]->GetLStickXF()) !=  0.0f || fabsf(g_pad[0]->GetLStickYF()) !=  0.0f) {
+	if (fabsf(g_pad[0]->GetLStickXF()) >= 0.001f || fabsf(g_pad[0]->GetLStickYF()) >= 0.001f) {
 		// 歩きステートに遷移する。
 		return new PlayerWalkState();
 	}

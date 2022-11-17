@@ -31,6 +31,7 @@ private:
 	/// プレイヤーが空中にいる時の更新処理。
 	/// </summary>
 	void UpdateOnAirspace();
+	void UpdateOnSlide();
 
 private:
 	Player*			m_player = nullptr;								// プレイヤー
@@ -41,4 +42,5 @@ private:
 	SpringCamera	m_springCamera;									// ばねカメラ							
 	float			m_degreeX = 0.0f;								// Degree単位のX軸方向の回転量
 	float			m_degreeY = 0.0f;								// Degree単位のY軸方向の回転量
+	bool			m_isResetToCameraPosScale = true;				// 注視点から視点へのベクトルの倍率がリセット済みか			
 };

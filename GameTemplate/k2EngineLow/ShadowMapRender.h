@@ -60,7 +60,7 @@ namespace nsK2EngineLow
 	private:
 		RenderTarget			m_shadowMaps[NUM_SHADOW_MAP];									// シャドウマップ
 		CascadeShadowMapMatrix  m_cascadeShadowMapMatrix;										// カスケードシャドウの行列
-		float					m_cascadeAreaRateArray[NUM_SHADOW_MAP] = { 0.1f, 0.4f, 1.0f };	// カスケードシャドウによって分割されたエリア率
+		float					m_cascadeAreaRateArray[NUM_SHADOW_MAP] = { 0.05f, 0.3f, 0.6f };	// カスケードシャドウによって分割されたエリア率
         Camera                  m_lightCamera;
 
 	};

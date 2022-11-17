@@ -79,7 +79,7 @@ namespace nsK2EngineLow
 		Vector3 lightPos = g_camera3D->GetPosition();
 		m_lightCamera.SetTarget(g_camera3D->GetPosition());
 		// ƒ‰ƒCƒg‚Ì‚‚³‚Í50mŒˆ‚ß‘Å‚¿B
-		float lightMaxHeight = 5000.0f;
+		float lightMaxHeight = 3000.0f;
 		lightPos += (lightDirection) * (lightMaxHeight / lightDirection.y);
 		m_lightCamera.SetPosition(lightPos);
 		m_lightCamera.Update();

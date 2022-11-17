@@ -230,6 +230,7 @@
     <ClCompile Include="PlayerFallInAirState.cpp" />
     <ClCompile Include="PlayerIdleInAirState.cpp" />
     <ClCompile Include="PlayerIdleState.cpp" />
+    <ClCompile Include="PlayerSlideState.cpp" />
     <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="PlayerWalkState.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -247,6 +248,7 @@
     <ClInclude Include="PlayerFallInAirState.h" />
     <ClInclude Include="PlayerIdleInAirState.h" />
     <ClInclude Include="PlayerIdleState.h" />
+    <ClInclude Include="PlayerSlideState.h" />
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="PlayerWalkState.h" />
     <ClInclude Include="stdafx.h" />

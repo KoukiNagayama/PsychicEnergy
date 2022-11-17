@@ -84,13 +84,13 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
     {
         m = mWorld;
     }
-    
+   
     // ñ@ê¸ï˚å¸Ç…ägí£
-    vsIn.pos += float4(vsIn.normal * 0.5f, 0.0f);
-    
+    vsIn.pos += float4(vsIn.normal * 0.3f, 0.0f);
     psIn.pos = mul(m, vsIn.pos);
     psIn.pos = mul(mView, psIn.pos);
     psIn.pos = mul(mProj, psIn.pos);
+
 
     psIn.uv = vsIn.uv;
 

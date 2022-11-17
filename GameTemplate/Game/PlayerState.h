@@ -20,7 +20,7 @@ public:
 	/// ステートの遷移処理。
 	/// </summary>
 	/// <returns>遷移するステート</returns>
-	virtual PlayerState* HandleInput(Player* player) = 0;
+	virtual PlayerState* StateChange(Player* player) = 0;
 	/// <summary>
 	/// 各ステートにおける更新処理。
 	/// </summary>

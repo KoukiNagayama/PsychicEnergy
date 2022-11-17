@@ -6,13 +6,13 @@
 void PlayerFallInAirState::Enter(Player* player)
 {
 	// アニメーションを設定する。
-	player->SetAnimation(Player::enAnimationClip_Idle);
+	//player->SetAnimation(Player::enAnimationClip_Idle);
 
 	// 移動方向を決定する。
 	player->DecideMoveDirection();
 }
 
-PlayerState* PlayerFallInAirState::HandleInput(Player* player)
+PlayerState* PlayerFallInAirState::StateChange(Player* player)
 {
 	if (g_pad[0]->IsTrigger(enButtonRB1)) {
 		// 空中での待機ステートに遷移する。

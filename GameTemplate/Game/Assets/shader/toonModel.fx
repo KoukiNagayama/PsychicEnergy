@@ -137,8 +137,11 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
     //ハーフランバート拡散照明によるライティング計算
     float p = dot(psIn.normal * -1.0f, directionalLight[0].direction.xyz);
-    p = p * 0.5f + 0.5f;
-    p = p * p;
+    p = p * 0.2f + 0.5f;
+    //p = p * 0.5f + 0.5f;
+    //p = p * p;
+    p = p * p + 0.45f;
+    
 
 
     //計算結果よりトゥーンシェーダー用のテクスチャから色をフェッチする

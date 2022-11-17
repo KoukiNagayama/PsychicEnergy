@@ -137,7 +137,8 @@ namespace nsK2EngineLow {
 
 			// 入力量を正規化する。
 			float t = sqrtf(m_lStickX * m_lStickX + m_lStickY * m_lStickY);
-			if (t > 0.001f) {
+			// PADの入力量が全て1か0になってしまうためコメントアウト。
+			if (t > 1.0f) {
 				m_lStickX /= t;
 				m_lStickY /= t;
 			}
@@ -169,7 +170,7 @@ namespace nsK2EngineLow {
 			}
 			// 入力量を正規化する。
 			float t = sqrtf(m_rStickX * m_rStickX + m_rStickY * m_rStickY);
-			if (t > 0.001f) {
+			if (t > 1.0f) {
 				m_rStickX /= t;
 				m_rStickY /= t;
 			}

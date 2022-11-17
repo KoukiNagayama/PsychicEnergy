@@ -6,12 +6,14 @@
 void PlayerIdleInAirState::Enter(Player* player)
 {
 	// 再生するアニメーションを設定する。
-	player->SetAnimation(Player::enAnimationClip_Idle);
+	//player->SetAnimation(Player::enAnimationClip_Idle);
 	// フラグをオブジェクトに触れていないように設定する。
 	player->SetIsTouchObject(false);
+
+	player->ResetSlide();
 }
 
-PlayerState* PlayerIdleInAirState::HandleInput(Player* player)
+PlayerState* PlayerIdleInAirState::StateChange(Player* player)
 {
 	if (g_pad[0]->IsTrigger(enButtonRB1)) {
 		// 空中での落下ステートに遷移する。

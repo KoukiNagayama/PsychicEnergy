@@ -2,58 +2,77 @@
 #include "Player.h"
 #include "PlayerState.h"
 #include "PlayerIdleState.h"
+#include "sound/SoundEngine.h"
+
 
 namespace
 {
-	const float WALK_SPEED = 300.0f;		// 歩く速さ
+	const float WALK_SPEED = 450.0f;		// 歩く速さ
 	const float COLLIDER_RADIUS = 30.0f;	// プレイヤーに割り当てるコライダーの半径
 	const float COLLIDER_HEIGHT = 70.0f; // プレイヤーに割り当てるコライダーの高さ
+	const float ANIMATION_INTERPORATE_TIME = 0.3f;	// アニメーションの補間時間
+	const float ANIMATION_SPEED = 1.1f;				// アニメーションスピード
+	const float MIN_INPUT_AMOUNT = 0.001f;			// 入力量の最低値
+	const float SLIDING_SPEED = 600.0f;				// スライディングの速さ
 }
 
 bool Player::Start()
 {
-	m_animationClips[enAnimationClip_Idle].Load("Assets/animData/idle.tka");
+	//m_animationClips[enAnimationClip_Idle].Load("Assets/animData/idle.tka");
+	//m_animationClips[enAnimationClip_Idle].SetLoopFlag(true);
+	//m_animationClips[enAnimationClip_Walk].Load("Assets/animData/walk.tka");
+	//m_animationClips[enAnimationClip_Walk].SetLoopFlag(true);
+	m_animationClips[enAnimationClip_Idle].Load("Assets/animData/WD/idle.tka");
 	m_animationClips[enAnimationClip_Idle].SetLoopFlag(true);
-	m_animationClips[enAnimationClip_Walk].Load("Assets/animData/walk.tka");
+	m_animationClips[enAnimationClip_Walk].Load("Assets/animData/WD/walk_2.tka");
 	m_animationClips[enAnimationClip_Walk].SetLoopFlag(true);
+	m_animationClips[enAnimationClip_Run].Load("Assets/animData/WD/run_4.tka");
+	m_animationClips[enAnimationClip_Run].SetLoopFlag(true);
+	m_animationClips[enAnimationClip_Slide].Load("Assets/animData/WD/slide_2.tka");
+	m_animationClips[enAnimationClip_Slide].SetLoopFlag(false);
+	
+
 
 	// モデルを初期化。
 	m_model.Init(
-		"Assets/modelData/unityChan.tkm",
+		"Assets/modelData/WD.tkm",
 		m_animationClips,
 		enAnimationClip_Num,
-		enModelUpAxisY,
+		enModelUpAxisZ,
 		true,
 		true
 	);
 
-	m_position.y += 30.0f;
+	m_scale *= 2.0f;
 	m_model.SetTRS(m_position, m_rotation, m_scale);
+	
+	m_model.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
+		OnAnimationEvent(clipName, eventName);
+	});
+
 	// キャラクターコントローターを初期化。
 	m_charaCon.Init(
 		COLLIDER_RADIUS,
 		COLLIDER_HEIGHT,
-		m_position,
-		m_yawPitchRoll
+		m_position
 	);
 	// 現在のモデルの上方向を指定。
 	m_currentModelUpAxis = Vector3::AxisY;
 	// 初期ステートを設定。
 	m_playerState = new PlayerIdleState();
 	m_playerState->Enter(this);
+
+	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/run_footstep.wav");
 	return true;
 }
 
 void Player::Update()
 {
-
-	TestRotation();
-
-	// ステートを更新するか
-	PlayerState* playerState = m_playerState->HandleInput(this);
-	// 次に更新するステートが設定されているならば
+	// ステートを変更するか
+	PlayerState* playerState = m_playerState->StateChange(this);
+	// 変更先のステートが設定されているならば
 	if (playerState != nullptr) {
-		// ステートを更新する。
+		// ステートを変更する。
 		delete m_playerState;
 		m_playerState = playerState;
 		m_playerState->Enter(this);
@@ -62,23 +81,23 @@ void Player::Update()
 	// 各ステートの更新処理を実行。
 	m_playerState->Update(this);
 
-	// モデルを更新する。
-
-	m_model.Update();
-
+	// 回転処理。
+	Rotation();
 
 	// アニメーションを再生する。
-	m_model.PlayAnimation(m_currentAnimationClip);
+	PlayAnimation(m_currentAnimationClip);
 
+	// モデルを更新する。
+	m_model.Update();
 }
 
-void Player::WalkOnGround()
+void Player::MoveOnGround()
 {
 	// 移動速度を0に戻す
 	m_moveSpeed = Vector3::Zero;
 
 	// Lスティックの入力量
-	Vector3 LStick;
+	Vector2 LStick;
 	LStick.x = g_pad[0]->GetLStickXF();
 	LStick.y = g_pad[0]->GetLStickYF();
 
@@ -87,8 +106,8 @@ void Player::WalkOnGround()
 	// カメラの右方向
 	Vector3 right = g_camera3D->GetRight();
 
-	//forward.y = 0.0f;
-	//right.y = 0.0f;
+	forward.y = 0.0f;
+	right.y = 0.0f;
 
 	forward.Normalize();
 	right.Normalize();
@@ -100,10 +119,17 @@ void Player::WalkOnGround()
 	// 計算結果をもとに最終的な移動速度を決める
 	m_moveSpeed += right + forward;
 
+	if (m_moveSpeed.LengthSq() <= 440.0f*440.0f) {
+		m_currentAnimationClip = enAnimationClip_Walk;
+	}
+	else {
+		m_currentAnimationClip = enAnimationClip_Run;
+	}
+
 	// モデルの下方向に落下 ※要調整
 	//m_moveSpeed += m_currentModelUpAxis * -1.0f * 100.0f;
 
-	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime(), m_yawPitchRoll);
+	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 
 	m_model.SetPosition(m_position);
 }
@@ -123,33 +149,88 @@ void Player::MoveOnAirspace()
 	m_moveSpeed += m_moveVectorInAir * 1500.0f;
 	
 	// 移動する。
-	m_position = m_charaCon.Float(m_moveSpeed, g_gameTime->GetFrameDeltaTime(), m_yawPitchRoll);
+	//m_position = m_charaCon.Float(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 
 	m_model.SetPosition(m_position);
 }
 
-void Player::TestRotation()
+void Player::Slide()
 {
-	if (g_pad[0]->IsTrigger(enButtonA)) {
-		Vector3 rotationAxis = Vector3::AxisZ;
-		rotationAxis.Normalize();
+	m_moveSpeed = Vector3::Zero;
 
-		m_rotation.AddRotationDeg(rotationAxis,-180.0f);
-		A(m_yawPitchRoll, rotationAxis, -180.0f, m_rotation);
+	// 左スティックの横方向入力量
+	float lStickX = g_pad[0]->GetLStickXF();
 
+	// 正面ベクトルを回転させる。
+	Quaternion slideRot = Quaternion::Identity;
+	slideRot.AddRotationDegY(lStickX);
+	slideRot.Apply(m_forward);
+
+	Vector3 forward = m_forward;
+	forward.y = 0.0f;
+	forward.Normalize();
+	forward *= SLIDING_SPEED;
+
+	// 移動速度を計算。
+	m_moveSpeed += m_forward * SLIDING_SPEED;
+
+	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
+
+	m_model.SetPosition(m_position);
+}
+
+void Player::Rotation()
+{
+	if (
+		fabsf(m_moveSpeed.x) >= MIN_INPUT_AMOUNT 
+		|| fabsf(m_moveSpeed.z) >= MIN_INPUT_AMOUNT
+	)
+	{
+		m_rotation.SetRotationYFromDirectionXZ(m_moveSpeed);
 		m_model.SetRotation(m_rotation);
 
-		// 現在の上方向はY方向に対してクォータニオンを適用することで求める。
-		m_currentModelUpAxis = Vector3::AxisY;
-		m_rotation.Apply(m_currentModelUpAxis);
-		m_currentModelUpAxis.Normalize();
+		m_forward = Vector3::AxisZ;
+		m_rotation.Apply(m_forward);
 	}
+}
+
+void Player::TestRotation()
+{
+	//if (g_pad[0]->IsTrigger(enButtonA)) {
+	//	Vector3 rotationAxis = Vector3::AxisZ;
+	//	rotationAxis.Normalize();
+
+	//	m_rotation.AddRotationDeg(rotationAxis,-180.0f);
+	//	A(m_yawPitchRoll, rotationAxis, -180.0f, m_rotation);
+
+	//	m_model.SetRotation(m_rotation);
+
+	//	// 現在の上方向はY方向に対してクォータニオンを適用することで求める。
+	//	m_currentModelUpAxis = Vector3::AxisY;
+	//	m_rotation.Apply(m_currentModelUpAxis);
+	//	m_currentModelUpAxis.Normalize();
+	//}
 }
 
 void Player::PlayAnimation(EnAnimationClip currentAnimationClip)
 {
+	m_model.SetAnimationSpeed(ANIMATION_SPEED);
 	// アニメーションを再生
-	m_model.PlayAnimation(currentAnimationClip, 1.0f);
+	m_model.PlayAnimation(currentAnimationClip, ANIMATION_INTERPORATE_TIME);
+}
+
+void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
+{
+	if (wcscmp(eventName, L"run_footstep1") == 0 || wcscmp(eventName, L"run_footstep2") == 0) {
+		m_runFootstep = NewGO<SoundSource>(0);
+		m_runFootstep->Init(0);
+		m_runFootstep->Play(false);
+	}
+	if (wcscmp(eventName, L"walk_footstep1") == 0 || wcscmp(eventName, L"walk_footstep2") == 0) {
+		m_runFootstep = NewGO<SoundSource>(0);
+		m_runFootstep->Init(0);
+		m_runFootstep->Play(false);
+	}
 }
 
 void Player::Render(RenderContext& rc)

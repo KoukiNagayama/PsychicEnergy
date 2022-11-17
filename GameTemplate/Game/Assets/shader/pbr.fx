@@ -337,7 +337,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     for (int cascadeIndex = 0; cascadeIndex < 3; cascadeIndex++)
     {
         
-        if (farClip[cascadeIndex] > psIn.posInCamera.z)
+        //if (farClip[cascadeIndex] > psIn.posInCamera.z)
         {
             // ライトビュースクリーン空間でのZ値を計算する
             float zInLVP = psIn.posInLVP[cascadeIndex].z / psIn.posInLVP[cascadeIndex].w;
@@ -356,12 +356,12 @@ float4 PSMain(SPSIn psIn) : SV_Target0
                     float2 shadowValue = shadowMapArray[cascadeIndex].Sample(g_sampler, shadowMapUV).xy;
 
                     // まずこのピクセルが遮蔽されているか調べる
-                    if (zInLVP >= shadowValue.r + 0.002f)
+                    if (zInLVP >= shadowValue.r + 0.0002f)
                     {
                         finalColor.xyz *= 0.5f;
 
                         // 影を落とせたので終了
-                        //break;
+                     
                     }
                     
                     break;

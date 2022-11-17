@@ -35,6 +35,9 @@
     <ClCompile Include="PlayerFallInAirState.cpp">
       <Filter>player</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerSlideState.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -60,6 +63,9 @@
       <Filter>player</Filter>
     </ClInclude>
     <ClInclude Include="PlayerFallInAirState.h">
+      <Filter>player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSlideState.h">
       <Filter>player</Filter>
     </ClInclude>
   </ItemGroup>

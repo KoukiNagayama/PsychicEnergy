@@ -15,7 +15,7 @@ public:
 	/// ステートの遷移処理。
 	/// </summary>
 	/// <returns>遷移するステート</returns>
-	PlayerState* HandleInput(Player* player) override;
+	PlayerState* StateChange(Player* player) override;
 	/// <summary>
 	/// ステートにおける更新処理。
 	/// </summary>
