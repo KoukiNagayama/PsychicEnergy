@@ -3,6 +3,7 @@
 #include "PlayerIdleState.h"
 #include "PlayerIdleInAirState.h"
 #include "PlayerSlideState.h"
+#include "PlayerJumpState.h"
 
 
 void PlayerWalkState::Enter(Player* player)
@@ -10,7 +11,7 @@ void PlayerWalkState::Enter(Player* player)
 	// フラグをオブジェクトに触れていると設定する。
 	player->SetIsTouchObject(true);
 
-	player->ResetSlide();
+	player->ResetSlideParam();
 
 }
 
@@ -27,6 +28,9 @@ PlayerState* PlayerWalkState::StateChange(Player* player)
 	if (g_pad[0]->IsTrigger(enButtonLB2)) {
 		// スライディングステートに遷移する。
 		return new PlayerSlideState();
+	}
+	if (g_pad[0]->IsTrigger(enButtonA)) {
+		return new PlayerJumpState();
 	}
 	// ここまで来たらステートを遷移しない。
 	return nullptr;

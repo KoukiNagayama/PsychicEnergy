@@ -13,7 +13,8 @@ public:
 		enAnimationClip_Idle,		// 待機
 		enAnimationClip_Walk,		// 歩き
 		enAnimationClip_Run,		// 走り
-		enAnimationClip_Slide,
+		enAnimationClip_Slide,		// スライディング
+		enAnimationClip_NormalJump,	// 通常のジャンプ
 		enAnimationClip_Num			// アニメーションクリップの数
 	};
 public:
@@ -116,9 +117,13 @@ public:
 	/// <summary>
 	/// スライドをリセットする。
 	/// </summary>
-	const void ResetSlide()
+	const void ResetSlideParam()
 	{
 		m_isSlide = false;
+		if (m_isRingingSlideSound) {
+			m_isRingingSlideSound = false;
+			DeleteGO(m_slideSound);
+		}
 	}
 	/// <summary>
 	/// スライド中か
@@ -128,9 +133,20 @@ public:
 	{
 		return m_isSlide;
 	}
+	/// <summary>
+	/// 正面方向を取得。
+	/// </summary>
+	/// <returns>プレイヤーのモデルの正面方向。</returns>
 	const Vector3& GetForward() const
 	{
 		return m_forward;
+	}
+	/// <summary>
+	/// アニメーションを再生しているか。
+	/// </summary>
+	const bool& IsPlayingAnimation() const
+	{
+		return m_modelRender.IsPlayingAnimation();
 	}
 
 private:
@@ -139,6 +155,7 @@ private:
 	friend class PlayerSlideState;
 	friend class PlayerIdleInAirState;
 	friend class PlayerFallInAirState;
+	friend class PlayerJumpState;
 	/// <summary>
 	/// 初期化処理。
 	/// </summary>
@@ -164,20 +181,21 @@ private:
 	/// </summary>
 	void Slide();
 	/// <summary>
+	/// ジャンプ。
+	/// </summary>
+	void Jump();
+	/// <summary>
 	/// アニメーションイベント用関数。
 	/// </summary>
 	/// <param name="clipName"></param>
 	/// <param name="eventName"></param>
 	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
-
-	void TestRotation();
 	/// <summary>
 	/// アニメーションを再生する。
 	/// </summary>
 	void PlayAnimation(EnAnimationClip currentAnimationClip);
-	void A(Vector3& vector, const Vector3& axis, float deg, const Quaternion& q);
 private:
-	ModelRender				m_model;										// モデル
+	ModelRender				m_modelRender;										// モデル
 	Vector3					m_position = Vector3::Zero;						// 座標
 	Vector3					m_scale = Vector3::One;							// 拡大率
 	Quaternion				m_rotation = Quaternion::Identity;				// 回転
@@ -194,6 +212,7 @@ private:
 	SoundSource*			m_runFootstep = nullptr;						// 走りの足音
 	Quaternion				m_slideRot = Quaternion::Identity;				// スライド中の進行方向の回転
 	bool					m_isSlide = false;								// スライド中？	
-	Vector3					m_forward2 = Vector3::Zero;
+	SoundSource*			m_slideSound = nullptr;							// スライドの滑り音
+	bool					m_isRingingSlideSound = false;
 };
 

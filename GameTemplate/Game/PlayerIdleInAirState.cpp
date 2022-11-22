@@ -10,7 +10,7 @@ void PlayerIdleInAirState::Enter(Player* player)
 	// フラグをオブジェクトに触れていないように設定する。
 	player->SetIsTouchObject(false);
 
-	player->ResetSlide();
+	player->ResetSlideParam();
 }
 
 PlayerState* PlayerIdleInAirState::StateChange(Player* player)

@@ -38,6 +38,9 @@
     <ClCompile Include="PlayerSlideState.cpp">
       <Filter>player</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerJumpState.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -66,6 +69,9 @@
       <Filter>player</Filter>
     </ClInclude>
     <ClInclude Include="PlayerSlideState.h">
+      <Filter>player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerJumpState.h">
       <Filter>player</Filter>
     </ClInclude>
   </ItemGroup>

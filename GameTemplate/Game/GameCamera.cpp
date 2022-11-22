@@ -13,6 +13,8 @@ namespace
 	const float CAMERA_COLLISION_RADIUS = 1.5f;				// カメラに使用するコリジョンの半径の値
 	const float CAMERA_UP_ROTATION_LIMIT = 70.0f;			// カメラの上回転の上限
 	const float CAMERA_DOWN_ROTATION_LIMIT = -55.0f;		// カメラの下回転の上限
+	const float CAMERA_RIGHT_ROTATION_LIMIT = 90.0f;
+	const float CAMERA_LEFT_ROTATION_LIMIT = -90.0f;
 	const float COMPENSATION_OF_ROTATION_RANGE = 1.5f;		// カメラの回転範囲の補正
 	const float TARGET_Y = 70.0f;							// 注視点の高さを上げる値
 	const float TO_CAMERA_POS_CHANGE_SCALE = 1.208f;		// 注視点から視点へのベクトルの倍率の変更値 
@@ -218,14 +220,6 @@ void GameCamera::UpdateOnSlide()
 	m_degreeX += x * 2.5f;
 	m_degreeY += y * 1.3f;
 
-	// 相対的にカメラとプレイヤーの位置関係がずれないように補正する
-	//m_toCameraPos.Set(
-	//	TO_CAMERA_POS_X_FROM_TARGET,
-	//	TO_CAMERA_POS_Y_FROM_TARGET,
-	//	TO_CAMERA_POS_Z_FROM_TARGET
-	//);
-	//rotation.Apply(m_toCameraPos);
-
 	// 上向きの軸回りの回転
 	Quaternion qRot;
 	qRot.SetRotationDeg(currentModelUpAxis, m_degreeX);
@@ -237,8 +231,6 @@ void GameCamera::UpdateOnSlide()
 	axisX.Normalize();
 	qRot.SetRotationDeg(axisX, m_degreeY);
 	qRot.Apply(m_toCameraPos);
-
-
 
 	// カメラの回転範囲の上限値を超えないように補正する
 	if (m_degreeY < CAMERA_DOWN_ROTATION_LIMIT) {

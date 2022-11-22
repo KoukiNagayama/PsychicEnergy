@@ -34,7 +34,7 @@ bool EngineTest::Start()
 	);
 	m_bgModel.SetPosition(Vector3({ 0.0f,0.0f,0.0f }));*/
 
-	m_levelRender.Init("Assets/level3D/testLevel.tkl", [&](LevelObjectData& objData)
+	m_levelRender.Init("Assets/level3D/testLevel2.tkl", [&](LevelObjectData& objData)
 		{
 			if (objData.EqualObjectName(L"ground") == true) {
 				m_testModel0 = NewGO<TestModel>(0, "testModel0");
@@ -60,7 +60,7 @@ bool EngineTest::Start()
 				m_testModel2->SetScale(objData.scale);
 				return true;
 			}
-			else if (objData.EqualObjectName(L"unityChan") == true) {
+			else if (objData.EqualObjectName(L"WD") == true) {
 				m_player = NewGO<Player>(0, "player");
 				m_player->SetPosition(objData.position);
 				m_player->SetRotation(objData.rotation);

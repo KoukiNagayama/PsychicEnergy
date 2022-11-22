@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "PlayerIdleState.h"
 #include "PlayerWalkState.h"
+#include "PlayerJumpState.h"
 #include "PlayerIdleInAirState.h"
 
 PlayerIdleState::~PlayerIdleState()
@@ -17,7 +18,7 @@ void PlayerIdleState::Enter(Player* player)
 	player->SetIsTouchObject(true);
 
 	// スライドをリセットする。
-	player->ResetSlide();
+	player->ResetSlideParam();
 }
 
 PlayerState* PlayerIdleState::StateChange(Player* player)
@@ -29,6 +30,10 @@ PlayerState* PlayerIdleState::StateChange(Player* player)
 	if (fabsf(g_pad[0]->GetLStickXF()) >= 0.001f || fabsf(g_pad[0]->GetLStickYF()) >= 0.001f) {
 		// 歩きステートに遷移する。
 		return new PlayerWalkState();
+	}
+	if (g_pad[0]->IsTrigger(enButtonA)) {
+		// ジャンプステートに遷移する。
+		return new PlayerJumpState();
 	}
 	// ここまで来たらステートを遷移しない。
 	return nullptr;
