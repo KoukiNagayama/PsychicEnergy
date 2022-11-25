@@ -14,6 +14,8 @@ namespace
 	const float ANIMATION_SPEED = 1.1f;				// アニメーションスピード
 	const float MIN_INPUT_AMOUNT = 0.001f;			// 入力量の最低値
 	const float SLIDING_SPEED = 600.0f;				// スライディングの速さ
+	const float MIN_SPEED_FOR_RUN = 440.0f;
+	const float RESIST_SPEED = 100.0f;
 }
 
 bool Player::Start()
@@ -90,48 +92,23 @@ void Player::Update()
 
 void Player::MoveOnGround()
 {
-	// 移動速度を0に戻す
-	m_moveSpeed = Vector3::Zero;
-
-	// Lスティックの入力量
-	Vector2 LStick;
-	LStick.x = g_pad[0]->GetLStickXF();
-	LStick.y = g_pad[0]->GetLStickYF();
-
-	// カメラの正面方向
-	Vector3 forward = g_camera3D->GetForward();
-	// カメラの右方向
-	Vector3 right = g_camera3D->GetRight();
-
-	forward.y = 0.0f;
-	right.y = 0.0f;
-
-	forward.Normalize();
-	right.Normalize();
-
-	// 正面と右に対してどれほど進むか計算
-	right *= LStick.x * WALK_SPEED;
-	forward *= LStick.y * WALK_SPEED;
-
-	// 計算結果をもとに最終的な移動速度を決める
-	m_moveSpeed += right + forward;
-
-	if (m_moveSpeed.LengthSq() <= 440.0f*440.0f) {
-		m_currentAnimationClip = enAnimationClip_Walk;
-	}
-	else {
-		m_currentAnimationClip = enAnimationClip_Run;
-	}
-
-	// モデルの下方向に落下 ※要調整
-	//m_moveSpeed += m_currentModelUpAxis * -1.0f * 100.0f;
+	// 移動速度を計算する。
+	m_moveSpeed = CalcMoveSpeed(WALK_SPEED);
 
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 
 	m_modelRender.SetPosition(m_position);
 }
 
-
+void Player::SelectAnimationOnGround()
+{
+	if (m_moveSpeed.LengthSq() <= MIN_SPEED_FOR_RUN * MIN_SPEED_FOR_RUN) {
+		m_currentAnimationClip = enAnimationClip_Walk;
+	}
+	else {
+		m_currentAnimationClip = enAnimationClip_Run;
+	}
+}
 
 void Player::DecideMoveDirection()
 {
@@ -165,14 +142,13 @@ void Player::Slide()
 	slideRot.AddRotationDegY(lStickX);
 	slideRot.Apply(m_forward);
 
-	Vector3 forward = m_forward;
-	forward.y = 0.0f;
-	forward.Normalize();
-	forward *= SLIDING_SPEED;
-
 	// 移動速度を計算。
 	m_moveSpeed += m_forward * SLIDING_SPEED;
 
+	// 重力を加算。
+	m_moveSpeed.y -= 7.0f;
+
+	// 移動。
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 
 	m_modelRender.SetPosition(m_position);
@@ -188,34 +164,29 @@ void Player::Slide()
 
 void Player::Jump()
 {
-	// 移動速度を0に戻す
-	m_moveSpeed = Vector3::Zero;
+	// 移動速度に加算する値。
+	Vector3 addMoveSpeed = CalcMoveSpeed(RESIST_SPEED);
+	//// 加算する値の正面ベクトルの長さ
+	float forwardVectorLength = addMoveSpeed.Dot(m_forward);
 
-	// Lスティックの入力量
-	Vector2 LStick;
-	LStick.x = g_pad[0]->GetLStickXF();
-	LStick.y = g_pad[0]->GetLStickYF();
+	// 正面ベクトルを削除
+	addMoveSpeed -= m_forward * forwardVectorLength;
 
-	// カメラの正面方向
-	Vector3 forward = g_camera3D->GetForward();
-	// カメラの右方向
-	Vector3 right = g_camera3D->GetRight();
+	// 移動速度を確定。
+	if (fabsf(addMoveSpeed.x) >= 0.0001f || fabsf(addMoveSpeed.z) >= 0.0001f) {
+		m_moveSpeed += addMoveSpeed;
+		if (m_moveSpeed.LengthSq() > 1.0f) {
+			m_moveSpeed.Normalize();
+		}
+		m_moveSpeed *= WALK_SPEED;
+	}
+	else {
+		m_moveSpeed = Vector3::Zero;
+		m_moveSpeed.y += addMoveSpeed.y;
+	}
 
-	forward.y = 0.0f;
-	right.y = 0.0f;
 
-	forward.Normalize();
-	right.Normalize();
 
-	// 正面と右に対してどれほど進むか計算
-	right *= LStick.x * WALK_SPEED;
-	forward *= LStick.y * WALK_SPEED;
-
-	// 計算結果をもとに最終的な移動速度を決める
-	m_moveSpeed += right + forward;
-
-	// モデルの下方向に落下 ※要調整
-	//m_moveSpeed += m_currentModelUpAxis * -1.0f * 100.0f;
 
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 
@@ -262,4 +233,36 @@ void Player::Render(RenderContext& rc)
 {
 	// 描画
 	m_modelRender.Draw(rc);
+}
+
+Vector3 Player::CalcMoveSpeed(float speed)
+{
+	Vector3 moveSpeed = Vector3::Zero;
+	// Lスティックの入力量
+	Vector2 LStick;
+	LStick.x = g_pad[0]->GetLStickXF();
+	LStick.y = g_pad[0]->GetLStickYF();
+
+	// カメラの正面方向
+	Vector3 forward = g_camera3D->GetForward();
+	// カメラの右方向
+	Vector3 right = g_camera3D->GetRight();
+
+	forward.y = 0.0f;
+	right.y = 0.0f;
+
+	forward.Normalize();
+	right.Normalize();
+
+	// 正面と右に対してどれほど進むか計算
+	right *= LStick.x * speed;
+	forward *= LStick.y * speed;
+
+	// 計算結果をもとに最終的な移動速度を決める
+	moveSpeed += right + forward;
+
+	// 重力を加算。
+	moveSpeed.y -= 7.0f;
+
+	return moveSpeed;
 }

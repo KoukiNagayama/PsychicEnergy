@@ -165,9 +165,18 @@ private:
 	/// </summary>
 	void Rotation();
 	/// <summary>
+	/// 移動速度を計算
+	/// </summary>
+	/// <param name="speed">速度</param>
+	Vector3 CalcMoveSpeed(float speed);
+	/// <summary>
 	/// 歩く。
 	/// </summary>
 	void MoveOnGround();
+	/// <summary>
+	/// 地上でのアニメーションを選択。
+	/// </summary>
+	void SelectAnimationOnGround();
 	/// <summary>
 	/// 移動方向を決める。
 	/// </summary>

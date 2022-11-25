@@ -30,6 +30,7 @@ PlayerState* PlayerWalkState::StateChange(Player* player)
 		return new PlayerSlideState();
 	}
 	if (g_pad[0]->IsTrigger(enButtonA)) {
+		// ジャンプステートに遷移する。
 		return new PlayerJumpState();
 	}
 	// ここまで来たらステートを遷移しない。
@@ -39,4 +40,6 @@ PlayerState* PlayerWalkState::StateChange(Player* player)
 void PlayerWalkState::Update(Player* player)
 {
 	player->MoveOnGround();
+
+	player->SelectAnimationOnGround();
 }
