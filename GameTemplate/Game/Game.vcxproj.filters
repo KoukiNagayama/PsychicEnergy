@@ -41,6 +41,7 @@
     <ClCompile Include="PlayerJumpState.cpp">
       <Filter>player</Filter>
     </ClCompile>
+    <ClCompile Include="Game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -74,5 +75,6 @@
     <ClInclude Include="PlayerJumpState.h">
       <Filter>player</Filter>
     </ClInclude>
+    <ClInclude Include="Game.h" />
   </ItemGroup>
 </Project>

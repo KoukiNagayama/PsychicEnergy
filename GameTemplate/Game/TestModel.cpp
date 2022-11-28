@@ -5,26 +5,49 @@ bool TestModel::Start()
 {
 	// tkmファイルパスを指定。
 	const char* filePath = nullptr;
+	bool isCaster = true;
 	if (m_typeNum == 0) {
 		filePath = "Assets/modelData/testStage/ground.tkm";
+
+		m_model.Init(
+			filePath,
+			nullptr,
+			0,
+			enModelUpAxisZ,
+			false,
+			false,
+			false,
+			0
+		);
 	}
-	else if (m_typeNum == 1) {
+	if (m_typeNum == 1) {
 		filePath = "Assets/modelData/testStage/testModel1.tkm";
+
+		m_model.Init(
+			filePath,
+			nullptr,
+			0,
+			enModelUpAxisZ,
+			false,
+			false,
+			true,
+			0
+		);
 	}
 	else if (m_typeNum == 2) {
 		filePath = "Assets/modelData/testStage/testModel2.tkm";
+
+		m_model.Init(
+			filePath,
+			nullptr,
+			0,
+			enModelUpAxisZ,
+			false,
+			false,
+			true,
+			0
+		);
 	}
-	// モデルを初期化。
-	m_model.Init(
-		filePath,
-		nullptr,
-		0,
-		enModelUpAxisZ,
-		false,
-		false,
-		true,
-		0
-	);
 
 	m_model.SetTRS(m_pos, m_rot, m_sca);
 	m_model.Update();

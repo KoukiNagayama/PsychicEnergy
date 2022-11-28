@@ -335,9 +335,10 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     farClip[1] = farClip2;
     farClip[2] = farClip3;
     for (int cascadeIndex = 0; cascadeIndex < 3; cascadeIndex++)
-    {
-        
+    { 
+        //要修正箇所----------------------------------
         //if (farClip[cascadeIndex] > psIn.posInCamera.z)
+        //-----------------------------------------------
         {
             // ライトビュースクリーン空間でのZ値を計算する
             float zInLVP = psIn.posInLVP[cascadeIndex].z / psIn.posInLVP[cascadeIndex].w;

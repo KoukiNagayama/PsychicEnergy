@@ -2,29 +2,32 @@
 #include "PlayerJumpState.h"
 #include "PlayerWalkState.h"
 #include "PlayerIdleState.h"
+#include "PlayerIdleInAirState.h"
+
 
 PlayerJumpState::~PlayerJumpState()
 {
-
+	
 }
 
 void PlayerJumpState::Enter(Player* player)
 {
-	player->SetAnimation(Player::enAnimationClip_NormalJump);
+	player->m_moveSpeed.y += 450.0f;
+
+	player->SetAnimationSpeed(0.9f);
+
+	player->SelectJumpAnimation();
 }
 
 PlayerState* PlayerJumpState::StateChange(Player* player)
 {
-	// アニメーションが再生されている間はステートを遷移しない。
-	if (player->IsPlayingAnimation()) {
-		return nullptr;
-	}
-	else if (fabsf(g_pad[0]->GetLStickXF()) >= 0.001f || fabsf(g_pad[0]->GetLStickYF()) >= 0.001f) {
-		return new PlayerWalkState();
-	}
-	else {
+	if (player->IsOnGround()){
 		return new PlayerIdleState();
 	}
+	else if (g_pad[0]->IsTrigger(enButtonRB1)) {
+		return new PlayerIdleInAirState();
+	}
+	return nullptr;
 }
 
 void PlayerJumpState::Update(Player* player)

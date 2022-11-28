@@ -6,11 +6,14 @@
 void PlayerIdleInAirState::Enter(Player* player)
 {
 	// 再生するアニメーションを設定する。
-	//player->SetAnimation(Player::enAnimationClip_Idle);
+	player->SetAnimation(Player::enAnimationClip_Idle);
 	// フラグをオブジェクトに触れていないように設定する。
 	player->SetIsTouchObject(false);
 
 	player->ResetSlideParam();
+
+	//player->m_moveSpeed = Vector3::Zero;
+	player->m_moveSpeed.y = 100.0f;
 }
 
 PlayerState* PlayerIdleInAirState::StateChange(Player* player)
@@ -29,5 +32,9 @@ PlayerState* PlayerIdleInAirState::StateChange(Player* player)
 
 void PlayerIdleInAirState::Update(Player* player)
 {
-
+	if (player->m_moveSpeed.y > 0.0f) {
+		player->m_moveSpeed *= 0.97f;
+		player->m_position = player->m_charaCon.Execute(player->m_moveSpeed, g_gameTime->GetFrameDeltaTime());
+		player->m_modelRender.SetPosition(player->m_position);
+	}
 }

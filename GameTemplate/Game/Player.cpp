@@ -15,7 +15,9 @@ namespace
 	const float MIN_INPUT_AMOUNT = 0.001f;			// 入力量の最低値
 	const float SLIDING_SPEED = 600.0f;				// スライディングの速さ
 	const float MIN_SPEED_FOR_RUN = 440.0f;
-	const float RESIST_SPEED = 100.0f;
+	const float ADD_SPEED = 10.0f;
+	const float GRAVITY = 14.0f;					// 重力
+	const float INERTIAL_FORCE = 0.99f;				// 慣性力
 }
 
 bool Player::Start()
@@ -29,8 +31,10 @@ bool Player::Start()
 	m_animationClips[enAnimationClip_Run].SetLoopFlag(true);
 	m_animationClips[enAnimationClip_Slide].Load("Assets/animData/WD/slide_2.tka");
 	m_animationClips[enAnimationClip_Slide].SetLoopFlag(false);
-	m_animationClips[enAnimationClip_NormalJump].Load("Assets/animData/WD/jump_2.tka");
+	m_animationClips[enAnimationClip_NormalJump].Load("Assets/animData/WD/jump_type2_1.tka");
 	m_animationClips[enAnimationClip_NormalJump].SetLoopFlag(false);
+	m_animationClips[enAnimationClip_DashJump].Load("Assets/animData/WD/jump_type1_1.tka");
+	m_animationClips[enAnimationClip_DashJump].SetLoopFlag(false);
 
 	// モデルを初期化。
 	m_modelRender.Init(
@@ -46,6 +50,8 @@ bool Player::Start()
 	m_modelRender.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
 		OnAnimationEvent(clipName, eventName);
 	});
+	m_modelRender.SetAnimationSpeed(ANIMATION_SPEED);
+
 
 	// キャラクターコントローターを初期化。
 	m_charaCon.Init(
@@ -62,6 +68,7 @@ bool Player::Start()
 	// wavファイルを登録する。
 	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/run_footstep.wav");
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/slide2.wav");
+	g_soundEngine->ResistWaveFileBank(2, "Assets/sound/landing.wav");
 	return true;
 }
 
@@ -124,9 +131,6 @@ void Player::MoveOnAirspace()
 	// 移動速度を求める。
 	m_moveSpeed += m_moveVectorInAir * 1500.0f;
 	
-	// 移動する。
-	//m_position = m_charaCon.Float(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
-
 	m_modelRender.SetPosition(m_position);
 }
 
@@ -146,7 +150,7 @@ void Player::Slide()
 	m_moveSpeed += m_forward * SLIDING_SPEED;
 
 	// 重力を加算。
-	m_moveSpeed.y -= 7.0f;
+	m_moveSpeed.y -= GRAVITY;
 
 	// 移動。
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
@@ -165,32 +169,24 @@ void Player::Slide()
 void Player::Jump()
 {
 	// 移動速度に加算する値。
-	Vector3 addMoveSpeed = CalcMoveSpeed(RESIST_SPEED);
-	//// 加算する値の正面ベクトルの長さ
-	float forwardVectorLength = addMoveSpeed.Dot(m_forward);
-
-	// 正面ベクトルを削除
-	addMoveSpeed -= m_forward * forwardVectorLength;
-
-	// 移動速度を確定。
-	if (fabsf(addMoveSpeed.x) >= 0.0001f || fabsf(addMoveSpeed.z) >= 0.0001f) {
-		m_moveSpeed += addMoveSpeed;
-		if (m_moveSpeed.LengthSq() > 1.0f) {
-			m_moveSpeed.Normalize();
-		}
-		m_moveSpeed *= WALK_SPEED;
-	}
-	else {
-		m_moveSpeed = Vector3::Zero;
-		m_moveSpeed.y += addMoveSpeed.y;
-	}
-
-
-
+	Vector3 addMoveSpeed = CalcMoveSpeed(ADD_SPEED);
+	m_moveSpeed += addMoveSpeed;
+	// 慣性
+	m_moveSpeed *= INERTIAL_FORCE;
 
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 
 	m_modelRender.SetPosition(m_position);
+}
+
+void Player::SelectJumpAnimation()
+{
+	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f) {
+		m_currentAnimationClip = enAnimationClip_DashJump;
+	}
+	else {
+		m_currentAnimationClip = enAnimationClip_NormalJump;
+	}
 }
 
 void Player::Rotation()
@@ -210,7 +206,6 @@ void Player::Rotation()
 
 void Player::PlayAnimation(EnAnimationClip currentAnimationClip)
 {
-	m_modelRender.SetAnimationSpeed(ANIMATION_SPEED);
 	// アニメーションを再生
 	m_modelRender.PlayAnimation(currentAnimationClip, ANIMATION_INTERPORATE_TIME);
 }
@@ -227,6 +222,17 @@ void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 		m_runFootstep->Init(0);
 		m_runFootstep->Play(false);
 	}
+	if (wcscmp(eventName, L"jump1_jump") == 0 || wcscmp(eventName, L"jump2_jump") == 0 ){
+		m_runFootstep = NewGO<SoundSource>(0);
+		m_runFootstep->Init(0);
+		m_runFootstep->Play(false);
+	}
+	if (wcscmp(eventName, L"jump1_landing1") == 0 || wcscmp(eventName, L"jump1_landing2") == 0) {
+		m_landingSound = NewGO<SoundSource>(0);
+		m_landingSound->Init(2);
+		m_landingSound->Play(false);
+	}
+
 }
 
 void Player::Render(RenderContext& rc)
@@ -262,7 +268,7 @@ Vector3 Player::CalcMoveSpeed(float speed)
 	moveSpeed += right + forward;
 
 	// 重力を加算。
-	moveSpeed.y -= 7.0f;
+	moveSpeed.y -= GRAVITY;
 
 	return moveSpeed;
 }

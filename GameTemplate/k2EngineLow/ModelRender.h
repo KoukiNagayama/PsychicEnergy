@@ -32,13 +32,6 @@ namespace nsK2EngineLow
 		/// </summary>
 		void Update();
 		/// <summary>
-		/// インスタンシングデータの更新。
-		/// </summary>
-		/// <param name="pos">座標</param>
-		/// <param name="rot">回転</param>
-		/// <param name="scale">拡大率</param>
-		void UpdateInstancingData(const Vector3& pos, const Quaternion& rot, const Vector3& scale);
-		/// <summary>
 		/// 描画処理
 		/// </summary>
 		void Draw(RenderContext& rc);
@@ -211,12 +204,6 @@ namespace nsK2EngineLow
 		Quaternion								m_rotation = Quaternion::Identity;				// 回転
 		Vector3									m_scale = Vector3::One;							// 拡大率
 		float									m_animationSpeed = 1.0f;						// アニメーションの再生速度
-		int										m_numInstance = 0;											// インスタンスの数
-		int										m_maxInstance = 1;											// 最大インスタンス数
-		int										m_fixNumInstanceOnFrame = 0;								// このフレームに描画するインスタンスの数の確定数
-		bool									m_isEnableInstancingDraw = false;							// インスタンシング描画が有効？
-		std::unique_ptr<Matrix[]>				m_worldMatrixArray;											// ワールド行列の配列。
-		StructuredBuffer						m_worldMatrixArraySB;										// ワールド行列の配列のストラクチャードバッファ。
 		ToonMap									m_toonMap;
 	};
 }

@@ -15,6 +15,7 @@ public:
 		enAnimationClip_Run,		// 走り
 		enAnimationClip_Slide,		// スライディング
 		enAnimationClip_NormalJump,	// 通常のジャンプ
+		enAnimationClip_DashJump,	// ダッシュジャンプ
 		enAnimationClip_Num			// アニメーションクリップの数
 	};
 public:
@@ -110,7 +111,7 @@ public:
 	/// <summary>
 	/// スライドを初期化する。
 	/// </summary>
-	const void InitSlide()
+	const void InitSlideParam()
 	{
 		m_isSlide = true;
 	}
@@ -148,7 +149,29 @@ public:
 	{
 		return m_modelRender.IsPlayingAnimation();
 	}
+	/// <summary>
+	/// アニメーションスピードを設定。
+	/// </summary>
+	/// <param name="speed"></param>
+	const void SetAnimationSpeed(float speed)
+	{
+		m_modelRender.SetAnimationSpeed(speed);
+	}
+	/// <summary>
+	/// ジャンプ終了後にリセットする。
+	/// </summary>
+	void ResetJump()
+	{
+		m_modelRender.SetAnimationSpeed(1.0f);
 
+	}
+	/// <summary>
+	/// 地面上にいるか
+	/// </summary>
+	const bool& IsOnGround() const 
+	{
+		return m_charaCon.IsOnGround();
+	}
 private:
 	friend class PlayerIdleState;
 	friend class PlayerWalkState;
@@ -194,6 +217,10 @@ private:
 	/// </summary>
 	void Jump();
 	/// <summary>
+	/// ジャンプのアニメーションを選択。
+	/// </summary>
+	void SelectJumpAnimation();
+	/// <summary>
 	/// アニメーションイベント用関数。
 	/// </summary>
 	/// <param name="clipName"></param>
@@ -215,13 +242,13 @@ private:
 	CharacterController		m_charaCon;										// キャラクターコントローラー
 	PlayerState*			m_playerState = nullptr;						// ステート
 	EnAnimationClip			m_currentAnimationClip;							// 現在設定されているアニメーションクリップ
-	Vector3					m_yawPitchRoll = Vector3::Zero;					// YawPitchRollの回転要素
 	Vector3					m_moveVectorInAir = Vector3::Zero;				// 空中での移動方向
 	Vector3					m_forward = Vector3::AxisZ;						// 正面方向
 	SoundSource*			m_runFootstep = nullptr;						// 走りの足音
 	Quaternion				m_slideRot = Quaternion::Identity;				// スライド中の進行方向の回転
 	bool					m_isSlide = false;								// スライド中？	
 	SoundSource*			m_slideSound = nullptr;							// スライドの滑り音
-	bool					m_isRingingSlideSound = false;
+	bool					m_isRingingSlideSound = false;					// スライディングの音が鳴っているか
+	SoundSource*			m_landingSound = nullptr;						// 着地音
 };
 

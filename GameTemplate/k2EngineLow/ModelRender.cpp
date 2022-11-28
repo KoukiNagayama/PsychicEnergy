@@ -221,29 +221,6 @@ namespace nsK2EngineLow
 		}
 	}
 
-	void ModelRender::UpdateInstancingData(const Vector3& pos, const Quaternion& rot, const Vector3& scale)
-	{
-		K2_ASSERT(m_numInstance < m_maxInstance, "インスタンスの数が多すぎです。");
-		if (!m_isEnableInstancingDraw) {
-			return;
-		}
-		auto wlorldMatrix = m_model.CalcWorldMatrix(pos, rot, scale);
-
-		// インスタンシング描画を行う。
-		m_worldMatrixArray[m_numInstance] = wlorldMatrix;
-		if (m_numInstance == 0) {
-			//インスタンス数が0の場合のみアニメーション関係の更新を行う。
-			// スケルトンを更新。
-			// 各インスタンスのワールド空間への変換は、
-			// インスタンスごとに行う必要があるので、頂点シェーダーで行う。
-			// なので、単位行列を渡して、モデル空間でボーン行列を構築する。
-			m_skeleton.Update(g_matIdentity);
-			//アニメーションを進める。
-			m_animation.Progress(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
-		}
-		m_numInstance++;
-	}
-
 	void ModelRender::Update()
 	{
 		// ワールド座標の更新
