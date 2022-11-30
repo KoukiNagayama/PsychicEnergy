@@ -6,11 +6,13 @@
 void PlayerIdleInAirState::Enter(Player* player)
 {
 	// 再生するアニメーションを設定する。
-	player->SetAnimation(Player::enAnimationClip_Idle);
+	player->SetAnimation(Player::enAnimationClip_IdleAir);
 	// フラグをオブジェクトに触れていないように設定する。
 	player->SetIsTouchObject(false);
 
 	player->ResetSlideParam();
+
+
 
 	//player->m_moveSpeed = Vector3::Zero;
 	player->m_moveSpeed.y = 100.0f;

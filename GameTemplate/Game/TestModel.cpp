@@ -35,7 +35,7 @@ bool TestModel::Start()
 		);
 	}
 	else if (m_typeNum == 2) {
-		filePath = "Assets/modelData/testStage/testModel2.tkm";
+		filePath = "Assets/modelData/testStage/testModel1.tkm";
 
 		m_model.Init(
 			filePath,

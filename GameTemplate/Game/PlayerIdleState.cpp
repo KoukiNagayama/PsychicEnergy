@@ -21,6 +21,16 @@ void PlayerIdleState::Enter(Player* player)
 	player->ResetSlideParam();
 
 	player->ResetJump();
+
+	//player->m_modelRender.Init(
+	//	"Assets/modelData/WD/WD.tkm",
+	//	player->m_animationClips,
+	//	player->enAnimationClip_Num,
+	//	enModelUpAxisZ,
+	//	true,
+	//	true,
+	//	false
+	//);
 }
 
 PlayerState* PlayerIdleState::StateChange(Player* player)

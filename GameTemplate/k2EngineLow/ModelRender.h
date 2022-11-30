@@ -25,7 +25,7 @@ namespace nsK2EngineLow
 			bool isDrawOutLine = false,
 			bool isCharacterModel = false,
 			bool isShadowCaster = true,
-			int maxInstance = 0
+			bool isFloating = false
 		);
 		/// <summary>
 		/// 更新処理
@@ -167,7 +167,8 @@ namespace nsK2EngineLow
 		/// <param name="filePath"></param>
 		/// <param name="enModelUpAxis"></param>
 		void InitModelForBackWithOutLine(const char* filePath,
-			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
+			bool isFloating = false
 		);
 		/// <summary>
 		/// 深度値記録用モデルを初期化

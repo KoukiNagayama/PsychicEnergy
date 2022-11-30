@@ -10,7 +10,7 @@ namespace nsK2EngineLow
 		bool isDrawOutLine,
 		bool isCharacterModel,
 		bool isShadowCaster,
-		int maxInstance
+		bool isFloating
 	)
 	{
 
@@ -21,7 +21,7 @@ namespace nsK2EngineLow
 
 		if (isDrawOutLine == true) {
 			// モデルの背面用モデルを初期化。
-			InitModelForBackWithOutLine(filePath, enModelUpAxis);
+			InitModelForBackWithOutLine(filePath, enModelUpAxis, isFloating);
 			InitDepthModel(filePath, enModelUpAxis);
 		}
 
@@ -137,15 +137,21 @@ namespace nsK2EngineLow
 	}
 
 	void ModelRender::InitModelForBackWithOutLine(const char* filePath,
-		EnModelUpAxis enModelUpAxis
+		EnModelUpAxis enModelUpAxis,
+		bool isFloating
 	)
 	{
 		// モデルの初期化データ
 		ModelInitData modelInitData;
 		// モデルのtkmファイルパスを指定。
 		modelInitData.m_tkmFilePath = filePath;
-		// シェーダーのfxファイルパスを指定。
-		modelInitData.m_fxFilePath = "Assets/shader/backModel.fx";
+		if (isFloating) {
+			modelInitData.m_fxFilePath = "Assets/shader/redBackModel.fx";
+		}
+		else {
+			// シェーダーのfxファイルパスを指定。
+			modelInitData.m_fxFilePath = "Assets/shader/blackBackModel.fx";
+		}
 		// カリングモードを指定。フロントカリングを使用。
 		modelInitData.m_cullMode = D3D12_CULL_MODE_FRONT;
 		// モデルの上方向を指定。

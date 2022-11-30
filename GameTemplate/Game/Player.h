@@ -16,6 +16,7 @@ public:
 		enAnimationClip_Slide,		// スライディング
 		enAnimationClip_NormalJump,	// 通常のジャンプ
 		enAnimationClip_DashJump,	// ダッシュジャンプ
+		enAnimationClip_IdleAir,	// 空中での待機
 		enAnimationClip_Num			// アニメーションクリップの数
 	};
 public:

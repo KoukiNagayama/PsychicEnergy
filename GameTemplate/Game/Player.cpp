@@ -35,15 +35,19 @@ bool Player::Start()
 	m_animationClips[enAnimationClip_NormalJump].SetLoopFlag(false);
 	m_animationClips[enAnimationClip_DashJump].Load("Assets/animData/WD/jump_type1_1.tka");
 	m_animationClips[enAnimationClip_DashJump].SetLoopFlag(false);
+	m_animationClips[enAnimationClip_IdleAir].Load("Assets/animData/WD/idle_air_2.tka");
+	m_animationClips[enAnimationClip_IdleAir].SetLoopFlag(true);
 
 	// ÉÇÉfÉãÇèâä˙âªÅB
 	m_modelRender.Init(
-		"Assets/modelData/WD.tkm",
+		"Assets/modelData/WD/WD.tkm",
 		m_animationClips,
 		enAnimationClip_Num,
 		enModelUpAxisZ,
 		true,
-		true
+		true,
+		true,
+		false
 	);
 	m_modelRender.SetTRS(m_position, m_rotation, m_scale);
 	
