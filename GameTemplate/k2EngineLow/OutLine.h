@@ -9,7 +9,7 @@ namespace nsK2EngineLow
 		/// </summary>
 		/// <param name="mainRenderTarget">メインレンダリングターゲット</param>
 		/// <param name="depthRenderTarget">深度値を記録したレンダリングターゲット</param>
-		void Init(RenderTarget& mainRenderTarget, RenderTarget& depthRenderTarget);
+		void Init(RenderTarget& mainRenderTarget, RenderTarget& depthRenderTarget, int& isFloating);
 		/// <summary>
 		/// 描画。
 		/// </summary>

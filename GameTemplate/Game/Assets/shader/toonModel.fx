@@ -1,5 +1,5 @@
 /*!
- * @brief	シンプルなモデルシェーダー。
+ * @brief	トゥーン調のモデルシェーダー。
  */
 
 static const int NUM_DIRECTIONAL_LIGHT = 4; // ディレクションライトの本数
@@ -55,7 +55,9 @@ cbuffer LightingCb : register(b1)
     float3 ambientLight; // 環境光
     float pad;
     float4x4 lvp[NUM_SHADOW_MAP];
+    int floating;
     float farClip[NUM_SHADOW_MAP];
+
 };
 
 ////////////////////////////////////////////////
@@ -132,8 +134,17 @@ SPSIn VSSkinMain(SVSIn vsIn)
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
-    //モデルのテクスチャから色をフェッチする
+    // モデルのテクスチャから色をフェッチする
     float4 albedoColor = g_albedoTexture.Sample(g_sampler, psIn.uv);
+    // 浮遊状態の場合はアルベドカラーを編集する
+    if (floating == 1)
+    {
+        float albedoRed = dot(albedoColor.xyz, float3(1.0f, 0.0f, 0.0f));
+        
+        albedoColor.x = (1.0f - albedoRed) * 0.5f;
+        albedoColor.y *= 0.1f;
+        albedoColor.z *= 0.1f;
+    }
 
     //ハーフランバート拡散照明によるライティング計算
     float p = dot(psIn.normal * -1.0f, directionalLight[0].direction.xyz);

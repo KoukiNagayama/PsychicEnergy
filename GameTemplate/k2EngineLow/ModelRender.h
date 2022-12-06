@@ -28,6 +28,11 @@ namespace nsK2EngineLow
 			bool isFloating = false
 		);
 		/// <summary>
+		/// 特殊なフォワードレンダリング用モデルの初期化関数
+		/// </summary>
+		/// <param name="initData">モデルの初期化データ</param>
+		void InitDirectlyNotifyForwardRendering(ModelInitData initData);
+		/// <summary>
 		/// 更新処理
 		/// </summary>
 		void Update();
@@ -125,6 +130,19 @@ namespace nsK2EngineLow
 			m_animation.AddAnimationEventListener(eventListener);
 		}
 		/// <summary>
+		/// 浮遊状態かどうかを設定。
+		/// </summary>
+		void SetIsFloating(const bool isFloating)
+		{
+			if (isFloating) {
+				m_floating = 1;
+			}
+			else {
+				m_floating = 0;
+			}
+			
+		}
+		/// <summary>
 		/// モデルを取得
 		/// </summary>
 		/// <returns>モデル</returns>
@@ -196,7 +214,6 @@ namespace nsK2EngineLow
 		Model									m_frontCullingModel;							// フロントカリングモデル
 		Model									m_depthModel;									// 深度値抽出用モデル
 		Model									m_shadowMapModel[NUM_SHADOW_MAP];				// シャドウマップに描画するモデル
-		
 		Skeleton								m_skeleton;										// スケルトン
 		Animation								m_animation;									// アニメーション
 		AnimationClip*							m_animationClips = nullptr;						// アニメーションクリップ
@@ -206,6 +223,7 @@ namespace nsK2EngineLow
 		Vector3									m_scale = Vector3::One;							// 拡大率
 		float									m_animationSpeed = 1.0f;						// アニメーションの再生速度
 		ToonMap									m_toonMap;
+		int										m_floating; 
 	};
 }
 

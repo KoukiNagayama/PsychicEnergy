@@ -173,6 +173,11 @@ public:
 	{
 		return m_charaCon.IsOnGround();
 	}
+	/// <summary>
+	/// モードの変更。
+	/// </summary>
+	/// <param name="isFloating">浮遊状態であるか</param>
+	void FloatModeChange(bool isFloating);
 private:
 	friend class PlayerIdleState;
 	friend class PlayerWalkState;
@@ -251,5 +256,6 @@ private:
 	SoundSource*			m_slideSound = nullptr;							// スライドの滑り音
 	bool					m_isRingingSlideSound = false;					// スライディングの音が鳴っているか
 	SoundSource*			m_landingSound = nullptr;						// 着地音
+	SoundSource*			m_modeChangeSound = nullptr;
 };
 

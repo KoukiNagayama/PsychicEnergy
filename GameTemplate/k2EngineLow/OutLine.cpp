@@ -3,12 +3,13 @@
 
 namespace nsK2EngineLow
 {
-	void OutLine::Init(RenderTarget& mainRenderTarget, RenderTarget& depthRenderTarget)
+	void OutLine::Init(RenderTarget& mainRenderTarget, RenderTarget& depthRenderTarget, int& isFloating)
 	{
 		// エッジ抽出用スプライトの初期化データ
 		SpriteInitData edgeSpriteInitData;
 		// テクスチャは深度記録用のレンダリングターゲットのものを使用。
 		edgeSpriteInitData.m_textures[0] = &depthRenderTarget.GetRenderTargetTexture();
+		edgeSpriteInitData.m_textures[1] = &mainRenderTarget.GetRenderTargetTexture();
 		// レンダリングターゲットの幅を指定。
 		edgeSpriteInitData.m_width = mainRenderTarget.GetWidth();
 		edgeSpriteInitData.m_height = mainRenderTarget.GetHeight();
@@ -16,7 +17,9 @@ namespace nsK2EngineLow
 		edgeSpriteInitData.m_fxFilePath = "Assets/shader/postEffect/outLine.fx";
 		// エントリーポイントを指定。
 		edgeSpriteInitData.m_vsEntryPointFunc = "VSMain";
-		edgeSpriteInitData.m_psEntryPoinFunc = "PSSamplingEdge";
+		edgeSpriteInitData.m_psEntryPoinFunc = "PSSamplingEdge";	
+		edgeSpriteInitData.m_expandConstantBuffer = &isFloating;
+		edgeSpriteInitData.m_expandConstantBufferSize = sizeof(isFloating);
 		// 初期化データをもとにスプライトを初期化。
 		m_edgeSprite.Init(edgeSpriteInitData);
 
@@ -28,7 +31,7 @@ namespace nsK2EngineLow
 			mainRenderTarget.GetHeight(),
 			1,
 			1,
-			DXGI_FORMAT_R16_FLOAT,
+			mainRenderTarget.GetColorBufferFormat(),
 			DXGI_FORMAT_UNKNOWN
 		);
 
@@ -36,6 +39,7 @@ namespace nsK2EngineLow
 		SpriteInitData finalSpriteInitData;
 		// テクスチャはアウトライン描画用のレンダリングターゲットのものを使用。
 		finalSpriteInitData.m_textures[0] = &m_outLineRenderTarget.GetRenderTargetTexture();
+
 		// スプライトの幅を指定。
 		finalSpriteInitData.m_width = mainRenderTarget.GetWidth();
 		finalSpriteInitData.m_height = mainRenderTarget.GetHeight();
@@ -45,7 +49,7 @@ namespace nsK2EngineLow
 		finalSpriteInitData.m_vsEntryPointFunc = "VSMain";
 		finalSpriteInitData.m_psEntryPoinFunc = "PSOutLineFinal";
 		// アルファブレンディングモードを乗算合成に指定。
-		finalSpriteInitData.m_alphaBlendMode = AlphaBlendMode_Multiply;
+		finalSpriteInitData.m_alphaBlendMode = AlphaBlendMode_Add;
 		// 初期化データをもとにスプライトを初期化。
 		m_finalSprite.Init(finalSpriteInitData);
 
@@ -57,6 +61,7 @@ namespace nsK2EngineLow
 		rc.WaitUntilToPossibleSetRenderTarget(m_outLineRenderTarget);
 		// レンダリングターゲットを設定
 		rc.SetRenderTargetAndViewport(m_outLineRenderTarget);
+		rc.ClearRenderTargetView(m_outLineRenderTarget);
 		// エッジ検出を行う。
 		m_edgeSprite.Draw(rc);
 		// レンダリングターゲットへの書き込み終了待ち

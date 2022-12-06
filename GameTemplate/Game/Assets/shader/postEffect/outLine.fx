@@ -11,6 +11,11 @@ cbuffer cb : register(b0)
     float4 mulColor;
 };
 
+cbuffer floating : register(b1)
+{
+    int isFloating;
+}
+
 ///////////////////////////////////////////////////
 // 構造体
 ///////////////////////////////////////////////////
@@ -31,11 +36,8 @@ struct PSInput
 // グローバル変数
 ///////////////////////////////////////////
 Texture2D<float4> g_depthTexture : register(t0);
+Texture2D<float4> g_sceneTexture : register(t1);
 sampler g_sampler : register(s0);
-Texture2D<float4> g_sceneTexture : register(t0);
-Texture2D<float4> g_edgeTexture : register(t0);
-
-
 
 PSInput VSMain(VSInput In)
 {
@@ -44,7 +46,6 @@ PSInput VSMain(VSInput In)
     psIn.uv = In.uv;
     return psIn;
 }
-
 
 float4 PSSamplingEdge(PSInput In) : SV_Target0
 {
@@ -99,18 +100,38 @@ float4 PSSamplingEdge(PSInput In) : SV_Target0
     
     if (abs(depth - depth2) > 0.0005f)
     {
-        // 黒
-        return float4(0.0f, 0.0f, 0.0f, 1.0f);
+        float4 sceneColor = g_sceneTexture.Sample(g_sampler, In.uv);
+        float4 edgeColor;
+        
+        // 加算合成のためシーンカラーに足したときに目的の色になる値を出力する
+        if (isFloating)
+        {
+            // 加算合成で水色になる値を出力する
+            edgeColor.x = 0.68f - sceneColor.x;
+            edgeColor.y = 0.87f - sceneColor.y;
+            edgeColor.z = 0.89f - sceneColor.z;
+            edgeColor.w = 0.0f;
+            return edgeColor;
+        }
+        else
+        {
+            // 加算合成で黒色になる値を出力する
+            edgeColor.x = -sceneColor.x;
+            edgeColor.y = -sceneColor.y;
+            edgeColor.z = -sceneColor.z;
+            edgeColor.w = 0.0f;
+            return edgeColor;
+        }
     }
-    else
-    {
-        return float4(1.0f, 1.0f, 1.0f, 1.0f);
-    }
+
+    // 輪郭線ではないため合成時に値がおかしくならないようにピクセルを0の値で塗りつぶす
+    return float4(0.0f, 0.0f, 0.0f, 0.0f);
 }
+
+Texture2D<float4> g_edgeTexture : register(t0);
 
 float4 PSOutLineFinal(PSInput In) : SV_Target0
 {
-    float combine = g_sceneTexture.Sample(g_sampler, In.uv);
-    float4 combineColor = float4(combine, combine, combine, 1.0f);
+    float4 combineColor = g_edgeTexture.Sample(g_sampler, In.uv);
     return combineColor;
 }

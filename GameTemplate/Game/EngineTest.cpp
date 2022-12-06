@@ -3,6 +3,7 @@
 #include "TestModel.h"
 #include "Player.h"
 #include "GameCamera.h"
+#include "SkyCube.h"
 
 
 bool EngineTest::Start()
@@ -70,6 +71,8 @@ bool EngineTest::Start()
 			return false;
 		});
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
+
+
 
 	//std::vector<nsK2EngineLow::TkmFile::SPolygon> polygons = m_bgModel.GetModel().GetTkmFile().GetPolygon();
 

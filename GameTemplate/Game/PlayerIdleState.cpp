@@ -20,17 +20,11 @@ void PlayerIdleState::Enter(Player* player)
 	// スライドをリセットする。
 	player->ResetSlideParam();
 
+	// ジャンプをリセットする。
 	player->ResetJump();
 
-	//player->m_modelRender.Init(
-	//	"Assets/modelData/WD/WD.tkm",
-	//	player->m_animationClips,
-	//	player->enAnimationClip_Num,
-	//	enModelUpAxisZ,
-	//	true,
-	//	true,
-	//	false
-	//);
+	player->FloatModeChange(false);
+
 }
 
 PlayerState* PlayerIdleState::StateChange(Player* player)

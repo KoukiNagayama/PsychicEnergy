@@ -47,7 +47,7 @@ bool Player::Start()
 		true,
 		true,
 		true,
-		false
+		true
 	);
 	m_modelRender.SetTRS(m_position, m_rotation, m_scale);
 	
@@ -73,6 +73,7 @@ bool Player::Start()
 	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/run_footstep.wav");
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/slide2.wav");
 	g_soundEngine->ResistWaveFileBank(2, "Assets/sound/landing.wav");
+	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/modeChange.wav");
 	return true;
 }
 
@@ -208,6 +209,16 @@ void Player::Rotation()
 	}
 }
 
+void Player::FloatModeChange(bool isFloating)
+{
+	m_modelRender.SetIsFloating(isFloating);
+	g_renderingEngine->SetIsFloating(isFloating);
+
+	m_modeChangeSound = NewGO<SoundSource>(0);
+	m_modeChangeSound->Init(3);
+	m_modeChangeSound->Play(false);
+}
+
 void Player::PlayAnimation(EnAnimationClip currentAnimationClip)
 {
 	// アニメーションを再生
@@ -236,7 +247,6 @@ void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 		m_landingSound->Init(2);
 		m_landingSound->Play(false);
 	}
-
 }
 
 void Player::Render(RenderContext& rc)

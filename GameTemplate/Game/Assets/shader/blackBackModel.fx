@@ -13,6 +13,11 @@ cbuffer ModelCb : register(b0)
     float4x4 mProj;
 };
 
+cbuffer StateCb : register(b1)
+{
+    int floating; 
+}
+
 ////////////////////////////////////////////////
 // 構造体
 ////////////////////////////////////////////////
@@ -116,6 +121,15 @@ SPSIn VSSkinMain(SVSIn vsIn)
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
-    // 黒色で出力
-    return float4(0.0f, 0.0f, 0.0f, 1.0f);
+    if (floating == 1)
+    {
+        // 水色で出力
+        return float4(0.68f, 0.87f, 0.89f, 1.0f);
+    }
+    else
+    {
+        // 黒色で出力
+        return float4(0.0f, 0.0f, 0.0f, 1.0f);
+    }
+
 }

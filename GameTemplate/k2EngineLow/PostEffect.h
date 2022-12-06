@@ -11,7 +11,7 @@ namespace nsK2EngineLow
 		/// 初期化
 		/// </summary>
 		/// <param name="mainRenderTarget">メインレンダリングターゲット</param>
-		void Init(RenderTarget& mainRenderTarget, RenderTarget& depthRenderTarget);
+		void Init(RenderTarget& mainRenderTarget, RenderTarget& depthRenderTarget, int& isFloating);
 		/// <summary>
 		/// 描画
 		/// </summary>

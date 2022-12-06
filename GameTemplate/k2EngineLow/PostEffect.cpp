@@ -3,12 +3,12 @@
 
 namespace nsK2EngineLow
 {
-	void PostEffect::Init(RenderTarget& mainRenderTarget, RenderTarget& depthRenderTarget)
+	void PostEffect::Init(RenderTarget& mainRenderTarget, RenderTarget& depthRenderTarget, int& isFloating)
 	{
 		// FXAA‚Ì‰Šú‰»
 		m_fxaa.Init(mainRenderTarget);
 
-		m_outLine.Init(mainRenderTarget, depthRenderTarget);
+		m_outLine.Init(mainRenderTarget, depthRenderTarget, isFloating);
 	}
 
 	void PostEffect::Render(RenderContext& rc, RenderTarget& mainRenderTarget)

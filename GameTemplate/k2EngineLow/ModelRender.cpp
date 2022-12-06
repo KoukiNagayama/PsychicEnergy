@@ -3,6 +3,14 @@
 
 namespace nsK2EngineLow
 {
+	void ModelRender::InitDirectlyNotifyForwardRendering(ModelInitData initData)
+	{
+		InitSkeleton(initData.m_tkmFilePath);
+
+		initData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+		m_model.Init(initData);
+	}
+
 	void ModelRender::Init(const char* filePath,
 		AnimationClip* animationClips,
 		int numAnimationClips,
@@ -145,13 +153,9 @@ namespace nsK2EngineLow
 		ModelInitData modelInitData;
 		// モデルのtkmファイルパスを指定。
 		modelInitData.m_tkmFilePath = filePath;
-		if (isFloating) {
-			modelInitData.m_fxFilePath = "Assets/shader/redBackModel.fx";
-		}
-		else {
-			// シェーダーのfxファイルパスを指定。
-			modelInitData.m_fxFilePath = "Assets/shader/blackBackModel.fx";
-		}
+		// シェーダーのfxファイルパスを指定。
+		modelInitData.m_fxFilePath = "Assets/shader/blackBackModel.fx";
+		
 		// カリングモードを指定。フロントカリングを使用。
 		modelInitData.m_cullMode = D3D12_CULL_MODE_FRONT;
 		// モデルの上方向を指定。
@@ -167,6 +171,10 @@ namespace nsK2EngineLow
 			//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
 			modelInitData.m_vsEntryPointFunc = "VSMain";
 		}
+
+		// 定数バッファを指定。
+		modelInitData.m_expandConstantBuffer = &m_floating;
+		modelInitData.m_expandConstantBufferSize = sizeof(m_floating);
 		// 初期化データをもとにモデルを初期化。
 		m_frontCullingModel.Init(modelInitData);
 	}

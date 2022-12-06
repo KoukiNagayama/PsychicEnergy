@@ -4,6 +4,7 @@
 #include "GameCamera.h"
 #include "TestModel.h"
 
+
 Game::Game()
 {
 
@@ -52,6 +53,8 @@ bool Game::Start()
 			return false;
 		});
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
+
+	m_skyCube = NewGO<SkyCube>(0, "skyCube");
 
 	return true;
 }

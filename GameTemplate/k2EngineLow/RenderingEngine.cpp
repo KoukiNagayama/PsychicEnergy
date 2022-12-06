@@ -9,7 +9,7 @@ namespace nsK2EngineLow
 		InitMainRenderTarget();
 		InitDepthForOutLineRenderTarget();
 		InitCopyMainRenderTargetToFrameBufferSprite();
-		m_postEffect.Init(m_mainRenderTarget, m_depthForOutLineRenderTarget);
+		m_postEffect.Init(m_mainRenderTarget, m_depthForOutLineRenderTarget, m_sLightingCb.m_isFloating);
 		InitShadowMapRender();
 	}
 

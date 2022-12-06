@@ -12,7 +12,9 @@ namespace nsK2EngineLow
 		{
 			Light m_light;						// ライト
 			Matrix m_lvp[NUM_SHADOW_MAP];		// ライトビュープロジェクション行列
+			int m_isFloating = 0;
 			float m_farList[NUM_SHADOW_MAP];	
+			
 		};
 	public:
 		RenderingEngine() {};
@@ -60,7 +62,11 @@ namespace nsK2EngineLow
 		{
 			m_shadowMapModels[areaNo].push_back(&model);
 		}
-
+		/// <summary>
+		/// シャドウマップに描画するモデルを取得
+		/// </summary>
+		/// <param name="areaNo">カスケードシャドウで分割されたエリア</param>
+		/// <returns>シャドウマップに描画するモデルの配列</returns>
 		const std::vector<Model*>& GetShadowMapModel(int areaNo) const 
 		{
 			return m_shadowMapModels[areaNo];
@@ -92,6 +98,15 @@ namespace nsK2EngineLow
 		RenderTarget& GetDepthValue()
 		{
 			return m_depthForOutLineRenderTarget;
+		}
+		void SetIsFloating(const bool isFloating)
+		{
+			if (isFloating) {
+				m_sLightingCb.m_isFloating = 1;
+			}
+			else {
+				m_sLightingCb.m_isFloating = 0;
+			}
 		}
 	private:
 		/// <summary>

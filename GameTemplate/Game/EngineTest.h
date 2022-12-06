@@ -1,5 +1,6 @@
 #pragma once
 #include "LevelRender.h"
+#include "SkyCube.h"
 class TestModel;
 class Player;
 class GameCamera;
@@ -34,5 +35,6 @@ private:
 	TestModel* m_testModel2;
 	Player* m_player = nullptr;
 	GameCamera* m_gameCamera;
+	SkyCube* m_skyCube;
 };
 
