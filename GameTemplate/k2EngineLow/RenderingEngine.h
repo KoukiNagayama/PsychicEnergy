@@ -3,6 +3,7 @@
 #include "PostEffect.h"
 #include "SceneLight.h"
 #include "ShadowMapRender.h"
+#include "SceneGeometryData.h"
 
 namespace nsK2EngineLow
 {
@@ -99,6 +100,10 @@ namespace nsK2EngineLow
 		{
 			return m_depthForOutLineRenderTarget;
 		}
+		/// <summary>
+		/// 浮遊情報を設定。
+		/// </summary>
+		/// <param name="isFloating">浮遊しているか。</param>
 		void SetIsFloating(const bool isFloating)
 		{
 			if (isFloating) {
@@ -108,6 +113,31 @@ namespace nsK2EngineLow
 				m_sLightingCb.m_isFloating = 0;
 			}
 		}
+		/// <summary>
+		/// ビューカリングのためのビュープロジェクション行列を取得。
+		/// </summary>
+		/// <returns>ビューカリングのためのビュープロジェクション行列</returns>
+		const Matrix& GetViewProjectionMatrixForViewCulling() const
+		{
+			return m_viewProjMatrixForViewCulling;
+		}
+		/// <summary>
+		/// 幾何学データを登録
+		/// </summary>
+		/// <param name="geomData">幾何学データ</param>
+		void RegisterGeometryData(GemometryData* geomData)
+		{
+			m_sceneGeometryData.RegisterGeometryData(geomData);
+		}
+		/// <summary>
+		/// 幾何学データの登録解除。
+		/// </summary>
+		/// <param name="geomData"></param>
+		void UnregisterGeometryData(GemometryData* geomData)
+		{
+			m_sceneGeometryData.UnregisterGeometryData(geomData);
+		}
+
 	private:
 		/// <summary>
 		/// メインレンダリングターゲットを初期化
@@ -121,6 +151,9 @@ namespace nsK2EngineLow
 		/// メインレンダリングターゲットのカラーバッファの内容をフレームバッファにコピーするためのスプライトを初期化
 		/// </summary>
 		void InitCopyMainRenderTargetToFrameBufferSprite();
+		/// <summary>
+		/// シャドウマップレンダーを初期化
+		/// </summary>
 		void InitShadowMapRender();
 		/// <summary>
 		/// シャドウマップにモデルを描画
@@ -146,6 +179,10 @@ namespace nsK2EngineLow
 		/// </summary>
 		/// <param name="rc">レンダリングコンテキスト</param>
 		void CopyMainRenderTargetToFrameBuffer(RenderContext& rc);
+		/// <summary>
+		/// ビューカリング用のビュープロジェクション行列を計算。
+		/// </summary>
+		void CalcViewProjectionMatrixForViewCulling();
 	private:
 		std::vector<Model*>		m_forwardRenderModels;					// フォワードレンダリングの描画パスで描画されるモデル
 		std::vector<Model*>		m_frontCullingModels;					// フロントカリングされたモデル
@@ -158,6 +195,8 @@ namespace nsK2EngineLow
 		SceneLight				m_sceneLight;
 		ShadowMapRender			m_shadowMapRender;
 		SLightingCB				m_sLightingCb;
+		Matrix					m_viewProjMatrixForViewCulling;			// ビューカリング用のビュープロジェクション行列。
+		SceneGeometryData		m_sceneGeometryData;
 	};
 
 	extern RenderingEngine* g_renderingEngine;

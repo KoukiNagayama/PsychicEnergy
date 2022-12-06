@@ -145,10 +145,27 @@ namespace nsK2EngineLow
 		/// <summary>
 		/// モデルを取得
 		/// </summary>
-		/// <returns>モデル</returns>
+		/// <returns>モデル。</returns>
 		Model& GetModel()
 		{
 			return m_model;
+		}
+		/// <summary>
+		/// ワールド行列を取得。
+		/// </summary>
+		/// <param name="instanceId">インスタンスID。</param>
+		/// <returns>ワールド行列。</returns>
+		const Matrix& GetWorldMatrix(int instanceId) const
+		{
+			return m_model.GetWorldMatrix();
+		}
+		/// <summary>
+		/// シャドウキャスター？
+		/// </summary>
+		/// <returns>シャドウキャスターであればtrue。そうでなければfalse。</returns>
+		bool IsShadowCaster() const
+		{
+			return m_isShadowCaster;
 		}
 	private:
 		/// <summary>
@@ -224,6 +241,7 @@ namespace nsK2EngineLow
 		float									m_animationSpeed = 1.0f;						// アニメーションの再生速度
 		ToonMap									m_toonMap;
 		int										m_floating; 
+		bool									m_isShadowCaster = true;
 	};
 }
 

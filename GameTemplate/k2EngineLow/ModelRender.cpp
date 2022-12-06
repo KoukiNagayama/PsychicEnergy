@@ -21,6 +21,7 @@ namespace nsK2EngineLow
 		bool isFloating
 	)
 	{
+		m_isShadowCaster = isShadowCaster;
 
 		// スケルトンを初期化。
 		InitSkeleton(filePath);
@@ -43,7 +44,7 @@ namespace nsK2EngineLow
 			// 背景用モデルを初期化。
 			InitBackGroundModelWithPBR(filePath, enModelUpAxis);
 		}
-		if (isShadowCaster) {
+		if (m_isShadowCaster) {
 			InitShadowMapModel(filePath, enModelUpAxis);
 		}
 

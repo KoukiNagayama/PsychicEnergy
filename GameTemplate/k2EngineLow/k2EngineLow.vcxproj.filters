@@ -241,6 +241,10 @@
     </ClCompile>
     <ClCompile Include="CameraCollisionSolver.cpp" />
     <ClCompile Include="SkyCube.cpp" />
+    <ClCompile Include="GeometryData.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGeometryData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -532,6 +536,10 @@
     </ClInclude>
     <ClInclude Include="CameraCollisionSolver.h" />
     <ClInclude Include="SkyCube.h" />
+    <ClInclude Include="GeometryData.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGeometryData.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
