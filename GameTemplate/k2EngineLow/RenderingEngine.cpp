@@ -65,6 +65,10 @@ namespace nsK2EngineLow
 
 	void RenderingEngine::Execute(RenderContext& rc)
 	{
+		// ビューカリング用のビュープロジェクション行列を更新
+		CalcViewProjectionMatrixForViewCulling();
+		// シーンのジオメトリ情報を更新
+		m_sceneGeometryData.Update();
 		// シーンライトの更新
 		m_sceneLight.Update();
 		m_sLightingCb.m_light = m_sceneLight.GetLightData();

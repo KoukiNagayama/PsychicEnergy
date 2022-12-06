@@ -3,7 +3,7 @@
 
 namespace nsK2EngineLow
 {
-	void GemometryData::Update()
+	void GeometryData::Update()
 	{
 		Matrix worldMatrix = m_modelRender->GetWorldMatrix(m_instanceId);
 		m_aabb.CalcVertexPositions(
@@ -45,14 +45,13 @@ namespace nsK2EngineLow
 			m_isInViewFrustum = true;
 		}
 	}
-	bool GemometryData::IsShadowCaster() const
+	bool GeometryData::IsShadowCaster() const
 	{
 		return m_modelRender->IsShadowCaster();
 	}
-	void GemometryData::Init(ModelRender* modelRender, int instanceId)
+	void GeometryData::Init(ModelRender* modelRender)
 	{
 		m_modelRender = modelRender;
-		m_instanceId = instanceId;
 		// tkmファイルからモデルの最小座標と最大座標を調べる。
 		Vector3 vMax = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
 		Vector3 vMin = { FLT_MAX,  FLT_MAX,  FLT_MAX };

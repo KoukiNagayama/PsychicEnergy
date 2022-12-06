@@ -6,9 +6,9 @@ namespace nsK2EngineLow
 	void ModelRender::InitDirectlyNotifyForwardRendering(ModelInitData initData)
 	{
 		InitSkeleton(initData.m_tkmFilePath);
-
 		initData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
 		m_model.Init(initData);
+		InitGeometryData();
 	}
 
 	void ModelRender::Init(const char* filePath,
@@ -47,6 +47,8 @@ namespace nsK2EngineLow
 		if (m_isShadowCaster) {
 			InitShadowMapModel(filePath, enModelUpAxis);
 		}
+
+		InitGeometryData();
 
 	}
 
@@ -236,6 +238,12 @@ namespace nsK2EngineLow
 		}
 	}
 
+	void ModelRender::InitGeometryData()
+	{
+		m_geometryData.Init(this);
+		g_renderingEngine->RegisterGeometryData(&m_geometryData);
+	}
+
 	void ModelRender::Update()
 	{
 		// ワールド座標の更新
@@ -276,22 +284,21 @@ namespace nsK2EngineLow
 
 	void ModelRender::Draw(RenderContext& rc)
 	{
-		// モデルを描画パスに追加
-		if (m_model.IsInited())
-		{
-			g_renderingEngine->Add3DModelToForwardRenderPass(m_model);
+		if (m_geometryData.IsInViewFrustum()) {
+			// モデルを描画パスに追加
+			if (m_model.IsInited()){
+				g_renderingEngine->Add3DModelToForwardRenderPass(m_model);
+			}
 		}
-		if (m_frontCullingModel.IsInited())
-		{
+
+		if (m_frontCullingModel.IsInited()){
 			g_renderingEngine->Add3DModelToRenderingModelsForOutLine(m_frontCullingModel);
 		}
-		if (m_depthModel.IsInited())
-		{
+		if (m_depthModel.IsInited()){
 			g_renderingEngine->Add3DModelToDepthForOutLinePass(m_depthModel);
 		}
 		for (int i = 0; i < NUM_SHADOW_MAP; i++) {
-			if (m_shadowMapModel[i].IsInited())
-			{
+			if (m_shadowMapModel[i].IsInited()){
 				g_renderingEngine->Add3DModelToRenderToShadowMapPass(m_shadowMapModel[i], i);
 			}
 		}

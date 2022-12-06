@@ -125,7 +125,7 @@ namespace nsK2EngineLow
 		/// 幾何学データを登録
 		/// </summary>
 		/// <param name="geomData">幾何学データ</param>
-		void RegisterGeometryData(GemometryData* geomData)
+		void RegisterGeometryData(GeometryData* geomData)
 		{
 			m_sceneGeometryData.RegisterGeometryData(geomData);
 		}
@@ -133,7 +133,7 @@ namespace nsK2EngineLow
 		/// 幾何学データの登録解除。
 		/// </summary>
 		/// <param name="geomData"></param>
-		void UnregisterGeometryData(GemometryData* geomData)
+		void UnregisterGeometryData(GeometryData* geomData)
 		{
 			m_sceneGeometryData.UnregisterGeometryData(geomData);
 		}

@@ -6,9 +6,9 @@ namespace nsK2EngineLow
 	/// <summary>
 	/// ジオメトリ情報
 	/// </summary>
-	class GemometryData {
+	class GeometryData {
 	public:
-		void Init(ModelRender* modelRender, int instanceId);
+		void Init(ModelRender* modelRender);
 		/// <summary>
 		/// ビューフラスタムに含まれている？
 		/// </summary>

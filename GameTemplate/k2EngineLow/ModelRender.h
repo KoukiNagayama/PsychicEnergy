@@ -1,6 +1,7 @@
 #pragma once
 #include "ToonMap.h"
 #include "MyRenderer.h"
+#include "GeometryData.h"
 namespace nsK2EngineLow
 {
 	class ModelRender
@@ -222,6 +223,10 @@ namespace nsK2EngineLow
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
 		);
 		/// <summary>
+		/// 幾何学情報を初期化
+		/// </summary>
+		void InitGeometryData();
+		/// <summary>
 		/// ワールド行列の更新
 		/// </summary>
 		void UpdateWorldMatrix();
@@ -242,6 +247,7 @@ namespace nsK2EngineLow
 		ToonMap									m_toonMap;
 		int										m_floating; 
 		bool									m_isShadowCaster = true;
+		GeometryData							m_geometryData;
 	};
 }
 
