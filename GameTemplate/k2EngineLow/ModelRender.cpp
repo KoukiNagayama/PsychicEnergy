@@ -3,10 +3,24 @@
 
 namespace nsK2EngineLow
 {
+	ModelRender::ModelRender()
+	{
+
+	}
+
+	ModelRender::~ModelRender()
+	{
+		// ジオメトリ情報の登録解除
+		g_renderingEngine->UnregisterGeometryData(&m_geometryData);
+	}
+
 	void ModelRender::InitDirectlyNotifyForwardRendering(ModelInitData initData)
 	{
+		// スケルトンを初期化
 		InitSkeleton(initData.m_tkmFilePath);
+		// カラーバッファのフォーマットを指定。
 		initData.m_colorBufferFormat[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+		// モデルの初期化
 		m_model.Init(initData);
 		InitGeometryData();
 	}
@@ -47,7 +61,7 @@ namespace nsK2EngineLow
 		if (m_isShadowCaster) {
 			InitShadowMapModel(filePath, enModelUpAxis);
 		}
-
+		// ジオメトリ情報の初期化
 		InitGeometryData();
 
 	}
@@ -260,7 +274,7 @@ namespace nsK2EngineLow
 
 	void ModelRender::UpdateWorldMatrix()
 	{
-		// モデルのワールド座標の更新。
+		// 各モデルのワールド座標の更新。
 		if (m_model.IsInited())
 		{
 			m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
@@ -284,19 +298,22 @@ namespace nsK2EngineLow
 
 	void ModelRender::Draw(RenderContext& rc)
 	{
+		// ビューフラスタムに含まれているならば描画する
 		if (m_geometryData.IsInViewFrustum()) {
-			// モデルを描画パスに追加
+			// 通常モデルを描画パスに追加
 			if (m_model.IsInited()){
 				g_renderingEngine->Add3DModelToForwardRenderPass(m_model);
 			}
+			// フロントカリングされたモデルを描画パスに追加
+			if (m_frontCullingModel.IsInited()){
+				g_renderingEngine->Add3DModelToRenderingModelsForOutLine(m_frontCullingModel);
+			}
+			// 深度値抽出用モデルを描画パスに追加
+			if (m_depthModel.IsInited()){
+				g_renderingEngine->Add3DModelToDepthForOutLinePass(m_depthModel);
+			}
 		}
-
-		if (m_frontCullingModel.IsInited()){
-			g_renderingEngine->Add3DModelToRenderingModelsForOutLine(m_frontCullingModel);
-		}
-		if (m_depthModel.IsInited()){
-			g_renderingEngine->Add3DModelToDepthForOutLinePass(m_depthModel);
-		}
+		// 
 		for (int i = 0; i < NUM_SHADOW_MAP; i++) {
 			if (m_shadowMapModel[i].IsInited()){
 				g_renderingEngine->Add3DModelToRenderToShadowMapPass(m_shadowMapModel[i], i);

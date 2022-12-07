@@ -8,6 +8,10 @@ namespace nsK2EngineLow
 	/// </summary>
 	class GeometryData {
 	public:
+		/// <summary>
+		/// ジオメトリ情報の初期化
+		/// </summary>
+		/// <param name="modelRender">モデルレンダー</param>
 		void Init(ModelRender* modelRender);
 		/// <summary>
 		/// ビューフラスタムに含まれている？
@@ -46,8 +50,8 @@ namespace nsK2EngineLow
 		bool m_isInViewFrustum = false;			// ビューフラスタムに含まれているか。
 		AABB m_aabb;							// AABB
 		Vector3 m_aabbWorldVertexPositions[8];	// AABBのワールド空間での8頂点。
-		Vector3 m_aabbMax;
-		Vector3 m_aabbMin;
+		Vector3 m_aabbMax;						// ワールド空間でのAABBの最大座標。
+		Vector3 m_aabbMin;						// ワールド空間でのAABBの最小座標。
 		ModelRender* m_modelRender = nullptr;	// このジオメトリ情報と関連づいているモデルレンダラー。
 		int m_instanceId = 0;
 	};

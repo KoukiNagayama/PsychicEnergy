@@ -7,14 +7,20 @@
 
 namespace nsK2EngineLow
 {
+	/// <summary>
+	/// レンダリングエンジン
+	/// </summary>
 	class RenderingEngine : public Noncopyable
 	{
+		/// <summary>
+		/// 定数バッファ用ライティング構造体
+		/// </summary>
 		struct SLightingCB
 		{
 			Light m_light;						// ライト
 			Matrix m_lvp[NUM_SHADOW_MAP];		// ライトビュープロジェクション行列
-			int m_isFloating = 0;
-			float m_farList[NUM_SHADOW_MAP];	
+			int m_isFloating = 0;				// 浮遊しているかどうか。
+			float m_farList[NUM_SHADOW_MAP];	// シャドウマップに使用しているファークリップのリスト
 			
 		};
 	public:
@@ -122,7 +128,7 @@ namespace nsK2EngineLow
 			return m_viewProjMatrixForViewCulling;
 		}
 		/// <summary>
-		/// 幾何学データを登録
+		/// ジオメトリデータを登録
 		/// </summary>
 		/// <param name="geomData">幾何学データ</param>
 		void RegisterGeometryData(GeometryData* geomData)
@@ -130,7 +136,7 @@ namespace nsK2EngineLow
 			m_sceneGeometryData.RegisterGeometryData(geomData);
 		}
 		/// <summary>
-		/// 幾何学データの登録解除。
+		/// ジオメトリデータの登録解除。
 		/// </summary>
 		/// <param name="geomData"></param>
 		void UnregisterGeometryData(GeometryData* geomData)
@@ -186,17 +192,17 @@ namespace nsK2EngineLow
 	private:
 		std::vector<Model*>		m_forwardRenderModels;					// フォワードレンダリングの描画パスで描画されるモデル
 		std::vector<Model*>		m_frontCullingModels;					// フロントカリングされたモデル
-		std::vector<Model*>     m_depthForOutLineModels;				// 深度値を記録するためのモデル
-		std::vector<Model*>		m_shadowMapModels[NUM_SHADOW_MAP];
+		std::vector<Model*>     m_depthForOutLineModels;				// 輪郭線描画用に深度値を記録するためのモデル
+		std::vector<Model*>		m_shadowMapModels[NUM_SHADOW_MAP];		// シャドウマップに描画するモデル
 		RenderTarget			m_mainRenderTarget;						// メインレンダリングターゲット
 		RenderTarget			m_depthForOutLineRenderTarget;			// 輪郭線用の深度値レンダリングターゲット
 		Sprite					m_copyMainRtToFrameBufferSprite;		// メインレンダリングターゲットの内容をフレームバッファにコピーするためのスプライト
 		PostEffect				m_postEffect;							// ポストエフェクト
-		SceneLight				m_sceneLight;
-		ShadowMapRender			m_shadowMapRender;
-		SLightingCB				m_sLightingCb;
+		SceneLight				m_sceneLight;							// シーンライト
+		ShadowMapRender			m_shadowMapRender;						// シャドウマップレンダー
+		SLightingCB				m_sLightingCb;							// 定数バッファ用ライティング構造体
 		Matrix					m_viewProjMatrixForViewCulling;			// ビューカリング用のビュープロジェクション行列。
-		SceneGeometryData		m_sceneGeometryData;
+		SceneGeometryData		m_sceneGeometryData;					// シーンのジオメトリ情報
 	};
 
 	extern RenderingEngine* g_renderingEngine;

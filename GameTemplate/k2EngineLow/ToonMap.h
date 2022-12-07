@@ -1,6 +1,9 @@
 #pragma once
 namespace nsK2EngineLow
 {
+	/// <summary>
+	/// トゥーンマップ
+	/// </summary>
 	class ToonMap : public Noncopyable
 	{
 	public:

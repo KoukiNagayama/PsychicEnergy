@@ -7,8 +7,8 @@ namespace nsK2EngineLow
 	class ModelRender
 	{
 	public:
-		ModelRender() {};
-		~ModelRender() {};
+		ModelRender();
+		~ModelRender();
 
 		/// <summary>
 		/// 初期化処理
@@ -223,7 +223,7 @@ namespace nsK2EngineLow
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
 		);
 		/// <summary>
-		/// 幾何学情報を初期化
+		/// ジオメトリ情報を初期化
 		/// </summary>
 		void InitGeometryData();
 		/// <summary>
@@ -244,10 +244,10 @@ namespace nsK2EngineLow
 		Quaternion								m_rotation = Quaternion::Identity;				// 回転
 		Vector3									m_scale = Vector3::One;							// 拡大率
 		float									m_animationSpeed = 1.0f;						// アニメーションの再生速度
-		ToonMap									m_toonMap;
-		int										m_floating; 
-		bool									m_isShadowCaster = true;
-		GeometryData							m_geometryData;
+		ToonMap									m_toonMap;										// トゥーンマップ
+		int										m_floating = 0;									// 浮遊状態か
+		bool									m_isShadowCaster = true;						// シャドウキャスターか
+		GeometryData							m_geometryData;									// ジオメトリ情報
 	};
 }
 

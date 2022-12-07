@@ -113,6 +113,9 @@ namespace nsK2EngineLow
 
 	void RenderingEngine::RenderToShadowMap(RenderContext& rc)
 	{
+		if (m_sceneGeometryData.IsBuildshadowCasterGeometryData() == false) {
+			return;
+		}
 		m_shadowMapRender.Render(
 			rc,
 			1,
