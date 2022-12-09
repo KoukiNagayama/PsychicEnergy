@@ -38,7 +38,7 @@ namespace nsK2EngineLow
 			return m_aabbMin;
 		}
 		/// <summary>
-		/// シャドウキャスターの幾何学データ？
+		/// シャドウキャスターのジオメトリ情報は？
 		/// </summary>
 		/// <returns></returns>
 		bool IsShadowCaster() const;
@@ -47,13 +47,12 @@ namespace nsK2EngineLow
 		/// </summary>
 		void Update();
 	private:
-		bool m_isInViewFrustum = false;			// ビューフラスタムに含まれているか。
-		AABB m_aabb;							// AABB
-		Vector3 m_aabbWorldVertexPositions[8];	// AABBのワールド空間での8頂点。
-		Vector3 m_aabbMax;						// ワールド空間でのAABBの最大座標。
-		Vector3 m_aabbMin;						// ワールド空間でのAABBの最小座標。
-		ModelRender* m_modelRender = nullptr;	// このジオメトリ情報と関連づいているモデルレンダラー。
-		int m_instanceId = 0;
+		bool			m_isInViewFrustum = false;		// ビューフラスタムに含まれているか。
+		AABB			m_aabb;							// AABB
+		Vector3			m_aabbWorldVertexPositions[8];	// AABBのワールド空間での8頂点。
+		Vector3			m_aabbMax;						// ワールド空間でのAABBの最大座標。
+		Vector3			m_aabbMin;						// ワールド空間でのAABBの最小座標。
+		ModelRender*	m_modelRender = nullptr;		// このジオメトリ情報と関連づいているモデルレンダラー。
 	};
 }
 

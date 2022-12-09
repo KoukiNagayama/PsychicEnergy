@@ -256,6 +256,6 @@ private:
 	SoundSource*			m_slideSound = nullptr;							// スライドの滑り音
 	bool					m_isRingingSlideSound = false;					// スライディングの音が鳴っているか
 	SoundSource*			m_landingSound = nullptr;						// 着地音
-	SoundSource*			m_modeChangeSound = nullptr;
+	SoundSource*			m_modeChangeSound = nullptr;					// モード変更時の効果音
 };
 

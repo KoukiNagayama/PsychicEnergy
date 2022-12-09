@@ -47,6 +47,7 @@ bool TestModel::Start()
 			true,
 			0
 		);
+
 	}
 
 	m_model.SetTRS(m_pos, m_rot, m_sca);
@@ -59,13 +60,13 @@ bool TestModel::Start()
 
 	// デバッグ用　当たり判定描画
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
-
+	m_model.Update();
 	return true;
 }
 
 void TestModel::Update()
 {
-	m_model.Update();
+	
 }
 
 void TestModel::Render(RenderContext& rc)

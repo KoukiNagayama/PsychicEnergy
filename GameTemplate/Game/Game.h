@@ -25,6 +25,7 @@ public:
 	/// 更新処理。
 	/// </summary>
 	void Update();
+	void Render(RenderContext& rc);
 private:
 
 private:
@@ -35,5 +36,6 @@ private:
 	TestModel*		m_testModel1 = nullptr;				// テストモデル2
 	TestModel*		m_testModel2 = nullptr;				// テストモデル3
 	SkyCube*		m_skyCube = nullptr;				// スカイキューブ
+	SpriteRender	m_sprite;
 };
 

@@ -54,8 +54,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_k2EngineLow->EndFrame();
 	}
 
-	delete g_renderingEngine;
 	delete g_k2EngineLow;
+	delete g_renderingEngine;
 
 	return 0;
 }

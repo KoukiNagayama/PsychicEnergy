@@ -115,11 +115,16 @@ namespace nsK2EngineLow
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		// 拡張SRVにトゥーンマップを設定。
 		modelInitData.m_expandShaderResoruceView[0] = &m_toonMap.GetToonMap();
+		for (int areaNo = 1; areaNo < NUM_SHADOW_MAP; areaNo++) {
+			modelInitData.m_expandShaderResoruceView[areaNo] = &g_renderingEngine->GetShadowMap(areaNo);
+		}
 		// 定数バッファを設定。
 		modelInitData.m_expandConstantBuffer = &g_renderingEngine->GetLightingCB();
 		modelInitData.m_expandConstantBufferSize = sizeof(g_renderingEngine->GetLightingCB());
+
 		// モデルの上方向を指定する。
 		modelInitData.m_modelUpAxis = enModelUpAxis;
+
 		// 音源データを定数バッファとして設定する
 		// 作成した初期化データをもとにモデルを初期化する。
 		m_model.Init(modelInitData);

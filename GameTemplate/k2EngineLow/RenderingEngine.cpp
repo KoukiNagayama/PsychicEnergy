@@ -8,6 +8,7 @@ namespace nsK2EngineLow
 		m_sceneLight.Init();
 		InitMainRenderTarget();
 		InitDepthForOutLineRenderTarget();
+		Init2DRenderTarget();
 		InitCopyMainRenderTargetToFrameBufferSprite();
 		m_postEffect.Init(m_mainRenderTarget, m_depthForOutLineRenderTarget, m_sLightingCb.m_isFloating);
 		InitShadowMapRender();
@@ -40,6 +41,50 @@ namespace nsK2EngineLow
 			DXGI_FORMAT_D32_FLOAT
 			//clearColor
 		);
+	}
+
+	void RenderingEngine::Init2DRenderTarget()
+	{
+		float clearColor[4] = { 0.0f,0.0f,0.0f,0.0f };
+
+		m_2DRenderTarget.Create(
+			UI_SPACE_WIDTH,
+			UI_SPACE_HEIGHT,
+			1,
+			1,
+			DXGI_FORMAT_R8G8B8A8_UNORM,
+			DXGI_FORMAT_UNKNOWN,
+			clearColor
+		);
+
+		// 最終合成用のスプライトを初期化する
+		SpriteInitData spriteInitData;
+		//テクスチャは2Dレンダリングターゲット。
+		spriteInitData.m_textures[0] = &m_2DRenderTarget.GetRenderTargetTexture();
+		// 解像度はmainRenderTargetの幅と高さ
+		spriteInitData.m_width = m_mainRenderTarget.GetWidth();
+		spriteInitData.m_height = m_mainRenderTarget.GetHeight();
+		// 2D用のシェーダーを使用する
+		spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
+		spriteInitData.m_vsEntryPointFunc = "VSMain";
+		spriteInitData.m_psEntryPoinFunc = "PSMain";
+		// 上書き。
+		spriteInitData.m_alphaBlendMode = AlphaBlendMode_None;
+		// レンダリングターゲットのフォーマット。
+		spriteInitData.m_colorBufferFormat[0] = m_mainRenderTarget.GetColorBufferFormat();
+
+		m_2DSprite.Init(spriteInitData);
+
+		// テクスチャはメインレンダリングターゲット。
+		spriteInitData.m_textures[0] = &m_mainRenderTarget.GetRenderTargetTexture();
+
+		// 解像度は2D用レンダリングターゲットの幅と高さ
+		spriteInitData.m_width = m_2DRenderTarget.GetWidth();
+		spriteInitData.m_height = m_2DRenderTarget.GetHeight();
+		// レンダリングターゲットのフォーマット。
+		spriteInitData.m_colorBufferFormat[0] = m_2DRenderTarget.GetColorBufferFormat();
+
+		m_mainSprite.Init(spriteInitData);
 	}
 
 	void RenderingEngine::InitCopyMainRenderTargetToFrameBufferSprite()
@@ -99,6 +144,8 @@ namespace nsK2EngineLow
 		// ポストエフェクト
 		m_postEffect.Render(rc, m_mainRenderTarget);
 
+		RenderSprite(rc);
+
 		// メインレンダリングターゲットの内容をフレームバッファにコピー
 		CopyMainRenderTargetToFrameBuffer(rc);
 
@@ -109,6 +156,7 @@ namespace nsK2EngineLow
 		for (int i = 0; i < NUM_SHADOW_MAP; i++) {
 			m_shadowMapModels[i].clear();
 		}
+		m_sprites.clear();
 	}
 
 	void RenderingEngine::RenderToShadowMap(RenderContext& rc)
@@ -177,6 +225,39 @@ namespace nsK2EngineLow
 		}
 
 		rc.WaitUntilFinishDrawingToRenderTarget(m_depthForOutLineRenderTarget);
+	}
+
+	void RenderingEngine::RenderSprite(RenderContext& rc)
+	{
+		// レンダリングターゲットとして利用できるまで待つ
+		rc.WaitUntilToPossibleSetRenderTarget(m_2DRenderTarget);
+
+		// レンダリングターゲットを設定
+		rc.SetRenderTargetAndViewport(m_2DRenderTarget);
+
+		// レンダリングターゲットをクリア
+		rc.ClearRenderTargetView(m_2DRenderTarget);
+
+		m_mainSprite.Draw(rc);
+
+		for (auto& sprite : m_sprites) {
+			// スプライトを描画
+			sprite->Draw(rc);
+		}
+
+		// 2D描画用レンダリングターゲットへの書き込み終了待ち
+		rc.WaitUntilFinishDrawingToRenderTarget(m_2DRenderTarget);
+
+		// レンダリングターゲットとして利用できるまで待つ
+		rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
+
+		// レンダリングターゲットを設定
+		rc.SetRenderTargetAndViewport(m_mainRenderTarget);
+
+		m_2DSprite.Draw(rc);
+
+		// メインレンダリングターゲットへの書き込み終了待ち
+		rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
 	}
 
 	void RenderingEngine::CopyMainRenderTargetToFrameBuffer(RenderContext& rc)

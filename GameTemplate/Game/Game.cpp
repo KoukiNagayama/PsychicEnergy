@@ -37,7 +37,7 @@ bool Game::Start()
 			}
 			else if (objData.ForwardMatchName(L"testModel2") == true) {
 				m_testModel2 = NewGO<TestModel>(0, "testModel2");
-				m_testModel2->SetTypeNum(1);
+				m_testModel2->SetTypeNum(2);
 				m_testModel2->SetPosition(objData.position);
 				m_testModel2->SetRotation(objData.rotation);
 				m_testModel2->SetScale(objData.scale);
@@ -56,10 +56,20 @@ bool Game::Start()
 
 	m_skyCube = NewGO<SkyCube>(0, "skyCube");
 
+	m_sprite.Init(
+		"Assets/sprite/screenEffect_test.DDS",
+		1920.0f,
+		1080.0f
+	);
 	return true;
 }
 
 void Game::Update()
 {
 
+}
+
+void Game::Render(RenderContext& rc)
+{
+	m_sprite.Draw(rc);
 }

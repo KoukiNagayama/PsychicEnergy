@@ -156,7 +156,7 @@ namespace nsK2EngineLow
 		/// </summary>
 		/// <param name="instanceId">インスタンスID。</param>
 		/// <returns>ワールド行列。</returns>
-		const Matrix& GetWorldMatrix(int instanceId) const
+		const Matrix& GetWorldMatrix() const
 		{
 			return m_model.GetWorldMatrix();
 		}

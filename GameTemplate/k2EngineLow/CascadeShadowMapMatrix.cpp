@@ -61,7 +61,7 @@ namespace nsK2EngineLow {
 
             vertex[7] += farPos + cameraUp * -farY + cameraRight * -farX;
 
-            // step-8 8頂点を変換して最大値、最小値を求める
+            // 8頂点を変換して最大値、最小値を求める
             Vector3 vMax, vMin;
             vMax = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
             vMin = { FLT_MAX, FLT_MAX, FLT_MAX };

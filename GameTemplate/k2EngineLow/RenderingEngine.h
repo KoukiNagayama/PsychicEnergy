@@ -70,6 +70,14 @@ namespace nsK2EngineLow
 			m_shadowMapModels[areaNo].push_back(&model);
 		}
 		/// <summary>
+		/// スプライトの描画パスで描画するスプライトを追加
+		/// </summary>
+		/// <param name="sprite"></param>
+		void AddSpriteToRenderSpritePass(Sprite& sprite)
+		{
+			m_sprites.push_back(&sprite);
+		}
+		/// <summary>
 		/// シャドウマップに描画するモデルを取得
 		/// </summary>
 		/// <param name="areaNo">カスケードシャドウで分割されたエリア</param>
@@ -161,6 +169,7 @@ namespace nsK2EngineLow
 		/// シャドウマップレンダーを初期化
 		/// </summary>
 		void InitShadowMapRender();
+		void Init2DRenderTarget();
 		/// <summary>
 		/// シャドウマップにモデルを描画
 		/// </summary>
@@ -181,6 +190,11 @@ namespace nsK2EngineLow
 		/// <param name="rc"></param>
 		void DepthForOutLine(RenderContext& rc);
 		/// <summary>
+		/// スプライト描画
+		/// </summary>
+		/// <param name="rc"></param>
+		void RenderSprite(RenderContext& rc);
+		/// <summary>
 		/// メインレンダリングターゲットの内容をフレームバッファにコピー
 		/// </summary>
 		/// <param name="rc">レンダリングコンテキスト</param>
@@ -194,8 +208,12 @@ namespace nsK2EngineLow
 		std::vector<Model*>		m_frontCullingModels;					// フロントカリングされたモデル
 		std::vector<Model*>     m_depthForOutLineModels;				// 輪郭線描画用に深度値を記録するためのモデル
 		std::vector<Model*>		m_shadowMapModels[NUM_SHADOW_MAP];		// シャドウマップに描画するモデル
+		std::vector<Sprite*>	m_sprites;								// 描画するスプライト
 		RenderTarget			m_mainRenderTarget;						// メインレンダリングターゲット
 		RenderTarget			m_depthForOutLineRenderTarget;			// 輪郭線用の深度値レンダリングターゲット
+		RenderTarget			m_2DRenderTarget;
+		Sprite					m_2DSprite;
+		Sprite					m_mainSprite;
 		Sprite					m_copyMainRtToFrameBufferSprite;		// メインレンダリングターゲットの内容をフレームバッファにコピーするためのスプライト
 		PostEffect				m_postEffect;							// ポストエフェクト
 		SceneLight				m_sceneLight;							// シーンライト

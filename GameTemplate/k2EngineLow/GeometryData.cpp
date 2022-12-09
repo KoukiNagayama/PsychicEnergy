@@ -5,7 +5,7 @@ namespace nsK2EngineLow
 {
 	void GeometryData::Update()
 	{
-		Matrix worldMatrix = m_modelRender->GetWorldMatrix(m_instanceId);
+		Matrix worldMatrix = m_modelRender->GetWorldMatrix();
 		m_aabb.CalcVertexPositions(
 			m_aabbWorldVertexPositions,
 			worldMatrix

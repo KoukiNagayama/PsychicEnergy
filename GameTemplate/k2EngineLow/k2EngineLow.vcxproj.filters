@@ -245,6 +245,7 @@
       <Filter>geometry</Filter>
     </ClCompile>
     <ClCompile Include="SceneGeometryData.cpp" />
+    <ClCompile Include="SpriteRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -540,6 +541,7 @@
       <Filter>geometry</Filter>
     </ClInclude>
     <ClInclude Include="SceneGeometryData.h" />
+    <ClInclude Include="SpriteRender.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
