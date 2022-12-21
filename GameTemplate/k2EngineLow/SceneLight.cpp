@@ -11,9 +11,9 @@ namespace nsK2EngineLow
 		m_light.directionalLight[0].direction.z = -0.577f;
 		m_light.directionalLight[0].direction.Normalize();
 
-		m_light.directionalLight[0].color.x = 20.0f;
-		m_light.directionalLight[0].color.y = 20.0f;
-		m_light.directionalLight[0].color.z = 20.0f;
+		m_light.directionalLight[0].color.x = 3.0f;
+		m_light.directionalLight[0].color.y = 3.0f;
+		m_light.directionalLight[0].color.z = 3.0f;
 
 		m_light.directionalLight[1].direction.x = 0.0f;
 		m_light.directionalLight[1].direction.y = 0.0f;
@@ -32,9 +32,9 @@ namespace nsK2EngineLow
 		m_light.specPow = 5.0f;
 
 		// ä¬ã´åıÇÃèâä˙âª
-		m_light.ambientLight.x = 0.7f;
-		m_light.ambientLight.y = 0.7f;
-		m_light.ambientLight.z = 0.7f;
+		m_light.ambientLight.x = 0.3f;
+		m_light.ambientLight.y = 0.3f;
+		m_light.ambientLight.z = 0.3f;
 	}
 
 	void SceneLight::Update()

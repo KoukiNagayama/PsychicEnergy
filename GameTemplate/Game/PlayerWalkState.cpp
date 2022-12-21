@@ -6,40 +6,40 @@
 #include "PlayerJumpState.h"
 
 
-void PlayerWalkState::Enter(Player* player)
+void PlayerWalkState::Enter()
 {
 	// フラグをオブジェクトに触れていると設定する。
-	player->SetIsTouchObject(true);
+	m_player->SetIsTouchObject(true);
 
-	player->ResetSlideParam();
+	m_player->ResetSlideParam();
 
 }
 
-PlayerState* PlayerWalkState::StateChange(Player* player)
+IPlayerState* PlayerWalkState::StateChange()
 {
 	if (fabsf(g_pad[0]->GetLStickXF()) < 0.001f && fabsf(g_pad[0]->GetLStickYF()) < 0.001f) {
 		// 待機ステートに遷移する。
-		return new PlayerIdleState();
+		return new PlayerIdleState(m_player);
 	}
 	if (g_pad[0]->IsTrigger(enButtonRB1)) {
 		// 空中での待機ステートに遷移する。
-		return new PlayerIdleInAirState();
+		return new PlayerIdleInAirState(m_player);
 	}
 	if (g_pad[0]->IsTrigger(enButtonLB2)) {
 		// スライディングステートに遷移する。
-		return new PlayerSlideState();
+		return new PlayerSlideState(m_player);
 	}
 	if (g_pad[0]->IsTrigger(enButtonA)) {
 		// ジャンプステートに遷移する。
-		return new PlayerJumpState();
+		return new PlayerJumpState(m_player);
 	}
 	// ここまで来たらステートを遷移しない。
 	return nullptr;
 }
 
-void PlayerWalkState::Update(Player* player)
+void PlayerWalkState::Update()
 {
-	player->MoveOnGround();
+	m_player->MoveOnGround();
 
-	player->SelectAnimationOnGround();
+	m_player->SelectAnimationOnGround();
 }

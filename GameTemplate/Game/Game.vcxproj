@@ -223,18 +223,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="EngineTest.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="GravityGauge.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerFallInAirState.cpp" />
+    <ClCompile Include="PlayerFallState.cpp" />
     <ClCompile Include="PlayerIdleInAirState.cpp" />
     <ClCompile Include="PlayerIdleState.cpp" />
     <ClCompile Include="PlayerJumpState.cpp" />
     <ClCompile Include="PlayerSlideState.cpp" />
-    <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="PlayerWalkState.cpp" />
+    <ClCompile Include="Sight.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -244,17 +247,21 @@
     <ClCompile Include="TestModel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BackGround.h" />
     <ClInclude Include="EngineTest.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="GravityGauge.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerFallInAirState.h" />
+    <ClInclude Include="PlayerFallState.h" />
     <ClInclude Include="PlayerIdleInAirState.h" />
     <ClInclude Include="PlayerIdleState.h" />
     <ClInclude Include="PlayerJumpState.h" />
     <ClInclude Include="PlayerSlideState.h" />
-    <ClInclude Include="PlayerState.h" />
+    <ClInclude Include="IPlayerState.h" />
     <ClInclude Include="PlayerWalkState.h" />
+    <ClInclude Include="Sight.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="TestModel.h" />

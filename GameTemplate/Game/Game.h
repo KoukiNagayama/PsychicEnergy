@@ -4,6 +4,9 @@
 class TestModel;
 class Player;
 class GameCamera;
+class GravityGauge;
+class Sight;
+class BackGround;
 
 class Game : public IGameObject
 {
@@ -25,7 +28,7 @@ public:
 	/// 更新処理。
 	/// </summary>
 	void Update();
-	void Render(RenderContext& rc);
+
 private:
 
 private:
@@ -35,7 +38,11 @@ private:
 	TestModel*		m_testModel0 = nullptr;				// テストモデル1
 	TestModel*		m_testModel1 = nullptr;				// テストモデル2
 	TestModel*		m_testModel2 = nullptr;				// テストモデル3
+	TestModel*		m_testModel3 = nullptr;
+	BackGround*		m_backGround = nullptr;
 	SkyCube*		m_skyCube = nullptr;				// スカイキューブ
 	SpriteRender	m_sprite;
+	GravityGauge*	m_gravityGauge = nullptr;
+	Sight*			m_sight = nullptr;
 };
 

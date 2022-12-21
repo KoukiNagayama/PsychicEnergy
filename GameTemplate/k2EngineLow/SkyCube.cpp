@@ -57,12 +57,15 @@ namespace nsK2EngineLow {
 
 	void SkyCube::Update()
 	{
-		if (m_isDirty)
-		{
-			m_modelRender.SetTRS(m_position, g_quatIdentity, m_scale);
-			m_modelRender.Update();
-			m_isDirty = false;
-		}
+		//if (m_isDirty)
+		//{
+		//	m_modelRender.SetTRS(m_position, g_quatIdentity, m_scale);
+		//	m_modelRender.Update();
+		//	m_isDirty = false;
+		//}
+		m_position = g_camera3D->GetPosition();
+		m_modelRender.SetPosition(m_position);
+		m_modelRender.Update();
 	}
 
 	void SkyCube::Render(RenderContext& rc)

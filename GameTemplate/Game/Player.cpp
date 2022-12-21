@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
-#include "PlayerState.h"
+#include "IPlayerState.h"
 #include "PlayerIdleState.h"
 #include "sound/SoundEngine.h"
 
@@ -66,8 +66,8 @@ bool Player::Start()
 	// 現在のモデルの上方向を指定。
 	m_currentModelUpAxis = Vector3::AxisY;
 	// 初期ステートを設定。
-	m_playerState = new PlayerIdleState();
-	m_playerState->Enter(this);
+	m_playerState = new PlayerIdleState(this);
+	m_playerState->Enter();
 
 	// wavファイルを登録する。
 	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/run_footstep.wav");
@@ -80,17 +80,17 @@ bool Player::Start()
 void Player::Update()
 {
 	// ステートを変更するか
-	PlayerState* playerState = m_playerState->StateChange(this);
+	IPlayerState* playerState = m_playerState->StateChange();
 	// 変更先のステートが設定されているならば
 	if (playerState != nullptr) {
 		// ステートを変更する。
 		delete m_playerState;
 		m_playerState = playerState;
-		m_playerState->Enter(this);
+		m_playerState->Enter();
 	}
 
 	// 各ステートの更新処理を実行。
-	m_playerState->Update(this);
+	m_playerState->Update();
 
 	// 回転処理。
 	Rotation();
@@ -105,7 +105,11 @@ void Player::Update()
 void Player::MoveOnGround()
 {
 	// 移動速度を計算する。
-	m_moveSpeed = CalcMoveSpeed(WALK_SPEED);
+	Vector3 tempMoveSpeed = CalcMoveSpeed(WALK_SPEED);
+	m_moveSpeed.x = tempMoveSpeed.x;
+	m_moveSpeed.z = tempMoveSpeed.z;
+	// y成分だけは徐々に数値を減少させるために減少させた数値を加算する。
+	m_moveSpeed.y += tempMoveSpeed.y;
 
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 
@@ -142,6 +146,7 @@ void Player::MoveOnAirspace()
 void Player::Slide()
 {
 	m_moveSpeed = Vector3::Zero;
+	m_moveSpeed.y = m_lastMoveSpeedY;
 
 	// 左スティックの横方向入力量
 	float lStickX = g_pad[0]->GetLStickXF();
@@ -157,18 +162,24 @@ void Player::Slide()
 	// 重力を加算。
 	m_moveSpeed.y -= GRAVITY;
 
+	if (m_charaCon.IsOnGround()) {
+		m_moveSpeed.y = 0;
+		if (m_isRingingSlideSound == false) {
+			m_slideSound = NewGO<SoundSource>(0);
+			m_slideSound->Init(1);
+			m_slideSound->SetVolume(0.5f);
+			m_slideSound->Play(true);
+			m_isRingingSlideSound = true;
+		}
+	}
+	// Y成分を保存
+	m_lastMoveSpeedY = m_moveSpeed.y;
+
 	// 移動。
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 
 	m_modelRender.SetPosition(m_position);
 
-	if (m_isRingingSlideSound == false) {
-		m_slideSound = NewGO<SoundSource>(0);
-		m_slideSound->Init(1);
-		m_slideSound->SetVolume(0.5f);
-		m_slideSound->Play(true);
-		m_isRingingSlideSound = true;
-	}
 }
 
 void Player::Jump()
@@ -211,8 +222,9 @@ void Player::Rotation()
 
 void Player::FloatModeChange(bool isFloating)
 {
-	m_modelRender.SetIsFloating(isFloating);
-	g_renderingEngine->SetIsFloating(isFloating);
+	m_isFloating = isFloating;
+	m_modelRender.SetIsFloating(m_isFloating);
+	g_renderingEngine->SetIsFloating(m_isFloating);
 
 	m_modeChangeSound = NewGO<SoundSource>(0);
 	m_modeChangeSound->Init(3);
@@ -242,10 +254,12 @@ void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 		m_runFootstep->Init(0);
 		m_runFootstep->Play(false);
 	}
-	if (wcscmp(eventName, L"jump1_landing1") == 0 || wcscmp(eventName, L"jump1_landing2") == 0) {
-		m_landingSound = NewGO<SoundSource>(0);
-		m_landingSound->Init(2);
-		m_landingSound->Play(false);
+	if (m_charaCon.IsOnGround()) {
+		if (wcscmp(eventName, L"jump1_landing1") == 0 || wcscmp(eventName, L"jump1_landing2") == 0) {
+			m_landingSound = NewGO<SoundSource>(0);
+			m_landingSound->Init(2);
+			m_landingSound->Play(false);
+		}
 	}
 }
 
@@ -283,6 +297,10 @@ Vector3 Player::CalcMoveSpeed(float speed)
 
 	// 重力を加算。
 	moveSpeed.y -= GRAVITY;
+
+	if (m_charaCon.IsOnGround()) {
+		moveSpeed.y = 0;
+	}
 
 	return moveSpeed;
 }

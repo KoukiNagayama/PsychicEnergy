@@ -3,34 +3,40 @@
 #include "PlayerWalkState.h"
 #include "PlayerIdleState.h"
 #include "PlayerIdleInAirState.h"
+#include "PlayerFallState.h"
 
 
 PlayerJumpState::~PlayerJumpState()
 {
-	
+	m_player->SetAnimationSpeed(1.0f);
 }
 
-void PlayerJumpState::Enter(Player* player)
+void PlayerJumpState::Enter()
 {
-	player->m_moveSpeed.y += 450.0f;
+	m_player->m_moveSpeed.y += 450.0f;
 
-	player->SetAnimationSpeed(0.9f);
+	m_player->SetAnimationSpeed(0.9f);
 
-	player->SelectJumpAnimation();
+	m_player->SelectJumpAnimation();
 }
 
-PlayerState* PlayerJumpState::StateChange(Player* player)
+IPlayerState* PlayerJumpState::StateChange()
 {
-	if (player->IsOnGround()){
-		return new PlayerIdleState();
+	if (m_player->IsOnGround()){
+		return new PlayerIdleState(m_player);
 	}
 	else if (g_pad[0]->IsTrigger(enButtonRB1)) {
-		return new PlayerIdleInAirState();
+		return new PlayerIdleInAirState(m_player);
+	}
+	if (m_count >= 0.5f) {
+		return new PlayerFallState(m_player);
 	}
 	return nullptr;
 }
 
-void PlayerJumpState::Update(Player* player)
+void PlayerJumpState::Update()
 {
-	player->Jump();
+	m_player->Jump();
+
+	m_count += g_gameTime->GetFrameDeltaTime();
 }

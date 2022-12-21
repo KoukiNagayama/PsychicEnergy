@@ -1,7 +1,7 @@
 #pragma once
 #include "sound/SoundSource.h"
 
-class PlayerState;
+class IPlayerState;
 
 /// <summary>
 /// プレイヤークラス
@@ -25,7 +25,7 @@ public:
 
 	/// <summary>
 	/// 開始処理。
-	/// インスタンス生成時に一度だけ実行。
+	/// インスタンス生成時に初期化を行う。trueを返したときに呼ばれなくなる。
 	/// </summary>
 	bool Start();
 	/// <summary>
@@ -178,6 +178,14 @@ public:
 	/// </summary>
 	/// <param name="isFloating">浮遊状態であるか</param>
 	void FloatModeChange(bool isFloating);
+	/// <summary>
+	/// 浮遊しているか。
+	/// </summary>
+	/// <returns></returns>
+	const bool& IsFloating() const 
+	{
+		return m_isFloating;
+	}
 private:
 	friend class PlayerIdleState;
 	friend class PlayerWalkState;
@@ -185,6 +193,7 @@ private:
 	friend class PlayerIdleInAirState;
 	friend class PlayerFallInAirState;
 	friend class PlayerJumpState;
+	friend class PlayerFallState;
 	/// <summary>
 	/// 初期化処理。
 	/// </summary>
@@ -246,7 +255,7 @@ private:
 	bool					m_isTouchObject = true;							// モデルとオブジェクトとの接地判定
 	Vector3					m_moveSpeed = Vector3::Zero;					// 移動速度
 	CharacterController		m_charaCon;										// キャラクターコントローラー
-	PlayerState*			m_playerState = nullptr;						// ステート
+	IPlayerState*			m_playerState = nullptr;						// ステート
 	EnAnimationClip			m_currentAnimationClip;							// 現在設定されているアニメーションクリップ
 	Vector3					m_moveVectorInAir = Vector3::Zero;				// 空中での移動方向
 	Vector3					m_forward = Vector3::AxisZ;						// 正面方向
@@ -257,5 +266,7 @@ private:
 	bool					m_isRingingSlideSound = false;					// スライディングの音が鳴っているか
 	SoundSource*			m_landingSound = nullptr;						// 着地音
 	SoundSource*			m_modeChangeSound = nullptr;					// モード変更時の効果音
+	bool					m_isFloating = false;
+	float					m_lastMoveSpeedY = 0.0f;
 };
 

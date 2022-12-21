@@ -21,7 +21,7 @@ bool TestModel::Start()
 		);
 	}
 	if (m_typeNum == 1) {
-		filePath = "Assets/modelData/testStage/testModel1.tkm";
+		filePath = "Assets/modelData/backGroundModel/backGroundModel_box1.tkm";
 
 		m_model.Init(
 			filePath,
@@ -35,7 +35,7 @@ bool TestModel::Start()
 		);
 	}
 	else if (m_typeNum == 2) {
-		filePath = "Assets/modelData/testStage/testModel1.tkm";
+		filePath = "Assets/modelData/backGroundModel/backGroundModel_box2.tkm";
 
 		m_model.Init(
 			filePath,
@@ -48,6 +48,20 @@ bool TestModel::Start()
 			0
 		);
 
+	}
+	else if (m_typeNum == 3) {
+		filePath = "Assets/modelData/backGroundModel/backGroundModel_box3.tkm";
+
+		m_model.Init(
+			filePath,
+			nullptr,
+			0,
+			enModelUpAxisZ,
+			false,
+			false,
+			true,
+			0
+		);
 	}
 
 	m_model.SetTRS(m_pos, m_rot, m_sca);

@@ -1,24 +1,26 @@
 #pragma once
-#include "PlayerState.h"
+#include "IPlayerState.h"
 
 /// <summary>
 /// プレイヤーの空中での待機ステートクラス
 /// </summary>
-class PlayerIdleInAirState : public PlayerState
+class PlayerIdleInAirState : public IPlayerState
 {
 public:
+	PlayerIdleInAirState(Player* player) :
+		IPlayerState(player) {}
 	/// <summary>
 	/// ステート開始時の処理。
 	/// </summary>
-	void Enter(Player* player) override;
+	void Enter() override;
 	/// <summary>
 	/// ステートの遷移処理。
 	/// </summary>
 	/// <returns>遷移するステート</returns>
-	PlayerState* StateChange(Player* player) override;
+	IPlayerState* StateChange() override;
 	/// <summary>
 	/// ステートにおける更新処理。
 	/// </summary>
-	void Update(Player* player) override;
+	void Update() override;
 };
 

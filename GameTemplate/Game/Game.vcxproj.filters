@@ -7,6 +7,15 @@
     <Filter Include="player">
       <UniqueIdentifier>{3232152b-ef07-4af4-a93d-baa84a488cec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{e5bc85c9-3eaa-471f-b260-bf00838da433}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{0907a0f7-4087-4a1b-9b1e-5372be7add9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="backGround">
+      <UniqueIdentifier>{45da49e5-f867-46ad-a023-2e0f03a989bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -16,7 +25,6 @@
     </ClCompile>
     <ClCompile Include="EngineTest.cpp" />
     <ClCompile Include="TestModel.cpp" />
-    <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="Player.cpp">
       <Filter>player</Filter>
     </ClCompile>
@@ -24,9 +32,6 @@
       <Filter>player</Filter>
     </ClCompile>
     <ClCompile Include="PlayerIdleState.cpp">
-      <Filter>player</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerState.cpp">
       <Filter>player</Filter>
     </ClCompile>
     <ClCompile Include="PlayerWalkState.cpp">
@@ -42,6 +47,21 @@
       <Filter>player</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Sight.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="GravityGauge.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCamera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="BackGround.cpp">
+      <Filter>backGround</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerFallState.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -50,7 +70,6 @@
     </ClInclude>
     <ClInclude Include="EngineTest.h" />
     <ClInclude Include="TestModel.h" />
-    <ClInclude Include="GameCamera.h" />
     <ClInclude Include="Player.h">
       <Filter>player</Filter>
     </ClInclude>
@@ -60,7 +79,7 @@
     <ClInclude Include="PlayerIdleState.h">
       <Filter>player</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerState.h">
+    <ClInclude Include="IPlayerState.h">
       <Filter>player</Filter>
     </ClInclude>
     <ClInclude Include="PlayerWalkState.h">
@@ -76,5 +95,20 @@
       <Filter>player</Filter>
     </ClInclude>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Sight.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="GravityGauge.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCamera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="BackGround.h">
+      <Filter>backGround</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerFallState.h">
+      <Filter>player</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

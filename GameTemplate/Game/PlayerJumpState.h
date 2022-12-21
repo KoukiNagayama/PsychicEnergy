@@ -1,22 +1,26 @@
 #pragma once
-#include "PlayerState.h"
-class PlayerJumpState : public PlayerState
+#include "IPlayerState.h"
+class PlayerJumpState : public IPlayerState
 {
 public:
+	PlayerJumpState(Player* player) :
+		IPlayerState(player) {}
 	~PlayerJumpState() override;
 	/// <summary>
 	/// ステート開始時の処理。
 	/// </summary>
-	void Enter(Player* player) override;
+	void Enter() override;
 	/// <summary>
 	/// ステートの遷移処理。
 	/// </summary>
 	/// <returns>遷移するステート</returns>
-	PlayerState* StateChange(Player* player) override;
+	IPlayerState* StateChange() override;
 	/// <summary>
 	/// ステートにおける更新処理。
 	/// </summary>
-	void Update(Player* player) override;
+	void Update() override;
+private:
+	float m_count = 0.0f;
 
 };
 

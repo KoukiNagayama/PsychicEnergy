@@ -8,27 +8,27 @@ PlayerSlideState::~PlayerSlideState()
 
 }
 
-void PlayerSlideState::Enter(Player* player)
+void PlayerSlideState::Enter()
 {
-	player->SetAnimation(Player::enAnimationClip_Slide);
+	m_player->SetAnimation(Player::enAnimationClip_Slide);
 
-	player->InitSlideParam();
+	m_player->InitSlideParam();
 }
 
-PlayerState* PlayerSlideState::StateChange(Player* player)
+IPlayerState* PlayerSlideState::StateChange()
 {
 	if (g_pad[0]->IsPress(enButtonLB2) == false) {
-		return new PlayerIdleState();
+		return new PlayerIdleState(m_player);
 	}
-	else if (g_pad[0]->IsTrigger(enButtonB)) {
+	else if (g_pad[0]->IsTrigger(enButtonA)) {
 		//return new PlayerJumpState();
 	}
 	return nullptr;
 }
 
-void PlayerSlideState::Update(Player* player)
+void PlayerSlideState::Update()
 {
-	player->Slide();
+	m_player->Slide();
 }
 
 

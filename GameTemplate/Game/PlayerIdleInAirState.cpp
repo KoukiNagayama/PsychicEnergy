@@ -3,41 +3,42 @@
 #include "PlayerIdleState.h"
 #include "PlayerFallInAirState.h"
 
-void PlayerIdleInAirState::Enter(Player* player)
+void PlayerIdleInAirState::Enter()
 {
 	// 再生するアニメーションを設定する。
-	player->SetAnimation(Player::enAnimationClip_IdleAir);
+	m_player->SetAnimation(Player::enAnimationClip_IdleAir);
 	// フラグをオブジェクトに触れていないように設定する。
-	player->SetIsTouchObject(false);
+	m_player->SetIsTouchObject(false);
 	// スライド時のパラメータをリセットする。
-	player->ResetSlideParam();
+	m_player->ResetSlideParam();
 	// 浮遊状態であると設定する。
-	player->FloatModeChange(true);
+	m_player->FloatModeChange(true);
 
 	//player->m_moveSpeed = Vector3::Zero;
-	player->m_moveSpeed.y = 100.0f;
+	m_player->m_moveSpeed.y = 100.0f;
 }
 
-PlayerState* PlayerIdleInAirState::StateChange(Player* player)
+IPlayerState* PlayerIdleInAirState::StateChange()
 {
 	if (g_pad[0]->IsTrigger(enButtonRB1)) {
 		// 空中での落下ステートに遷移する。
-		return new PlayerFallInAirState();
+		return new PlayerFallInAirState(m_player);
 	}
 	if (g_pad[0]->IsTrigger(enButtonLB1)) {
 		// 通常の待機ステートに遷移する。
-		player->m_modelRender.SetIsFloating(false);
-		return new PlayerIdleState();
+		m_player->m_modelRender.SetIsFloating(false);
+		m_player->FloatModeChange(false);
+		return new PlayerIdleState(m_player);
 	}
 	// ここまで来たらステートを遷移しない。
 	return nullptr;
 }
 
-void PlayerIdleInAirState::Update(Player* player)
+void PlayerIdleInAirState::Update()
 {
-	if (player->m_moveSpeed.y > 0.0f) {
-		player->m_moveSpeed *= 0.97f;
-		player->m_position = player->m_charaCon.Execute(player->m_moveSpeed, g_gameTime->GetFrameDeltaTime());
-		player->m_modelRender.SetPosition(player->m_position);
+	if (m_player->m_moveSpeed.y > 0.0f) {
+		m_player->m_moveSpeed *= 0.97f;
+		m_player->m_position = m_player->m_charaCon.Execute(m_player->m_moveSpeed, g_gameTime->GetFrameDeltaTime());
+		m_player->m_modelRender.SetPosition(m_player->m_position);
 	}
 }

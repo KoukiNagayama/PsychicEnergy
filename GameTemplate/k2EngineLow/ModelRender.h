@@ -143,6 +143,15 @@ namespace nsK2EngineLow
 			}
 			
 		}
+		bool IsFloating() const
+		{
+			if (m_floating == 0) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
 		/// <summary>
 		/// ƒ‚ƒfƒ‹‚ðŽæ“¾
 		/// </summary>

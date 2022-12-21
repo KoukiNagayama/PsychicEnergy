@@ -3,31 +3,32 @@
 #include "PlayerIdleInAirState.h"
 #include "PlayerIdleState.h"
 
-void PlayerFallInAirState::Enter(Player* player)
+void PlayerFallInAirState::Enter()
 {
 	// アニメーションを設定する。
 	//player->SetAnimation(Player::enAnimationClip_Idle);
 
 	// 移動方向を決定する。
-	player->DecideMoveDirection();
+	m_player->DecideMoveDirection();
 }
 
-PlayerState* PlayerFallInAirState::StateChange(Player* player)
+IPlayerState* PlayerFallInAirState::StateChange()
 {
 	if (g_pad[0]->IsTrigger(enButtonRB1)) {
 		// 空中での待機ステートに遷移する。
-		return new PlayerIdleInAirState();
+		return new PlayerIdleInAirState(m_player);
 	}
 	if (g_pad[0]->IsTrigger(enButtonLB1)) {
 		// 通常の待機ステートに遷移する。
-		return new PlayerIdleState();
+		m_player->FloatModeChange(false);
+		return new PlayerIdleState(m_player);
 	}
 	// ここまで来たら遷移しない。
 	return nullptr;
 }
 
-void PlayerFallInAirState::Update(Player* player)
+void PlayerFallInAirState::Update()
 {
 	// 空中での移動処理。
-	player->MoveOnAirspace();
+	m_player->MoveOnAirspace();
 }

@@ -9,38 +9,38 @@ PlayerIdleState::~PlayerIdleState()
 
 }
 
-void PlayerIdleState::Enter(Player* player) 
+void PlayerIdleState::Enter() 
 {
 	// 再生するアニメーションを設定。
-	player->SetAnimation(Player::enAnimationClip_Idle);
+	m_player->SetAnimation(Player::enAnimationClip_Idle);
 
 	// フラグをオブジェクトに触れているように設定する。
-	player->SetIsTouchObject(true);
+	m_player->SetIsTouchObject(true);
 
 	// スライドをリセットする。
-	player->ResetSlideParam();
+	m_player->ResetSlideParam();
 
 	// ジャンプをリセットする。
-	player->ResetJump();
+	m_player->ResetJump();
 
-	player->FloatModeChange(false);
+
 
 }
 
-PlayerState* PlayerIdleState::StateChange(Player* player)
+IPlayerState* PlayerIdleState::StateChange()
 {
 	if (g_pad[0]->IsTrigger(enButtonRB1)) {
 		// 空中での待機ステートに遷移する。
-		return new PlayerIdleInAirState();
+		return new PlayerIdleInAirState(m_player);
 	}
-	else if (player->IsOnGround()) {
+	else if (m_player->IsOnGround()) {
 		if (fabsf(g_pad[0]->GetLStickXF()) >= 0.001f || fabsf(g_pad[0]->GetLStickYF()) >= 0.001f) {
 			// 歩きステートに遷移する。
-			return new PlayerWalkState();
+			return new PlayerWalkState(m_player);
 		}
 		else if (g_pad[0]->IsTrigger(enButtonA)) {
 			// ジャンプステートに遷移する。
-			return new PlayerJumpState();
+			return new PlayerJumpState(m_player);
 		}
 	}
 	// ここまで来たらステートを遷移しない。
@@ -48,13 +48,13 @@ PlayerState* PlayerIdleState::StateChange(Player* player)
 
 }
 
-void PlayerIdleState::Update(Player* player)
+void PlayerIdleState::Update()
 {
 	//player->WalkOnGround();
 	// todo 変える
-	player->m_moveSpeed.x = 0.0f;
-	player->m_moveSpeed.z = 0.0f;
-	player->m_moveSpeed.y -= 14.0f;
-	player->m_position = player->m_charaCon.Execute(player->m_moveSpeed, g_gameTime->GetFrameDeltaTime());
-	player->m_modelRender.SetPosition(player->m_position);
+	m_player->m_moveSpeed.x = 0.0f;
+	m_player->m_moveSpeed.z = 0.0f;
+	m_player->m_moveSpeed.y -= 14.0f;
+	m_player->m_position = m_player->m_charaCon.Execute(m_player->m_moveSpeed, g_gameTime->GetFrameDeltaTime());
+	m_player->m_modelRender.SetPosition(m_player->m_position);
 }
