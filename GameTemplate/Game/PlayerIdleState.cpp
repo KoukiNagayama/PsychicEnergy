@@ -3,6 +3,7 @@
 #include "PlayerWalkState.h"
 #include "PlayerJumpState.h"
 #include "PlayerIdleInAirState.h"
+#include "PlayerFallState.h"
 
 PlayerIdleState::~PlayerIdleState()
 {
@@ -42,6 +43,9 @@ IPlayerState* PlayerIdleState::StateChange()
 			// ジャンプステートに遷移する。
 			return new PlayerJumpState(m_player);
 		}
+	}
+	if (m_player->IsOnGround() == false) {
+		return new PlayerFallState(m_player);
 	}
 	// ここまで来たらステートを遷移しない。
 	return nullptr;

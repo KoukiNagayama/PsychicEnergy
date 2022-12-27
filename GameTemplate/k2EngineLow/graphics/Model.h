@@ -129,6 +129,10 @@ namespace nsK2EngineLow {
 		{
 			return m_worldMatrix;
 		}
+		void SetWorldMatrix(Matrix& worldMatrix)
+		{
+			m_worldMatrix = worldMatrix;
+		}
 		/// <summary>
 		/// メッシュに対して問い合わせを行う。
 		/// </summary>

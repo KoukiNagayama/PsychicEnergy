@@ -165,9 +165,13 @@ namespace nsK2EngineLow
 		/// </summary>
 		/// <param name="instanceId">インスタンスID。</param>
 		/// <returns>ワールド行列。</returns>
-		const Matrix& GetWorldMatrix() const
+		const Matrix& GetWorldMatrix() 
 		{
 			return m_model.GetWorldMatrix();
+		}
+		void SetWorldMatrix(Matrix& worldMatrix) 
+		{
+			m_model.SetWorldMatrix(worldMatrix);
 		}
 		/// <summary>
 		/// シャドウキャスター？

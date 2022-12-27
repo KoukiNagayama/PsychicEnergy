@@ -3,6 +3,7 @@
 #include "IPlayerState.h"
 #include "PlayerIdleState.h"
 #include "sound/SoundEngine.h"
+#include "WorldRotation.h"
 
 
 namespace
@@ -35,7 +36,7 @@ bool Player::Start()
 	m_animationClips[enAnimationClip_NormalJump].SetLoopFlag(false);
 	m_animationClips[enAnimationClip_DashJump].Load("Assets/animData/WD/jump_type1_1.tka");
 	m_animationClips[enAnimationClip_DashJump].SetLoopFlag(false);
-	m_animationClips[enAnimationClip_IdleAir].Load("Assets/animData/WD/idle_air_2.tka");
+	m_animationClips[enAnimationClip_IdleAir].Load("Assets/animData/WD/idle_air_4.tka");
 	m_animationClips[enAnimationClip_IdleAir].SetLoopFlag(true);
 
 	// モデルを初期化。
@@ -68,6 +69,10 @@ bool Player::Start()
 	// 初期ステートを設定。
 	m_playerState = new PlayerIdleState(this);
 	m_playerState->Enter();
+
+	Matrix mat;
+	mat = m_modelRender.GetWorldMatrix();
+	g_worldRotation->InitPlayerModelData(mat);
 
 	// wavファイルを登録する。
 	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/run_footstep.wav");

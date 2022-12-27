@@ -4,6 +4,7 @@
 #include "PlayerIdleInAirState.h"
 #include "PlayerSlideState.h"
 #include "PlayerJumpState.h"
+#include "PlayerFallState.h"
 
 
 void PlayerWalkState::Enter()
@@ -32,6 +33,9 @@ IPlayerState* PlayerWalkState::StateChange()
 	if (g_pad[0]->IsTrigger(enButtonA)) {
 		// ジャンプステートに遷移する。
 		return new PlayerJumpState(m_player);
+	}
+	if (m_player->IsOnGround() == false) {
+		return new PlayerFallState(m_player);
 	}
 	// ここまで来たらステートを遷移しない。
 	return nullptr;

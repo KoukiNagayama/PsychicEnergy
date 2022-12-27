@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "BackGround.h"
+#include "WorldRotation.h"
 
 bool BackGround::Start()
 {
@@ -39,15 +40,18 @@ bool BackGround::Start()
 		m_modelRender.GetModel().GetWorldMatrix()
 	);
 
+	
 	// デバッグ用　当たり判定描画
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 	m_modelRender.Update();
+
+	g_worldRotation->AddMapModelData(m_modelRender);
 	return true;
 }
 
 void BackGround::Update()
 {
-
+	m_modelRender.Update();
 }
 
 void BackGround::Render(RenderContext& rc)

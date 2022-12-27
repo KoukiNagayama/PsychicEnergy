@@ -1,4 +1,5 @@
 #pragma once
+#include "WorldRotation.h"
 /// <summary>
 /// ”wŒiƒ‚ƒfƒ‹ƒNƒ‰ƒX
 /// </summary>

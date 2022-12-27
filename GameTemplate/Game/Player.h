@@ -1,6 +1,6 @@
 #pragma once
 #include "sound/SoundSource.h"
-
+#include "WorldRotation.h"
 class IPlayerState;
 
 /// <summary>

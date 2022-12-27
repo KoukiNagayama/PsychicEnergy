@@ -37,7 +37,7 @@ namespace nsK2EngineLow {
 			return;
 		}
 
-		//インスタンシング描画用にモデルを初期化。
+		//モデルを初期化。
 		m_modelRender.Init(*m_filePath.get(), nullptr, 0, enModelUpAxisZ, m_mapChipDataNum);
 
 		for (auto& mapChipData : m_mapChipDataVector)
@@ -55,7 +55,7 @@ namespace nsK2EngineLow {
 	{
 		for (auto& mapChipData : m_mapChipDataVector)
 		{
-			//モデルレンダーのインスタンシング用のデータを更新。
+			//モデルレンダーのデータを更新。
 			m_modelRender.Update();
 		}
 	}

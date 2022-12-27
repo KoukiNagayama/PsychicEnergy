@@ -2,6 +2,7 @@
 #include "PlayerFallState.h"
 #include "PlayerIdleState.h"
 #include "PlayerWalkState.h"
+#include "PlayerIdleInAirState.h"
 
 
 void PlayerFallState::Enter()
@@ -18,6 +19,9 @@ IPlayerState* PlayerFallState::StateChange()
 		else {
 			return new PlayerIdleState(m_player);
 		}
+	}
+	else if (g_pad[0]->IsTrigger(enButtonRB1)) {
+		return new PlayerIdleInAirState(m_player);
 	}
 	// ‚±‚±‚Ü‚Å—ˆ‚½‚ç‘JˆÚ‚µ‚È‚¢B
 	return nullptr;

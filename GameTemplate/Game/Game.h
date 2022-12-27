@@ -1,6 +1,7 @@
 #pragma once
 #include "LevelRender.h"
 #include "SkyCube.h"
+#include "WorldRotation.h"
 class TestModel;
 class Player;
 class GameCamera;
@@ -35,10 +36,6 @@ private:
 	LevelRender		m_levelRender;						// レベルレンダー
 	Player*			m_player = nullptr;					// プレイヤー
 	GameCamera*		m_gameCamera = nullptr;				// ゲームカメラ
-	TestModel*		m_testModel0 = nullptr;				// テストモデル1
-	TestModel*		m_testModel1 = nullptr;				// テストモデル2
-	TestModel*		m_testModel2 = nullptr;				// テストモデル3
-	TestModel*		m_testModel3 = nullptr;
 	BackGround*		m_backGround = nullptr;
 	SkyCube*		m_skyCube = nullptr;				// スカイキューブ
 	SpriteRender	m_sprite;
