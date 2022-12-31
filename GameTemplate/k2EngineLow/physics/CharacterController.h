@@ -6,6 +6,7 @@
 
 #include "CapsuleCollider.h"
 #include "RigidBody.h"
+#include "WorldRotation.h"
 
 namespace nsK2EngineLow {
 	/*!

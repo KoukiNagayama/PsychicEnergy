@@ -79,6 +79,7 @@ using namespace Microsoft::WRL;
 #include "ModelRender.h"
 #include "PostEffect.h"
 #include "SpriteRender.h"
+#include "WorldRotation.h"
 //#include "Fxaa.h"
 //#include "OutLine.h"
 #include "RenderingEngine.h"

@@ -6,10 +6,13 @@
 void PlayerFallInAirState::Enter()
 {
 	// アニメーションを設定する。
-	//player->SetAnimation(Player::enAnimationClip_Idle);
+	m_player->SetAnimation(Player::enAnimationClip_FallAir);
 
 	// 移動方向を決定する。
 	m_player->DecideMoveDirection();
+
+	m_player->RotationFallAir();
+
 }
 
 IPlayerState* PlayerFallInAirState::StateChange()
@@ -31,4 +34,5 @@ void PlayerFallInAirState::Update()
 {
 	// 空中での移動処理。
 	m_player->MoveOnAirspace();
+
 }

@@ -62,7 +62,6 @@
     <ClCompile Include="PlayerFallState.cpp">
       <Filter>player</Filter>
     </ClCompile>
-    <ClCompile Include="WorldRotation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -111,6 +110,5 @@
     <ClInclude Include="PlayerFallState.h">
       <Filter>player</Filter>
     </ClInclude>
-    <ClInclude Include="WorldRotation.h" />
   </ItemGroup>
 </Project>

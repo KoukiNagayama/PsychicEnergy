@@ -38,6 +38,8 @@ bool Player::Start()
 	m_animationClips[enAnimationClip_DashJump].SetLoopFlag(false);
 	m_animationClips[enAnimationClip_IdleAir].Load("Assets/animData/WD/idle_air_4.tka");
 	m_animationClips[enAnimationClip_IdleAir].SetLoopFlag(true);
+	m_animationClips[enAnimationClip_FallAir].Load("Assets/animData/WD/fall_air.tka");
+	m_animationClips[enAnimationClip_FallAir].SetLoopFlag(true);
 
 	// モデルを初期化。
 	m_modelRender.Init(
@@ -70,8 +72,8 @@ bool Player::Start()
 	m_playerState = new PlayerIdleState(this);
 	m_playerState->Enter();
 
-	Matrix mat;
-	mat = m_modelRender.GetWorldMatrix();
+	//Matrix mat;
+	const Matrix& mat = m_modelRender.GetWorldMatrix();
 	g_worldRotation->InitPlayerModelData(mat);
 
 	// wavファイルを登録する。
@@ -97,8 +99,6 @@ void Player::Update()
 	// 各ステートの更新処理を実行。
 	m_playerState->Update();
 
-	// 回転処理。
-	Rotation();
 
 	// アニメーションを再生する。
 	PlayAnimation(m_currentAnimationClip);
@@ -144,7 +144,9 @@ void Player::MoveOnAirspace()
 
 	// 移動速度を求める。
 	m_moveSpeed += m_moveVectorInAir * 1500.0f;
-	
+
+	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
+
 	m_modelRender.SetPosition(m_position);
 }
 
@@ -223,6 +225,25 @@ void Player::Rotation()
 		m_forward = Vector3::AxisZ;
 		m_rotation.Apply(m_forward);
 	}
+}
+
+void Player::RotationFallAir()
+{
+	// 回転する角度
+	float rotAngle;
+	rotAngle = m_forward.Dot(m_moveVectorInAir);
+	//Math::RadToDeg(rotAngle);
+	// 回転軸
+	Vector3 rotAxis;
+	rotAxis.Cross(m_moveVectorInAir, m_forward);
+	//rotAxis *= -1.0f;
+
+	m_rotation.SetRotationDeg(rotAxis, acos(rotAngle));
+	m_modelRender.SetRotation(m_rotation);
+
+	//m_forward = Vector3::AxisZ;
+	//m_rotation.Apply(m_forward);
+
 }
 
 void Player::FloatModeChange(bool isFloating)

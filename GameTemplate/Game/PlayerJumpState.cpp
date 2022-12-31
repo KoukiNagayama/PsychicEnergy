@@ -39,4 +39,7 @@ void PlayerJumpState::Update()
 	m_player->Jump();
 
 	m_count += g_gameTime->GetFrameDeltaTime();
+
+	m_player->Rotation();
+
 }

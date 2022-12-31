@@ -46,4 +46,7 @@ void PlayerWalkState::Update()
 	m_player->MoveOnGround();
 
 	m_player->SelectAnimationOnGround();
+
+	m_player->Rotation();
+
 }

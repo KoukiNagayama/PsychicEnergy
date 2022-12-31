@@ -246,6 +246,7 @@
     </ClCompile>
     <ClCompile Include="SceneGeometryData.cpp" />
     <ClCompile Include="SpriteRender.cpp" />
+    <ClCompile Include="WorldRotation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -542,6 +543,7 @@
     </ClInclude>
     <ClInclude Include="SceneGeometryData.h" />
     <ClInclude Include="SpriteRender.h" />
+    <ClInclude Include="WorldRotation.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

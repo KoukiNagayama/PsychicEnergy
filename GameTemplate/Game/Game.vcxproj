@@ -245,7 +245,6 @@
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="TestModel.cpp" />
-    <ClCompile Include="WorldRotation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
@@ -266,7 +265,6 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="TestModel.h" />
-    <ClInclude Include="WorldRotation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

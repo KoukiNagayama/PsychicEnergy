@@ -4,6 +4,7 @@
 
 #include "k2EngineLowPreCompile.h"
 #include "CharacterController.h"
+#include "WorldRotation.h"
 
 namespace nsK2EngineLow {
 	namespace {
@@ -212,6 +213,7 @@ namespace nsK2EngineLow {
 						nextPosition.z = m_position.z;
 						break;
 					}
+					g_worldRotation->SetHitNormal(callback.hitNormal);
 				}
 				else {
 					//‚Ç‚±‚Æ‚à“–‚½‚ç‚È‚¢‚Ì‚ÅI‚í‚èB

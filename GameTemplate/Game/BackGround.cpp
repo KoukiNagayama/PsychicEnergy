@@ -51,7 +51,7 @@ bool BackGround::Start()
 
 void BackGround::Update()
 {
-	m_modelRender.Update();
+	//m_modelRender.Update();
 }
 
 void BackGround::Render(RenderContext& rc)

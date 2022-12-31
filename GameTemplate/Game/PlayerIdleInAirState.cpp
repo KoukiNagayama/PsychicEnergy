@@ -41,4 +41,7 @@ void PlayerIdleInAirState::Update()
 		m_player->m_position = m_player->m_charaCon.Execute(m_player->m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 		m_player->m_modelRender.SetPosition(m_player->m_position);
 	}
+
+	m_player->Rotation();
+
 }

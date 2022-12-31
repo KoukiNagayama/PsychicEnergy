@@ -347,6 +347,7 @@
     <ClCompile Include="tkFile\TknFile.cpp" />
     <ClCompile Include="tkFile\TksFile.cpp" />
     <ClCompile Include="ToonMap.cpp" />
+    <ClCompile Include="WorldRotation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\PathFinding\Cell.h" />
@@ -459,6 +460,7 @@
     <ClInclude Include="tkFile\TksFile.h" />
     <ClInclude Include="ToonMap.h" />
     <ClInclude Include="util\TResourceBank.h" />
+    <ClInclude Include="WorldRotation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

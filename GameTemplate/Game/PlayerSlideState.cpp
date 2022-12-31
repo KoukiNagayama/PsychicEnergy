@@ -33,6 +33,9 @@ IPlayerState* PlayerSlideState::StateChange()
 void PlayerSlideState::Update()
 {
 	m_player->Slide();
+
+	m_player->Rotation();
+
 }
 
 

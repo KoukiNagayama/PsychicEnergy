@@ -55,6 +55,8 @@ void GameCamera::Init()
 	// ‹ß•½–Ê‚Æ‰“•½–Ê‚Ü‚Å‚Ì‹——£‚ğİ’èB
 	m_springCamera.SetFar(FAR_CLIP);
 	m_springCamera.SetNear(NEAR_CLIP);
+
+
 }
 
 void GameCamera::Update()

@@ -31,9 +31,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_renderingEngine = new RenderingEngine;
 	g_renderingEngine->Init();
 
-
-
-
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{

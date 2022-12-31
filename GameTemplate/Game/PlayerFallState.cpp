@@ -30,4 +30,7 @@ IPlayerState* PlayerFallState::StateChange()
 void PlayerFallState::Update()
 {
 	m_player->MoveOnGround();
+
+	m_player->Rotation();
+
 }

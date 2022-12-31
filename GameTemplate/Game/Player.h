@@ -17,6 +17,7 @@ public:
 		enAnimationClip_NormalJump,	// 通常のジャンプ
 		enAnimationClip_DashJump,	// ダッシュジャンプ
 		enAnimationClip_IdleAir,	// 空中での待機
+		enAnimationClip_FallAir,	// 空中での落下
 		enAnimationClip_Num			// アニメーションクリップの数
 	};
 public:
@@ -202,6 +203,7 @@ private:
 	/// 回転処理。
 	/// </summary>
 	void Rotation();
+	void RotationFallAir();
 	/// <summary>
 	/// 移動速度を計算
 	/// </summary>
@@ -257,7 +259,7 @@ private:
 	CharacterController		m_charaCon;										// キャラクターコントローラー
 	IPlayerState*			m_playerState = nullptr;						// ステート
 	EnAnimationClip			m_currentAnimationClip;							// 現在設定されているアニメーションクリップ
-	Vector3					m_moveVectorInAir = Vector3::Zero;				// 空中での移動方向
+	Vector3					m_moveVectorInAir = Vector3::One;				// 空中での移動方向
 	Vector3					m_forward = Vector3::AxisZ;						// 正面方向
 	SoundSource*			m_runFootstep = nullptr;						// 走りの足音
 	Quaternion				m_slideRot = Quaternion::Identity;				// スライド中の進行方向の回転
