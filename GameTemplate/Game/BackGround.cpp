@@ -40,6 +40,8 @@ bool BackGround::Start()
 		m_modelRender.GetModel().GetWorldMatrix()
 	);
 
+	// ワールド行列を記録しておく
+	m_worldMatrix = m_modelRender.GetWorldMatrix();
 	
 	// デバッグ用　当たり判定描画
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
@@ -51,7 +53,19 @@ bool BackGround::Start()
 
 void BackGround::Update()
 {
-	//m_modelRender.Update();
+	// 現在のワールド行列
+	Matrix nowWorldMatrix = m_modelRender.GetWorldMatrix();
+	
+	if (m_worldMatrix == nowWorldMatrix) {
+		return;
+	}
+	// 背景が保持する当たり判定を新たなワールド行列に対して再生成する。
+	m_physicsStaticObject.Release();
+	m_physicsStaticObject.CreateFromModel(
+		m_modelRender.GetModel(),
+		m_modelRender.GetWorldMatrix()
+	);
+	m_worldMatrix = nowWorldMatrix;
 }
 
 void BackGround::Render(RenderContext& rc)

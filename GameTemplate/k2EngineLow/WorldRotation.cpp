@@ -16,17 +16,10 @@ namespace nsK2EngineLow
 			return;
 		}
 		m_count++;
+		// 現在取得している法線を記録する
 		m_lastHitNormal = m_hitNormal;
 		m_hitNormal.Normalize();
-		
-		//// 上方向と次に上方向に変わる面の法線の方向のズレの角度
-		//float angle;
-		//angle = m_hitNormal.Dot(Vector3::Up);
-		//angle = acos(angle);
-		//// 回転軸
-		//Vector3 axis = Vector3::One;
-		//axis.Cross(Vector3::Up, m_hitNormal);
-
+		// クォータニオンから回転行列を作る
 		m_testRot.SetRotation(m_hitNormal, Vector3::Up);
 		m_rotationMatrix.MakeRotationFromQuaternion(m_testRot);
 		// プレイヤーのワールド行列の逆行列
@@ -50,7 +43,7 @@ namespace nsK2EngineLow
 			// ×プレイヤーのワールド行列で求める
 			afterRotMatrix.Multiply(modelMat->GetWorldMatrix(), playerWorldMatInv);
 			afterRotMatrix.Multiply(afterRotMatrix, m_rotationMatrix);
-			afterRotMatrix.Multiply(afterRotMatrix, *m_playerWorldMatrix[0]);
+			afterRotMatrix.Multiply(afterRotMatrix, playerTranslationMat);
 
 			modelMat->SetWorldMatrix(afterRotMatrix);
 		}

@@ -88,6 +88,25 @@ namespace nsK2EngineLow {
 			mat = _m.mat;
 			return *this;
 		}
+		bool operator==(const Matrix& _m)
+		{
+			return mat._11 == _m.mat._11
+				&& mat._12 == _m.mat._12
+				&& mat._13 == _m.mat._13
+				&& mat._14 == _m.mat._14
+				&& mat._21 == _m.mat._21
+				&& mat._22 == _m.mat._22
+				&& mat._23 == _m.mat._23
+				&& mat._24 == _m.mat._24
+				&& mat._31 == _m.mat._31
+				&& mat._32 == _m.mat._32
+				&& mat._33 == _m.mat._33
+				&& mat._34 == _m.mat._34
+				&& mat._41 == _m.mat._41
+				&& mat._42 == _m.mat._42
+				&& mat._43 == _m.mat._43
+				&& mat._44 == _m.mat._44;
+		}
 		/// <summary>
 		/// ベクトルと3x3行列を乗算。
 		/// </summary>

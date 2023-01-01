@@ -69,5 +69,6 @@ private:
 	Quaternion				m_rotation;					// 回転
 	int						m_typeNum;					// モデルのタイプ
 	PhysicsStaticObject		m_physicsStaticObject;		// 静的物理オブジェクト
+	Matrix					m_worldMatrix = Matrix::Identity;
 };
 
