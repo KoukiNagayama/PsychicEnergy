@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "BackGround.h"
 #include "WorldRotation.h"
+#include "Player.h"
 
 bool BackGround::Start()
 {
@@ -47,7 +48,12 @@ bool BackGround::Start()
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 	m_modelRender.Update();
 
+	// ワールド行列の回転をするオブジェクトを設定する。
 	g_worldRotation->AddMapModelData(m_modelRender);
+	// 地面のワールド行列は基準の行列として別でも記録しておく
+	if (m_typeNum == 0) {
+		g_worldRotation->SetGroundWorldMatrix(m_worldMatrix);
+	}
 	return true;
 }
 
@@ -55,10 +61,10 @@ void BackGround::Update()
 {
 	// 現在のワールド行列
 	Matrix nowWorldMatrix = m_modelRender.GetWorldMatrix();
-	
 	if (m_worldMatrix == nowWorldMatrix) {
 		return;
 	}
+
 	// 背景が保持する当たり判定を新たなワールド行列に対して再生成する。
 	m_physicsStaticObject.Release();
 	m_physicsStaticObject.CreateFromModel(

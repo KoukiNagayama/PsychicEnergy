@@ -1,5 +1,7 @@
 #pragma once
 #include "WorldRotation.h"
+
+class Player;
 /// <summary>
 /// 背景モデルクラス
 /// </summary>
@@ -70,5 +72,6 @@ private:
 	int						m_typeNum;					// モデルのタイプ
 	PhysicsStaticObject		m_physicsStaticObject;		// 静的物理オブジェクト
 	Matrix					m_worldMatrix = Matrix::Identity;
+	Player*					m_player = nullptr;
 };
 

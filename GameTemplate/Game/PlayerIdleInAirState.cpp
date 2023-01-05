@@ -42,6 +42,6 @@ void PlayerIdleInAirState::Update()
 		m_player->m_modelRender.SetPosition(m_player->m_position);
 	}
 
-	m_player->Rotation();
+	//m_player->Rotation();
 
 }

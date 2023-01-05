@@ -896,6 +896,12 @@ namespace nsK2EngineLow {
 			addRot.SetRotation(axis, halfAngle);
 			*this *= addRot;
 		}
+		void AddRotation(const Vector3& axis, float angle)
+		{
+			Quaternion addRot;
+			addRot.SetRotation(axis, angle);
+			*this *= addRot;
+		}
 		/// <summary>
 		/// クォータニオン同士の乗算
 		/// </summary>

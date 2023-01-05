@@ -105,6 +105,10 @@ void Player::Update()
 
 	// モデルを更新する。
 	m_modelRender.Update();
+
+	if (g_pad[0]->IsTrigger(enButtonX)) {
+		g_worldRotation->ResetWorldMatrix();
+	}
 }
 
 void Player::MoveOnGround()
@@ -235,15 +239,13 @@ void Player::RotationFallAir()
 	//Math::RadToDeg(rotAngle);
 	// 回転軸
 	Vector3 rotAxis;
-	rotAxis.Cross(m_moveVectorInAir, m_forward);
-	//rotAxis *= -1.0f;
+	rotAxis = Cross(m_moveVectorInAir, m_forward);
 
-	m_rotation.SetRotationDeg(rotAxis, acos(rotAngle));
+	//m_rotation.SetRotation(rotAxis, acosf(rotAngle));
+	m_rotation.SetRotation(m_forward, m_moveVectorInAir);
 	m_modelRender.SetRotation(m_rotation);
 
-	//m_forward = Vector3::AxisZ;
-	//m_rotation.Apply(m_forward);
-
+	m_rotation.Apply(m_forward);
 }
 
 void Player::FloatModeChange(bool isFloating)

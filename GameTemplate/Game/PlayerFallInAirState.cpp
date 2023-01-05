@@ -13,6 +13,9 @@ void PlayerFallInAirState::Enter()
 
 	m_player->RotationFallAir();
 
+	g_worldRotation->SetIsGetNormal(true);
+
+
 }
 
 IPlayerState* PlayerFallInAirState::StateChange()
@@ -34,5 +37,4 @@ void PlayerFallInAirState::Update()
 {
 	// ‹ó’†‚Å‚ÌˆÚ“®ˆ—B
 	m_player->MoveOnAirspace();
-
 }
