@@ -49,7 +49,7 @@ bool BackGround::Start()
 	m_modelRender.Update();
 
 	// ワールド行列の回転をするオブジェクトを設定する。
-	g_worldRotation->AddMapModelData(m_modelRender);
+	g_worldRotation->AddBackGround(this);
 	// 地面のワールド行列は基準の行列として別でも記録しておく
 	if (m_typeNum == 0) {
 		g_worldRotation->SetGroundWorldMatrix(m_worldMatrix);
@@ -59,12 +59,28 @@ bool BackGround::Start()
 
 void BackGround::Update()
 {
-	// 現在のワールド行列
+	{
+		constexpr float kRotateTime = 0.7f;
+		if (m_rotateTimer < kRotateTime)
+		{
+			m_rotateTimer += g_gameTime->GetFrameDeltaTime();
+			m_rotateTimer = min(m_rotateTimer, kRotateTime);
+
+			const float rate = m_rotateTimer / kRotateTime;
+			Matrix mat;
+			mat.v[0].Lerp(rate, m_prevMatrix.v[0], m_nextMatrix.v[0]);
+			mat.v[1].Lerp(rate, m_prevMatrix.v[1], m_nextMatrix.v[1]);
+			mat.v[2].Lerp(rate, m_prevMatrix.v[2], m_nextMatrix.v[2]);
+			mat.v[3].Lerp(rate, m_prevMatrix.v[3], m_nextMatrix.v[3]);
+
+			m_modelRender.SetWorldMatrix(mat);
+		}
+	}
+	// 現在のワールド行列が記憶されたワールド行列と一致する場合動作させない
 	Matrix nowWorldMatrix = m_modelRender.GetWorldMatrix();
 	if (m_worldMatrix == nowWorldMatrix) {
 		return;
 	}
-
 	// 背景が保持する当たり判定を新たなワールド行列に対して再生成する。
 	m_physicsStaticObject.Release();
 	m_physicsStaticObject.CreateFromModel(

@@ -56,6 +56,16 @@ public:
 	{
 		m_typeNum = num;
 	}
+	ModelRender& GetModelRender()
+	{
+		return m_modelRender;
+	}
+	inline void SetWorldMatrixWithLerp(const Matrix& worldMat)
+	{
+		m_prevMatrix = m_modelRender.GetWorldMatrix();
+		m_nextMatrix = worldMat;
+		m_rotateTimer = 0.0f;
+	}
 public:
 	enum enModelType
 	{
@@ -73,5 +83,9 @@ private:
 	PhysicsStaticObject		m_physicsStaticObject;		// 静的物理オブジェクト
 	Matrix					m_worldMatrix = Matrix::Identity;
 	Player*					m_player = nullptr;
+	Matrix					m_prevMatrix = Matrix::Identity;
+	Matrix					m_nextMatrix = Matrix::Identity;
+	float					m_rotateTimer = 1.0f;
+
 };
 

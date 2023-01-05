@@ -3,6 +3,11 @@
 #include "PlayerIdleInAirState.h"
 #include "PlayerIdleState.h"
 
+PlayerFallInAirState::~PlayerFallInAirState()
+{
+
+}
+
 void PlayerFallInAirState::Enter()
 {
 	// アニメーションを設定する。

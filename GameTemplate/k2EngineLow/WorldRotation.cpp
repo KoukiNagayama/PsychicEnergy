@@ -1,5 +1,6 @@
 #include "k2EngineLowPreCompile.h"
 #include "WorldRotation.h"
+#include "../Game/BackGround.h"
 
 namespace nsK2EngineLow
 {
@@ -31,8 +32,8 @@ namespace nsK2EngineLow
 		//playerTranslationMat.v[2] = m_playerWorldMatrix[0]->v[2];
 		playerTranslationMat.v[3] = m_playerWorldMatrix[0]->v[3];
 		playerWorldMatInv.Inverse(playerTranslationMat);
-
-		for (auto& modelMat : m_modelArray) {
+		
+		for (auto& backGround : m_backGroundArray) {
 			// 回転後のワールド座標変数
 			Matrix afterRotMatrix;
 			// ワールド座標の回転は
@@ -40,13 +41,12 @@ namespace nsK2EngineLow
 			// ×プレイヤーのワールド行列の逆行列
 			// ×世界の回転行列
 			// ×プレイヤーのワールド行列で求める
+			ModelRender* modelMat = &backGround->GetModelRender();
 			afterRotMatrix.Multiply(modelMat->GetWorldMatrix(), playerWorldMatInv);
 			afterRotMatrix.Multiply(afterRotMatrix, m_rotationMatrix);
 			afterRotMatrix.Multiply(afterRotMatrix, playerTranslationMat);
-
-			modelMat->SetWorldMatrix(afterRotMatrix);
+			backGround->SetWorldMatrixWithLerp(afterRotMatrix);
 		}
-		//m_rot.Apply(m_vec);
 	}
 
 	void WorldRotation::ResetWorldMatrix()
@@ -68,7 +68,7 @@ namespace nsK2EngineLow
 		playerTranslationMat.v[3] = m_playerWorldMatrix[0]->v[3];
 		playerWorldMatInv.Inverse(playerTranslationMat);
 
-		for (auto& modelMat : m_modelArray) {
+		for (auto& backGround : m_backGroundArray) {
 			// 回転後のワールド座標変数
 			Matrix afterRotMatrix;
 			// ワールド座標の回転は
@@ -76,6 +76,7 @@ namespace nsK2EngineLow
 			// ×プレイヤーのワールド行列の逆行列
 			// ×世界の回転行列
 			// ×プレイヤーのワールド行列で求める
+			ModelRender* modelMat = &backGround->GetModelRender();
 			afterRotMatrix.Multiply(modelMat->GetWorldMatrix(), playerWorldMatInv);
 			afterRotMatrix.Multiply(afterRotMatrix, m_rotationMatrix);
 			afterRotMatrix.Multiply(afterRotMatrix, playerTranslationMat);

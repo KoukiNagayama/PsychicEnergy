@@ -670,6 +670,18 @@ namespace nsK2EngineLow {
 			DirectX::XMVECTOR xmv1 = DirectX::XMLoadFloat4(&v.vec);
 			DirectX::XMStoreFloat4(&vec, DirectX::XMVectorMin(xmv0, xmv1));
 		}
+		/// <summary>
+		/// ê¸å`ï‚ä‘
+		/// </summary>
+		/// <param name="t">ï‚ä‘ó¶</param>
+		void Lerp(float t, const Vector4& v0, const Vector4& v1)
+		{
+			DirectX::XMVECTOR _v = DirectX::XMVectorLerp(
+				DirectX::XMLoadFloat4(&v0.vec),
+				DirectX::XMLoadFloat4(&v1.vec),
+				t);
+			DirectX::XMStoreFloat4(&vec, _v);
+		}
 	};
 
 	const Vector2 g_vec2Zero = { 0.0f, 0.0f };

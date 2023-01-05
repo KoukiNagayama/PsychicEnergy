@@ -1,13 +1,14 @@
 #pragma once
+class BackGround;
 namespace nsK2EngineLow {
 	class WorldRotation
 	{
 	public:
 		WorldRotation() {}
 		~WorldRotation() {}
-		void AddMapModelData(ModelRender& modelRender)
+		void AddBackGround(BackGround* modelRender)
 		{
-			m_modelArray.push_back(&modelRender);
+			m_backGroundArray.push_back(modelRender);
 		}
 		void InitPlayerModelData(const Matrix& matrix)
 		{
@@ -40,7 +41,10 @@ namespace nsK2EngineLow {
 	private:
 		std::vector<const Matrix*>	m_playerWorldMatrix;					// プレイヤーのワールド行列
 		Matrix		m_rotationMatrix = Matrix::Identity;					// 世界の回転行列
-		std::vector<ModelRender*> m_modelArray;								// 回転するオブジェクトの配列
+		//std::vector<ModelRender*> m_modelArray;								// 回転するオブジェクトの配列
+		std::vector<BackGround*> m_backGroundArray;
+		
+		
 		Quaternion  m_matrixRot = Quaternion::Identity;						// 
 		Vector3		m_hitNormal = Vector3::Zero;							// プレイヤーが触れたオブジェクトの面の法線
 		Vector3		m_lastHitNormal = Vector3::Zero;						// 最後に記録されたプレイヤーが触れたオブジェクトの面の法線

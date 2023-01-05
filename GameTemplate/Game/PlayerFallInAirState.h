@@ -6,6 +6,7 @@ class PlayerFallInAirState : public IPlayerState
 public:
 	PlayerFallInAirState(Player* player) :
 		IPlayerState(player) {}
+	~PlayerFallInAirState() override;
 	/// <summary>
 	/// ステート開始時の処理。
 	/// </summary>
