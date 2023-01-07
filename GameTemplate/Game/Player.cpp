@@ -5,6 +5,8 @@
 #include "sound/SoundEngine.h"
 #include "WorldRotation.h"
 
+#include "graphics/effect/EffectEmitter.h"
+
 
 namespace
 {
@@ -81,6 +83,9 @@ bool Player::Start()
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/slide2.wav");
 	g_soundEngine->ResistWaveFileBank(2, "Assets/sound/landing.wav");
 	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/modeChange.wav");
+
+	EffectEngine::GetInstance()->ResistEffect(0, u"Assets/effect/wind4.efk");
+	
 	return true;
 }
 
@@ -235,14 +240,17 @@ void Player::RotationFallAir()
 {
 	// ‰ñ“]‚·‚éŠp“x
 	float rotAngle;
+	// 2•Ó‚Ì“àÏ‚Å‹‚ß‚é
 	rotAngle = m_forward.Dot(m_moveVectorInAir);
 	//Math::RadToDeg(rotAngle);
 	// ‰ñ“]²
 	Vector3 rotAxis;
+	// 2•Ó‚ÌŠOÏ‚Å‹‚ß‚é
 	rotAxis = Cross(m_moveVectorInAir, m_forward);
 
 	//m_rotation.SetRotation(rotAxis, acosf(rotAngle));
 	m_rotation.SetRotation(m_forward, m_moveVectorInAir);
+
 	m_modelRender.SetRotation(m_rotation);
 
 	m_rotation.Apply(m_forward);

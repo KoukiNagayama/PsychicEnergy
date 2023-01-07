@@ -270,5 +270,6 @@ private:
 	SoundSource*			m_modeChangeSound = nullptr;					// ƒ‚[ƒh•ÏX‚ÌŒø‰Ê‰¹
 	bool					m_isFloating = false;
 	float					m_lastMoveSpeedY = 0.0f;
+	EffectEmitter*			m_effectEmitterWind = nullptr;
 };
 

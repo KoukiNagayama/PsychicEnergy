@@ -17,5 +17,7 @@ namespace nsK2EngineLow
 		m_fxaa.Render(rc, mainRenderTarget);
 
 		m_outLine.Render(rc, mainRenderTarget);
+
+		EffectEngine::GetInstance()->Draw();
 	}
 }
