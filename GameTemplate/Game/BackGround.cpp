@@ -54,6 +54,8 @@ bool BackGround::Start()
 	if (m_typeNum == 0) {
 		g_worldRotation->SetGroundWorldMatrix(m_worldMatrix);
 	}
+
+	m_player = FindGO<Player>("player");
 	return true;
 }
 
@@ -88,6 +90,8 @@ void BackGround::Update()
 		m_modelRender.GetWorldMatrix()
 	);
 	m_worldMatrix = nowWorldMatrix;
+
+	m_player->SetIsTouchObject(true);
 }
 
 void BackGround::Render(RenderContext& rc)

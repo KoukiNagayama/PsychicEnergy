@@ -35,6 +35,10 @@ IPlayerState* PlayerFallInAirState::StateChange()
 		m_player->FloatModeChange(false);
 		return new PlayerIdleState(m_player);
 	}
+	if (m_player->IsPlayerTouchObject()) {
+		m_player->FloatModeChange(false);
+		return new PlayerIdleState(m_player);
+	}
 	// ‚±‚±‚Ü‚Å—ˆ‚½‚ç‘JˆÚ‚µ‚È‚¢B
 	return nullptr;
 }

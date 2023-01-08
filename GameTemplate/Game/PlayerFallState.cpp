@@ -4,6 +4,10 @@
 #include "PlayerWalkState.h"
 #include "PlayerIdleInAirState.h"
 
+PlayerFallState::~PlayerFallState()
+{
+
+}
 
 void PlayerFallState::Enter()
 {

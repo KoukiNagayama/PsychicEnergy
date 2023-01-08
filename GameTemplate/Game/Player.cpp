@@ -238,15 +238,15 @@ void Player::Rotation()
 
 void Player::RotationFallAir()
 {
-	// ‰ñ“]‚·‚éŠp“x
-	float rotAngle;
-	// 2•Ó‚Ì“àÏ‚Å‹‚ß‚é
-	rotAngle = m_forward.Dot(m_moveVectorInAir);
-	//Math::RadToDeg(rotAngle);
-	// ‰ñ“]²
-	Vector3 rotAxis;
-	// 2•Ó‚ÌŠOÏ‚Å‹‚ß‚é
-	rotAxis = Cross(m_moveVectorInAir, m_forward);
+	//// ‰ñ“]‚·‚éŠp“x
+	//float rotAngle;
+	//// 2•Ó‚Ì“àÏ‚Å‹‚ß‚é
+	//rotAngle = m_forward.Dot(m_moveVectorInAir);
+	////Math::RadToDeg(rotAngle);
+	//// ‰ñ“]²
+	//Vector3 rotAxis;
+	//// 2•Ó‚ÌŠOÏ‚Å‹‚ß‚é
+	//rotAxis = Cross(m_moveVectorInAir, m_forward);
 
 	//m_rotation.SetRotation(rotAxis, acosf(rotAngle));
 	m_rotation.SetRotation(m_forward, m_moveVectorInAir);
