@@ -1,6 +1,7 @@
 #include "k2EngineLowPreCompile.h"
 #include "WorldRotation.h"
 #include "../Game/BackGround.h"
+#include "../Game/Ring.h"
 
 namespace nsK2EngineLow
 {
@@ -11,6 +12,7 @@ namespace nsK2EngineLow
 			&& m_hitNormal.y == m_lastHitNormal.y
 			&& m_hitNormal.z == m_lastHitNormal.z
 			) {
+			m_ringArray.clear();
 			return;
 		}
 
@@ -47,6 +49,16 @@ namespace nsK2EngineLow
 			afterRotMatrix.Multiply(afterRotMatrix, playerTranslationMat);
 			backGround->SetWorldMatrixWithLerp(afterRotMatrix);
 		}
+		// ã‚Æ“¯—l‚ÉƒŠƒ“ƒO‚ð‰ñ“]‚³‚¹‚é
+		for (auto& ring : m_ringArray) {
+			Matrix afterRotMatrix;
+			ModelRender* modelMat = &ring->GetModelRender();
+			afterRotMatrix.Multiply(modelMat->GetWorldMatrix(), playerWorldMatInv);
+			afterRotMatrix.Multiply(afterRotMatrix, m_rotationMatrix);
+			afterRotMatrix.Multiply(afterRotMatrix, playerTranslationMat);
+			ring->SetWorldMatrixWithLerp(afterRotMatrix);
+		}
+		m_ringArray.clear();
 	}
 
 	void WorldRotation::ResetWorldMatrix()

@@ -1,5 +1,6 @@
 #pragma once
 class BackGround;
+class Ring;
 namespace nsK2EngineLow {
 	class WorldRotation
 	{
@@ -9,6 +10,10 @@ namespace nsK2EngineLow {
 		void AddBackGround(BackGround* modelRender)
 		{
 			m_backGroundArray.push_back(modelRender);
+		}
+		void AddRing(Ring* modelRender)
+		{
+			m_ringArray.push_back(modelRender);
 		}
 		void InitPlayerModelData(const Matrix& matrix)
 		{
@@ -43,7 +48,7 @@ namespace nsK2EngineLow {
 		Matrix		m_rotationMatrix = Matrix::Identity;					// 世界の回転行列
 		//std::vector<ModelRender*> m_modelArray;								// 回転するオブジェクトの配列
 		std::vector<BackGround*> m_backGroundArray;
-		
+		std::vector<Ring*> m_ringArray;
 		
 		Quaternion  m_matrixRot = Quaternion::Identity;						// 
 		Vector3		m_hitNormal = Vector3::Zero;							// プレイヤーが触れたオブジェクトの面の法線

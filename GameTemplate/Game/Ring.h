@@ -1,4 +1,5 @@
 #pragma once
+class Player;
 class Ring : public IGameObject
 {
 public:
@@ -32,12 +33,37 @@ public:
 	{
 		m_scale = scale;
 	}
+	ModelRender& GetModelRender()
+	{
+		return m_modelRender;
+	}
+	inline void SetWorldMatrixWithLerp(const Matrix& worldMat)
+	{
+		m_prevMatrix = m_modelRender.GetWorldMatrix();
+		m_nextMatrix = worldMat;
+		m_rotateTimer = 0.0f;
+	}
 private:
-
+	/// <summary>
+	/// 回転
+	/// </summary>
+	void Rotation();
+	/// <summary>
+	/// 当たり判定
+	/// </summary>
+	void Collision();
+	/// <summary>
+	/// プレイヤーとの距離を計算
+	/// </summary>
+	float CalcDistanceToPlayer();
 private:
 	ModelRender				m_modelRender;				// モデルレンダー
 	Vector3					m_position;					// 座標
 	Vector3					m_scale;					// 拡大率
 	Quaternion				m_rotation;					// 回転
+	Player*					m_player = nullptr;			// プレイヤー
+	Matrix					m_prevMatrix = Matrix::Identity;
+	Matrix					m_nextMatrix = Matrix::Identity;
+	float					m_rotateTimer = 1.0f;
 };
 
