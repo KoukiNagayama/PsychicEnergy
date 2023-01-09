@@ -74,6 +74,8 @@ bool Player::Start()
 	m_playerState = new PlayerIdleState(this);
 	m_playerState->Enter();
 
+
+
 	//Matrix mat;
 	const Matrix& mat = m_modelRender.GetWorldMatrix();
 	g_worldRotation->InitPlayerModelData(mat);
@@ -249,10 +251,11 @@ void Player::RotationFallAir()
 	//rotAxis = Cross(m_moveVectorInAir, m_forward);
 
 	//m_rotation.SetRotation(rotAxis, acosf(rotAngle));
-	m_rotation.SetRotation(m_forward, m_moveVectorInAir);
+	m_rotation.SetRotation(Vector3::AxisZ, m_moveVectorInAir);
 
 	m_modelRender.SetRotation(m_rotation);
 
+	m_forward = Vector3::AxisZ;
 	m_rotation.Apply(m_forward);
 }
 

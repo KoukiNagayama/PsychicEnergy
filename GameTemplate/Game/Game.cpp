@@ -6,6 +6,7 @@
 #include "GravityGauge.h"
 #include "Sight.h"
 #include "BackGround.h"
+#include "Ring.h"
 
 
 Game::Game()
@@ -22,7 +23,7 @@ bool Game::Start()
 {
 	g_worldRotation = new WorldRotation();
 
-	m_levelRender.Init("Assets/level3D/stageLevel_2.tkl", [&](LevelObjectData& objData)
+	m_levelRender.Init("Assets/level3D/stageLevel_3.tkl", [&](LevelObjectData& objData)
 		{
 			// ’n–Ê
 			if (objData.EqualObjectName(L"ground") == true) {
@@ -66,6 +67,13 @@ bool Game::Start()
 				m_player->SetPosition(objData.position);
 				m_player->SetRotation(objData.rotation);
 				m_player->SetScale(objData.scale);
+				return true;
+			}
+			else if (objData.ForwardMatchName(L"ring") == true) {
+				m_ring = NewGO<Ring>(0, "ring");
+				m_ring->SetPosition(objData.position);
+				m_ring->SetRotation(objData.rotation);
+				m_ring->SetScale(objData.scale);
 				return true;
 			}
 			return false;

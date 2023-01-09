@@ -237,6 +237,7 @@
     <ClCompile Include="PlayerJumpState.cpp" />
     <ClCompile Include="PlayerSlideState.cpp" />
     <ClCompile Include="PlayerWalkState.cpp" />
+    <ClCompile Include="Ring.cpp" />
     <ClCompile Include="Sight.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -261,6 +262,7 @@
     <ClInclude Include="PlayerSlideState.h" />
     <ClInclude Include="IPlayerState.h" />
     <ClInclude Include="PlayerWalkState.h" />
+    <ClInclude Include="Ring.h" />
     <ClInclude Include="Sight.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />

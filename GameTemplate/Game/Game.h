@@ -8,6 +8,7 @@ class GameCamera;
 class GravityGauge;
 class Sight;
 class BackGround;
+class Ring;
 
 class Game : public IGameObject
 {
@@ -41,5 +42,6 @@ private:
 	SpriteRender	m_sprite;
 	GravityGauge*	m_gravityGauge = nullptr;
 	Sight*			m_sight = nullptr;
+	Ring*			m_ring = nullptr;
 };
 

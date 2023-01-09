@@ -2,9 +2,17 @@
 #include "PlayerIdleInAirState.h"
 #include "PlayerIdleState.h"
 #include "PlayerFallInAirState.h"
+#include "Sight.h"
+
+PlayerIdleInAirState::~PlayerIdleInAirState()
+{
+	m_sight->SetIsDrawSight(false);
+}
 
 void PlayerIdleInAirState::Enter()
 {
+	m_sight = FindGO<Sight>("sight");
+	m_sight->SetIsDrawSight(true);
 	// 再生するアニメーションを設定する。
 	m_player->SetAnimation(Player::enAnimationClip_IdleAir);
 	// フラグをオブジェクトに触れていないように設定する。

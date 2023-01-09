@@ -20,8 +20,10 @@ public:
 	/// </summary>
 	/// <param name="rc"></param>
 	void Render(RenderContext& rc);
-private:
-
+	void SetIsDrawSight(const bool& isDrawSight)
+	{
+		m_isDrawSight = isDrawSight;
+	}
 private:
 	enum enAlphaState
 	{
@@ -32,5 +34,6 @@ private:
 	SpriteRender		m_spriteRender;			// スプライトレンダー
 	float				m_currentAlpha = 0.0f;	// 現在のα値
 	Player*				m_player = nullptr;		// プレイヤー
+	bool				m_isDrawSight = false;	// 照準を表示するか
 };
 

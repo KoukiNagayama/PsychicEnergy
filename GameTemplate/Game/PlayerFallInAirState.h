@@ -22,5 +22,8 @@ public:
 	void Update() override;
 
 	void GenerateWindEffect();
+private:
+	float m_secToRegenerateWindEffect = 0.0f;
+
 };
 

@@ -10,6 +10,7 @@ PlayerFallInAirState::~PlayerFallInAirState()
 
 void PlayerFallInAirState::Enter()
 {
+
 	// アニメーションを設定する。
 	m_player->SetAnimation(Player::enAnimationClip_FallAir);
 
@@ -50,9 +51,12 @@ void PlayerFallInAirState::Update()
 
 	m_player->m_effectEmitterWind->SetPosition(m_player->m_position);
 
-	if (m_player->m_effectEmitterWind->IsPlay() == false) {
+	m_secToRegenerateWindEffect += g_gameTime->GetFrameDeltaTime();
+
+	if (m_secToRegenerateWindEffect >= 0.8f) {
 		DeleteGO(m_player->m_effectEmitterWind);
 		GenerateWindEffect();
+		m_secToRegenerateWindEffect = 0.0f;
 	}
 }
 
@@ -62,9 +66,7 @@ void PlayerFallInAirState::GenerateWindEffect()
 	m_player->m_effectEmitterWind->Init(0);
 	m_player->m_effectEmitterWind->SetPosition(m_player->m_position);
 	m_player->m_effectEmitterWind->SetRotation(m_player->m_rotation);
-	
-	Quaternion rot;
-	rot;
-	m_player->m_effectEmitterWind->SetScale(Vector3::One * 50.0f);
+
+	m_player->m_effectEmitterWind->SetScale(Vector3::One * 100.0f);
 	m_player->m_effectEmitterWind->Play();
 }

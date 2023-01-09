@@ -20,13 +20,12 @@ bool Sight::Start()
 	m_spriteRender.SetScale(Vector3(SCALE, SCALE, 1.0f));
 	m_spriteRender.Update();
 
-	m_player = FindGO<Player>("player");
 	return true;
 }
 
 void Sight::Update()
 {
-	if (m_player->IsFloating()) {
+	if (m_isDrawSight) {
 		m_currentAlpha += CHANGE_ALPHA_PER_FRAME;
 		if (m_currentAlpha >= MAX_MUL_ALPHA) {
 			m_currentAlpha = MAX_MUL_ALPHA;
