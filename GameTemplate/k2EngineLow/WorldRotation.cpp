@@ -7,7 +7,6 @@ namespace nsK2EngineLow
 {
 	void WorldRotation::RotationWorldMatrix()
 	{
-		//m_testRot.AddRotationDegZ(1.0f);
 		if (m_hitNormal.x == m_lastHitNormal.x
 			&& m_hitNormal.y == m_lastHitNormal.y
 			&& m_hitNormal.z == m_lastHitNormal.z
@@ -22,41 +21,37 @@ namespace nsK2EngineLow
 		// クォータニオンから回転行列を作る
 		m_matrixRot.SetRotation(m_hitNormal, Vector3::Up);
 		m_rotationMatrix.MakeRotationFromQuaternion(m_matrixRot);
-	
 
 		// プレイヤーのワールド行列の逆行列
 		Matrix playerWorldMatInv;
 		// プレイヤーのワールド行列をもとにワールド行列の逆行列を計算
-		//playerWorldMatInv.Inverse(*m_playerWorldMatrix[0]);
 		Matrix playerTranslationMat = Matrix::Identity;
-		//playerTranslationMat.v[0] = m_playerWorldMatrix[0]->v[0];
-		//playerTranslationMat.v[1] = m_playerWorldMatrix[0]->v[1];
-		//playerTranslationMat.v[2] = m_playerWorldMatrix[0]->v[2];
+		// 行列の回転成分と拡大成分を除去し、平行移動成分だけを抽出する。
 		playerTranslationMat.v[3] = m_playerWorldMatrix[0]->v[3];
 		playerWorldMatInv.Inverse(playerTranslationMat);
 		
 		for (auto& backGround : m_backGroundArray) {
 			// 回転後のワールド座標変数
-			Matrix afterRotMatrix;
+			Matrix worldMatAfterRotation;
 			// ワールド座標の回転は
 			// マップチップのワールド行列
 			// ×プレイヤーのワールド行列の逆行列
 			// ×世界の回転行列
 			// ×プレイヤーのワールド行列で求める
 			ModelRender* modelMat = &backGround->GetModelRender();
-			afterRotMatrix.Multiply(modelMat->GetWorldMatrix(), playerWorldMatInv);
-			afterRotMatrix.Multiply(afterRotMatrix, m_rotationMatrix);
-			afterRotMatrix.Multiply(afterRotMatrix, playerTranslationMat);
-			backGround->SetWorldMatrixWithLerp(afterRotMatrix);
+			worldMatAfterRotation.Multiply(modelMat->GetWorldMatrix(), playerWorldMatInv);
+			worldMatAfterRotation.Multiply(worldMatAfterRotation, m_rotationMatrix);
+			worldMatAfterRotation.Multiply(worldMatAfterRotation, playerTranslationMat);
+			backGround->SetWorldMatrixWithLerp(worldMatAfterRotation);
 		}
 		// 上と同様にリングを回転させる
 		for (auto& ring : m_ringArray) {
-			Matrix afterRotMatrix;
+			Matrix worldMatAfterRotation;
 			ModelRender* modelMat = &ring->GetModelRender();
-			afterRotMatrix.Multiply(modelMat->GetWorldMatrix(), playerWorldMatInv);
-			afterRotMatrix.Multiply(afterRotMatrix, m_rotationMatrix);
-			afterRotMatrix.Multiply(afterRotMatrix, playerTranslationMat);
-			ring->SetWorldMatrixWithLerp(afterRotMatrix);
+			worldMatAfterRotation.Multiply(modelMat->GetWorldMatrix(), playerWorldMatInv);
+			worldMatAfterRotation.Multiply(worldMatAfterRotation, m_rotationMatrix);
+			worldMatAfterRotation.Multiply(worldMatAfterRotation, playerTranslationMat);
+			ring->SetWorldMatrixWithLerp(worldMatAfterRotation);
 		}
 		m_ringArray.clear();
 	}
@@ -66,38 +61,46 @@ namespace nsK2EngineLow
 		// 記録されている法線をリセットする。
 		m_lastHitNormal = Vector3::Zero;
 		m_groundNormal.Normalize();
+
+		// クォータニオンから回転行列を作る
 		m_matrixRot.SetRotation(m_groundNormal, Vector3::Up);
+		//m_matrixRot.SetRotation(Vector3::Up,m_groundNormal);
 		m_rotationMatrix.MakeRotationFromQuaternion(m_matrixRot);
 
 		// プレイヤーのワールド行列の逆行列
 		Matrix playerWorldMatInv;
 		// プレイヤーのワールド行列をもとにワールド行列の逆行列を計算
-		//playerWorldMatInv.Inverse(*m_playerWorldMatrix[0]);
 		Matrix playerTranslationMat = Matrix::Identity;
-		//playerTranslationMat.v[0] = m_playerWorldMatrix[0]->v[0];
-		//playerTranslationMat.v[1] = m_playerWorldMatrix[0]->v[1];
-		//playerTranslationMat.v[2] = m_playerWorldMatrix[0]->v[2];
+		// 行列の回転成分と拡大成分を除去し、平行移動成分だけを抽出する。
 		playerTranslationMat.v[3] = m_playerWorldMatrix[0]->v[3];
 		playerWorldMatInv.Inverse(playerTranslationMat);
 
 		for (auto& backGround : m_backGroundArray) {
 			// 回転後のワールド座標変数
-			Matrix afterRotMatrix;
+			Matrix worldMatAfterRotation;
 			// ワールド座標の回転は
 			// マップチップのワールド行列
 			// ×プレイヤーのワールド行列の逆行列
 			// ×世界の回転行列
 			// ×プレイヤーのワールド行列で求める
 			ModelRender* modelMat = &backGround->GetModelRender();
-			afterRotMatrix.Multiply(modelMat->GetWorldMatrix(), playerWorldMatInv);
-			afterRotMatrix.Multiply(afterRotMatrix, m_rotationMatrix);
-			afterRotMatrix.Multiply(afterRotMatrix, playerTranslationMat);
-
-			modelMat->SetWorldMatrix(afterRotMatrix);
+			//worldMatAfterRotation.Multiply(modelMat->GetWorldMatrix(), playerWorldMatInv);
+			//worldMatAfterRotation.Multiply(worldMatAfterRotation, m_rotationMatrix);
+			//worldMatAfterRotation.Multiply(worldMatAfterRotation, playerTranslationMat);
+			//backGround->SetWorldMatrixWithLerp(worldMatAfterRotation);
 		}
+		// 上と同様にリングを回転させる
+		for (auto& ring : m_ringArray) {
+			Matrix worldMatAfterRotation;
+			ModelRender* modelMat = &ring->GetModelRender();
+			worldMatAfterRotation.Multiply(modelMat->GetWorldMatrix(), playerWorldMatInv);
+			worldMatAfterRotation.Multiply(worldMatAfterRotation, m_rotationMatrix);
+			worldMatAfterRotation.Multiply(worldMatAfterRotation, playerTranslationMat);
+			ring->SetWorldMatrixWithLerp(worldMatAfterRotation);
+		}
+		m_ringArray.clear();
 
 		m_groundNormal = Vector3::Up;
-
 	}
 
 	WorldRotation* g_worldRotation = nullptr;

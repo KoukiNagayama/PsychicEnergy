@@ -1,6 +1,7 @@
 #pragma once
 #include "IPlayerState.h"
 class Player;
+class GravityGauge;
 class PlayerFallState : public IPlayerState
 {
 public:
@@ -20,5 +21,6 @@ public:
 	/// ステートにおける更新処理。
 	/// </summary>
 	void Update() override;
+
 };
 

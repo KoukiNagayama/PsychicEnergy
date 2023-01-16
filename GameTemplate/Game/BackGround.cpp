@@ -3,23 +3,33 @@
 #include "WorldRotation.h"
 #include "Player.h"
 
+namespace
+{
+	const int MODEL_TYPE_GROUND = 0;
+	const int MODEL_TYPE_BOX1 = 1;
+	const int MODEL_TYPE_BOX2 = 2;
+	const int MODEL_TYPE_BOX3 = 3;
+
+
+}
+
 bool BackGround::Start()
 {
 	// tkmファイルパスを指定。
 	const char* filePath = nullptr;
 
 	bool isShadowCaster = true;
-	if (m_typeNum == 0) {
+	if (m_typeNum == MODEL_TYPE_GROUND) {
 		filePath = "Assets/modelData/testStage/ground.tkm";
 		isShadowCaster = false;
 	}
-	if (m_typeNum == 1) {
+	if (m_typeNum == MODEL_TYPE_BOX1) {
 		filePath = "Assets/modelData/backGroundModel/backGroundModel_box1.tkm";
 	}
-	else if (m_typeNum == 2) {
+	else if (m_typeNum == MODEL_TYPE_BOX2) {
 		filePath = "Assets/modelData/backGroundModel/backGroundModel_box2.tkm";
 	}
-	else if (m_typeNum == 3) {
+	else if (m_typeNum == MODEL_TYPE_BOX3) {
 		filePath = "Assets/modelData/backGroundModel/backGroundModel_box3.tkm";
 	}
 
@@ -43,10 +53,7 @@ bool BackGround::Start()
 
 	// ワールド行列を記録しておく
 	m_worldMatrix = m_modelRender.GetWorldMatrix();
-	
-	// デバッグ用　当たり判定描画
-	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
-	m_modelRender.Update();
+	m_initialWorldMatrix = m_worldMatrix;
 
 	// ワールド行列の回転をするオブジェクトを設定する。
 	g_worldRotation->AddBackGround(this);
@@ -62,7 +69,7 @@ bool BackGround::Start()
 void BackGround::Update()
 {
 	{
-		constexpr float kRotateTime = 0.7f;
+		constexpr float kRotateTime = 0.1f;
 		if (m_rotateTimer < kRotateTime)
 		{
 			m_rotateTimer += g_gameTime->GetFrameDeltaTime();
@@ -78,9 +85,10 @@ void BackGround::Update()
 			m_modelRender.SetWorldMatrix(mat);
 		}
 	}
+	m_player->SetDisablePlayerMove(false);
 	// 現在のワールド行列が記憶されたワールド行列と一致する場合動作させない
-	Matrix nowWorldMatrix = m_modelRender.GetWorldMatrix();
-	if (m_worldMatrix == nowWorldMatrix) {
+	Matrix currentWorldMatrix = m_modelRender.GetWorldMatrix();
+	if (m_worldMatrix == currentWorldMatrix) {
 		return;
 	}
 	// 背景が保持する当たり判定を新たなワールド行列に対して再生成する。
@@ -89,9 +97,9 @@ void BackGround::Update()
 		m_modelRender.GetModel(),
 		m_modelRender.GetWorldMatrix()
 	);
-	m_worldMatrix = nowWorldMatrix;
+	m_worldMatrix = currentWorldMatrix;
+	m_player->SetDisablePlayerMove(true);
 
-	m_player->SetIsTouchObject(true);
 }
 
 void BackGround::Render(RenderContext& rc)

@@ -2,6 +2,7 @@
 #include "PlayerFallInAirState.h"
 #include "PlayerIdleInAirState.h"
 #include "PlayerIdleState.h"
+#include "GravityGauge.h"
 
 PlayerFallInAirState::~PlayerFallInAirState()
 {
@@ -11,16 +12,17 @@ PlayerFallInAirState::~PlayerFallInAirState()
 void PlayerFallInAirState::Enter()
 {
 
+	m_gravityGauge = FindGO<GravityGauge>("gravityGauge");
+
 	// アニメーションを設定する。
 	m_player->SetAnimation(Player::enAnimationClip_FallAir);
-
 	// 移動方向を決定する。
 	m_player->DecideMoveDirection();
-
+	// プレイヤーのモデルの向きを決める。
 	m_player->RotationFallAir();
-
+	// 衝突した場合に法線を取得するように設定。
 	g_worldRotation->SetIsGetNormal(true);
-
+	// 風のエフェクトを生成。
 	GenerateWindEffect();
 
 }
@@ -31,13 +33,19 @@ IPlayerState* PlayerFallInAirState::StateChange()
 		// 空中での待機ステートに遷移する。
 		return new PlayerIdleInAirState(m_player);
 	}
-	if (g_pad[0]->IsTrigger(enButtonLB1)) {
+	if (g_pad[0]->IsTrigger(enButtonLB1)
+		|| m_player->IsPlayerTouchObject()
+		|| m_gravityGauge->GetDisplayAreaAngleDeg() <= 0.0f
+		) {
 		// 通常の待機ステートに遷移する。
 		m_player->FloatModeChange(false);
 		return new PlayerIdleState(m_player);
 	}
 	if (m_player->IsPlayerTouchObject()) {
 		m_player->FloatModeChange(false);
+		return new PlayerIdleState(m_player);
+	}
+	if (m_gravityGauge->GetDisplayAreaAngleDeg() <= 0.0f) {
 		return new PlayerIdleState(m_player);
 	}
 	// ここまで来たら遷移しない。

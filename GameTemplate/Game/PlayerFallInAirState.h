@@ -1,6 +1,10 @@
 #pragma once
 #include "IPlayerState.h"
 
+class GravityGauge;
+/// <summary>
+/// プレイヤーが浮かんでいる状態での落下ステート
+/// </summary>
 class PlayerFallInAirState : public IPlayerState
 {
 public:
@@ -23,7 +27,7 @@ public:
 
 	void GenerateWindEffect();
 private:
-	float m_secToRegenerateWindEffect = 0.0f;
-
+	float				m_secToRegenerateWindEffect = 0.0f;
+	GravityGauge*		m_gravityGauge = nullptr;
 };
 

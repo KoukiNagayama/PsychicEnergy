@@ -37,11 +37,10 @@ private:
 	LevelRender		m_levelRender;						// レベルレンダー
 	Player*			m_player = nullptr;					// プレイヤー
 	GameCamera*		m_gameCamera = nullptr;				// ゲームカメラ
-	BackGround*		m_backGround = nullptr;
-	SkyCube*		m_skyCube = nullptr;				// スカイキューブ
-	SpriteRender	m_sprite;
-	GravityGauge*	m_gravityGauge = nullptr;
-	Sight*			m_sight = nullptr;
-	Ring*			m_ring = nullptr;
+	BackGround*		m_backGround = nullptr;				// 背景
+	SkyCube*		m_skyCube = nullptr;				// スカイキューブ						
+	GravityGauge*	m_gravityGauge = nullptr;			// 重力ゲージ
+	Sight*			m_sight = nullptr;					// 照準
+	Ring*			m_ring = nullptr;					// リング
 };
 

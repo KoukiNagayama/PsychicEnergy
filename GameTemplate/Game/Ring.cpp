@@ -36,7 +36,7 @@ void Ring::Update()
 
 void Ring::Rotation()
 {
-	constexpr float kRotateTime = 0.7f;
+	constexpr float kRotateTime = 0.1f;
 	if (m_rotateTimer < kRotateTime)
 	{
 		m_rotateTimer += g_gameTime->GetFrameDeltaTime();

@@ -8,6 +8,7 @@
 #include "graphics/effect/EffectEmitter.h"
 
 
+bool g_disablePlayerMove = false;
 namespace
 {
 	const float WALK_SPEED = 450.0f;		// 歩く速さ
@@ -78,7 +79,7 @@ bool Player::Start()
 
 	//Matrix mat;
 	const Matrix& mat = m_modelRender.GetWorldMatrix();
-	g_worldRotation->InitPlayerModelData(mat);
+	g_worldRotation->InitPlayerWorldMatrix(mat);
 
 	// wavファイルを登録する。
 	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/run_footstep.wav");
@@ -93,6 +94,9 @@ bool Player::Start()
 
 void Player::Update()
 {
+	if (m_disablePlayerMove) {
+		return;
+	}
 	// ステートを変更するか
 	IPlayerState* playerState = m_playerState->StateChange();
 	// 変更先のステートが設定されているならば
@@ -156,9 +160,31 @@ void Player::MoveOnAirspace()
 	// 移動速度を求める。
 	m_moveSpeed += m_moveVectorInAir * 1500.0f;
 
-	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
-
+	Vector3 move = m_moveSpeed * g_gameTime->GetFrameDeltaTime();
+	
+	Vector3 hitPos, hitNormal;
+	if( PhysicsWorld::GetInstance()->RayTest(
+		m_position,
+		m_position + move,
+		hitPos,
+		hitNormal))
+	{
+		Vector3 playerDir = m_moveSpeed;
+		playerDir.y = 0.0f;
+		playerDir.Normalize();
+		m_rotation.SetRotationYFromDirectionXZ(playerDir);
+		m_modelRender.SetRotation(m_rotation);
+		m_position = hitPos;
+		m_moveSpeed = Vector3::Zero;
+		g_worldRotation->SetHitNormal(hitNormal);
+		SetIsTouchObject(true);
+	}
+	else {
+		m_position += move;
+	}
+	m_charaCon.SetPosition(m_position);
 	m_modelRender.SetPosition(m_position);
+	
 }
 
 void Player::Slide()

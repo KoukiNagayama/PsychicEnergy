@@ -2,6 +2,7 @@
 #include "IPlayerState.h"
 
 class Sight;
+class GravityGauge;
 /// <summary>
 /// プレイヤーの空中での待機ステートクラス
 /// </summary>
@@ -26,5 +27,6 @@ public:
 	void Update() override;
 private:
 	Sight* m_sight = nullptr;
+	GravityGauge* m_gravityGauge = nullptr;
 };
 

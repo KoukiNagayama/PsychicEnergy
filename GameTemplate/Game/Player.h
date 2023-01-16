@@ -187,6 +187,10 @@ public:
 	{
 		return m_isFloating;
 	}
+	void SetDisablePlayerMove(const bool& disablePlayerMove)
+	{
+		m_disablePlayerMove = disablePlayerMove;
+	}
 private:
 	friend class PlayerIdleState;
 	friend class PlayerWalkState;
@@ -271,5 +275,6 @@ private:
 	bool					m_isFloating = false;
 	float					m_lastMoveSpeedY = 0.0f;
 	EffectEmitter*			m_effectEmitterWind = nullptr;
+	bool					m_disablePlayerMove = false;
 };
 

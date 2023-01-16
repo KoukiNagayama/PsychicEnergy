@@ -32,6 +32,7 @@ namespace nsK2EngineLow {
 			Vector3 hitPos;
 			Vector3 rayStart;
 			Vector3 rayEnd;
+			Vector3 hitNormal;
 			bool isHit = false;
 			float hitFraction = 1.0f;
 			btScalar	addSingleResult(btCollisionWorld::LocalRayResult& rayResult, bool normalInWorldSpace) override			
@@ -39,6 +40,9 @@ namespace nsK2EngineLow {
 				if (rayResult.m_hitFraction < hitFraction) {
 					// ‚±‚¿‚ç‚Ì•û‚ª‹ß‚¢B
 					hitPos.Lerp(rayResult.m_hitFraction, rayStart, rayEnd);
+					hitNormal.x = rayResult.m_hitNormalLocal.x();
+					hitNormal.y = rayResult.m_hitNormalLocal.y();
+					hitNormal.z = rayResult.m_hitNormalLocal.z();
 				}
 				isHit = true;
 				return rayResult.m_hitFraction;
@@ -62,7 +66,8 @@ namespace nsK2EngineLow {
 		);
 		return result.isHit;
 	}
-	bool PhysicsWorld::RayTest(const Vector3& rayStart, const Vector3& rayEnd, Vector3& hitPos) const
+	
+	bool PhysicsWorld::RayTest(const Vector3& rayStart, const Vector3& rayEnd, Vector3& hitPos, Vector3& hitNormal) const
 	{
 		btVector3 start, end;
 		start.setValue(rayStart.x, rayStart.y, rayStart.z);
@@ -73,6 +78,7 @@ namespace nsK2EngineLow {
 		m_dynamicWorld->rayTest(start, end, cb);
 		if (cb.isHit) {
 			hitPos = cb.hitPos;
+			hitNormal = cb.hitNormal;
 		}
 		return cb.isHit;
 	}

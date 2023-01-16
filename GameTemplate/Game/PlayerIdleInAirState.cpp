@@ -3,6 +3,7 @@
 #include "PlayerIdleState.h"
 #include "PlayerFallInAirState.h"
 #include "Sight.h"
+#include "GravityGauge.h"
 
 PlayerIdleInAirState::~PlayerIdleInAirState()
 {
@@ -12,6 +13,7 @@ PlayerIdleInAirState::~PlayerIdleInAirState()
 void PlayerIdleInAirState::Enter()
 {
 	m_sight = FindGO<Sight>("sight");
+	m_gravityGauge = FindGO<GravityGauge>("gravityGauge");
 	m_sight->SetIsDrawSight(true);
 	// 再生するアニメーションを設定する。
 	m_player->SetAnimation(Player::enAnimationClip_IdleAir);
@@ -32,9 +34,10 @@ IPlayerState* PlayerIdleInAirState::StateChange()
 		// 空中での落下ステートに遷移する。
 		return new PlayerFallInAirState(m_player);
 	}
-	if (g_pad[0]->IsTrigger(enButtonLB1)) {
+	if (g_pad[0]->IsTrigger(enButtonLB1)
+		|| m_gravityGauge->GetDisplayAreaAngleDeg() <= 0.0f
+		) {
 		// 通常の待機ステートに遷移する。
-		m_player->m_modelRender.SetIsFloating(false);
 		m_player->FloatModeChange(false);
 		return new PlayerIdleState(m_player);
 	}

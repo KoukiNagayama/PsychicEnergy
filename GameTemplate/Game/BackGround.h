@@ -56,15 +56,27 @@ public:
 	{
 		m_typeNum = num;
 	}
+	/// <summary>
+	/// モデルレンダーを取得。
+	/// </summary>
+	/// <returns></returns>
 	ModelRender& GetModelRender()
 	{
 		return m_modelRender;
 	}
+	/// <summary>
+	/// ワールド行列を設定し、補間するため情報を初期化。
+	/// </summary>
+	/// <param name="worldMat"></param>
 	inline void SetWorldMatrixWithLerp(const Matrix& worldMat)
 	{
 		m_prevMatrix = m_modelRender.GetWorldMatrix();
 		m_nextMatrix = worldMat;
 		m_rotateTimer = 0.0f;
+	}
+	Matrix& GetInitialWorldMatrix()
+	{
+		return m_initialWorldMatrix;
 	}
 public:
 	enum enModelType
@@ -75,17 +87,18 @@ public:
 		enModelType_Box3		// 箱3
 	};
 private:
-	ModelRender				m_modelRender;				// モデルレンダー
-	Vector3					m_position;					// 座標
-	Vector3					m_scale;					// 拡大率
-	Quaternion				m_rotation;					// 回転
-	int						m_typeNum;					// モデルのタイプ
-	PhysicsStaticObject		m_physicsStaticObject;		// 静的物理オブジェクト
-	Matrix					m_worldMatrix = Matrix::Identity;
-	Player*					m_player = nullptr;
-	Matrix					m_prevMatrix = Matrix::Identity;
-	Matrix					m_nextMatrix = Matrix::Identity;
-	float					m_rotateTimer = 1.0f;
+	ModelRender				m_modelRender;								// モデルレンダー
+	Vector3					m_position;									// 座標
+	Vector3					m_scale;									// 拡大率
+	Quaternion				m_rotation;									// 回転
+	int						m_typeNum;									// モデルのタイプ
+	PhysicsStaticObject		m_physicsStaticObject;						// 静的物理オブジェクト
+	Matrix					m_worldMatrix = Matrix::Identity;			// ワールド行列
+	Player*					m_player = nullptr;							// プレイヤークラス
+	Matrix					m_prevMatrix = Matrix::Identity;			// 直前のワールド行列
+	Matrix					m_nextMatrix = Matrix::Identity;			// 次のワールド行列
+	float					m_rotateTimer = 1.0f;						// 回転する時間
+	Matrix					m_initialWorldMatrix = Matrix::Identity;	// 初期のワールド行列
 
 };
 
