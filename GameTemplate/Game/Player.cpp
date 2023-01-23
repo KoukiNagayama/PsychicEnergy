@@ -109,17 +109,11 @@ void Player::Update()
 
 	// 各ステートの更新処理を実行。
 	m_playerState->Update();
-
-
 	// アニメーションを再生する。
 	PlayAnimation(m_currentAnimationClip);
-
 	// モデルを更新する。
 	m_modelRender.Update();
 
-	if (g_pad[0]->IsTrigger(enButtonX)) {
-		g_worldRotation->ResetWorldMatrix();
-	}
 }
 
 void Player::MoveOnGround()
@@ -266,19 +260,7 @@ void Player::Rotation()
 
 void Player::RotationFallAir()
 {
-	//// 回転する角度
-	//float rotAngle;
-	//// 2辺の内積で求める
-	//rotAngle = m_forward.Dot(m_moveVectorInAir);
-	////Math::RadToDeg(rotAngle);
-	//// 回転軸
-	//Vector3 rotAxis;
-	//// 2辺の外積で求める
-	//rotAxis = Cross(m_moveVectorInAir, m_forward);
-
-	//m_rotation.SetRotation(rotAxis, acosf(rotAngle));
 	m_rotation.SetRotation(Vector3::AxisZ, m_moveVectorInAir);
-
 	m_modelRender.SetRotation(m_rotation);
 
 	m_forward = Vector3::AxisZ;
@@ -287,10 +269,12 @@ void Player::RotationFallAir()
 
 void Player::FloatModeChange(bool isFloating)
 {
+	// 各種クラスの浮遊状態の設定を変更
 	m_isFloating = isFloating;
 	m_modelRender.SetIsFloating(m_isFloating);
 	g_renderingEngine->SetIsFloating(m_isFloating);
 
+	// モード変更の効果音を発生させる
 	m_modeChangeSound = NewGO<SoundSource>(0);
 	m_modeChangeSound->Init(3);
 	m_modeChangeSound->Play(false);

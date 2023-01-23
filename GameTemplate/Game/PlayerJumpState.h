@@ -1,5 +1,6 @@
 #pragma once
 #include "IPlayerState.h"
+class GravityGauge;
 class PlayerJumpState : public IPlayerState
 {
 public:
@@ -20,7 +21,7 @@ public:
 	/// </summary>
 	void Update() override;
 private:
-	float m_count = 0.0f;
-
+	float				m_count = 0.0f;
+	GravityGauge*		m_gravityGauge = nullptr;
 };
 

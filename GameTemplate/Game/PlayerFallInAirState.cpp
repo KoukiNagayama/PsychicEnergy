@@ -3,17 +3,17 @@
 #include "PlayerIdleInAirState.h"
 #include "PlayerIdleState.h"
 #include "GravityGauge.h"
+#include "PlayerJumpState.h"
 
 PlayerFallInAirState::~PlayerFallInAirState()
 {
 	DeleteGO(m_player->m_effectEmitterWind);
+	g_worldRotation->SetIsGetNormal(false);
 }
 
 void PlayerFallInAirState::Enter()
 {
-
 	m_gravityGauge = FindGO<GravityGauge>("gravityGauge");
-
 	// アニメーションを設定する。
 	m_player->SetAnimation(Player::enAnimationClip_FallAir);
 	// 移動方向を決定する。
@@ -34,18 +34,12 @@ IPlayerState* PlayerFallInAirState::StateChange()
 		return new PlayerIdleInAirState(m_player);
 	}
 	if (g_pad[0]->IsTrigger(enButtonLB1)
-		|| m_player->IsPlayerTouchObject()
 		|| m_gravityGauge->GetDisplayAreaAngleDeg() <= 0.0f
+		|| m_player->IsPlayerTouchObject()
 		) {
 		// 通常の待機ステートに遷移する。
 		m_player->FloatModeChange(false);
-		return new PlayerIdleState(m_player);
-	}
-	if (m_player->IsPlayerTouchObject()) {
-		m_player->FloatModeChange(false);
-		return new PlayerIdleState(m_player);
-	}
-	if (m_gravityGauge->GetDisplayAreaAngleDeg() <= 0.0f) {
+		g_worldRotation->SetIsReseting(true);
 		return new PlayerIdleState(m_player);
 	}
 	// ここまで来たら遷移しない。

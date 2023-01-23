@@ -5,13 +5,22 @@
 
 namespace nsK2EngineLow
 {
+	void WorldRotation::Update()
+	{
+		m_ringArray.clear();
+	}
+
 	void WorldRotation::RotationWorldMatrix()
 	{
+		if (m_isReseting){
+			return;
+		}
+
 		if (m_hitNormal.x == m_lastHitNormal.x
 			&& m_hitNormal.y == m_lastHitNormal.y
 			&& m_hitNormal.z == m_lastHitNormal.z
 			) {
-			m_ringArray.clear();
+			//m_ringArray.clear();
 			return;
 		}
 
@@ -54,17 +63,22 @@ namespace nsK2EngineLow
 			ring->SetWorldMatrixWithLerp(worldMatAfterRotation);
 		}
 		m_ringArray.clear();
+		m_matrixRot.Apply(m_directionOfCurrentReference);
 	}
 
 	void WorldRotation::ResetWorldMatrix()
 	{
-		// 記録されている法線をリセットする。
-		m_lastHitNormal = Vector3::Zero;
-		m_groundNormal.Normalize();
+		if (m_isReseting == false) {
+			return;
+		}
 
+		// 記録されている法線情報をリセットする。
+		m_hitNormal = Vector3::Zero;
+		m_lastHitNormal = Vector3::Zero;
+
+		// ここから回転
 		// クォータニオンから回転行列を作る
-		m_matrixRot.SetRotation(m_groundNormal, Vector3::Up);
-		//m_matrixRot.SetRotation(Vector3::Up,m_groundNormal);
+		m_matrixRot.SetRotation(m_directionOfCurrentReference, Vector3::Up);
 		m_rotationMatrix.MakeRotationFromQuaternion(m_matrixRot);
 
 		// プレイヤーのワールド行列の逆行列
@@ -80,14 +94,14 @@ namespace nsK2EngineLow
 			Matrix worldMatAfterRotation;
 			// ワールド座標の回転は
 			// マップチップのワールド行列
-			// ×プレイヤーのワールド行列の逆行列
+			// ×プレイヤーの平行移動行列の逆行列
 			// ×世界の回転行列
-			// ×プレイヤーのワールド行列で求める
+			// ×プレイヤーの平行移動行列で求める
 			ModelRender* modelMat = &backGround->GetModelRender();
-			//worldMatAfterRotation.Multiply(modelMat->GetWorldMatrix(), playerWorldMatInv);
-			//worldMatAfterRotation.Multiply(worldMatAfterRotation, m_rotationMatrix);
-			//worldMatAfterRotation.Multiply(worldMatAfterRotation, playerTranslationMat);
-			//backGround->SetWorldMatrixWithLerp(worldMatAfterRotation);
+			worldMatAfterRotation.Multiply(modelMat->GetWorldMatrix(), playerWorldMatInv);
+			worldMatAfterRotation.Multiply(worldMatAfterRotation, m_rotationMatrix);
+			worldMatAfterRotation.Multiply(worldMatAfterRotation, playerTranslationMat);
+			backGround->SetWorldMatrixWithLerp(worldMatAfterRotation);
 		}
 		// 上と同様にリングを回転させる
 		for (auto& ring : m_ringArray) {
@@ -99,8 +113,10 @@ namespace nsK2EngineLow
 			ring->SetWorldMatrixWithLerp(worldMatAfterRotation);
 		}
 		m_ringArray.clear();
+		// リセット中であるとフラグを設定。
+		m_isReseting = false;
+		m_directionOfCurrentReference = Vector3::Up;
 
-		m_groundNormal = Vector3::Up;
 	}
 
 	WorldRotation* g_worldRotation = nullptr;

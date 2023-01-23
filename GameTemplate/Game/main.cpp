@@ -40,13 +40,18 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// ゲームオブジェクトマネージャーの更新処理を呼び出す。
 		g_k2EngineLow->ExecuteUpdate();
 
+		// 世界の回転
 		g_worldRotation->RotationWorldMatrix();
+
+		g_worldRotation->ResetWorldMatrix();
 
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
 
 		// レンダリングエンジンの描画処理を実行。
 		g_renderingEngine->Execute(renderContext);
+
+		g_worldRotation->Update();
 
 		// デバッグ描画処理を実行する。
 		g_k2EngineLow->DebubDrawWorld();

@@ -3,6 +3,7 @@
 #include "PlayerIdleState.h"
 #include "PlayerJumpState.h"
 #include "PlayerFallState.h"
+#include "GravityGauge.h"
 
 PlayerSlideState::~PlayerSlideState()
 {

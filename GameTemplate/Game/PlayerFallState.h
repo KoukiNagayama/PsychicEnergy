@@ -1,5 +1,6 @@
 #pragma once
 #include "IPlayerState.h"
+#include "sound/SoundSource.h"
 class Player;
 class GravityGauge;
 class PlayerFallState : public IPlayerState
@@ -21,6 +22,7 @@ public:
 	/// ステートにおける更新処理。
 	/// </summary>
 	void Update() override;
-
+private:
+	SoundSource*		m_landingSound = nullptr;
 };
 

@@ -1,6 +1,5 @@
 #pragma once
 #include "IPlayerState.h"
-
 /// <summary>
 /// プレイヤーの地上での歩行ステートクラス
 /// </summary>

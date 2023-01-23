@@ -7,6 +7,7 @@ namespace nsK2EngineLow {
 	public:
 		WorldRotation() {}
 		~WorldRotation() {}
+		void Update();
 		/// <summary>
 		/// 背景オブジェクトを回転する対象に追加
 		/// </summary>
@@ -30,14 +31,6 @@ namespace nsK2EngineLow {
 		void InitPlayerWorldMatrix(const Matrix& matrix)
 		{
 			m_playerWorldMatrix.push_back(&matrix);
-		}
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="matrix"></param>
-		void SetGroundWorldMatrix(const Matrix& matrix)
-		{
-			m_groundWorldMatrix = &matrix;
 		}
 		/// <summary>
 		/// 衝突した法線を設定。
@@ -66,18 +59,26 @@ namespace nsK2EngineLow {
 		/// ワールド行列のリセット
 		/// </summary>
 		void ResetWorldMatrix();
+		/// <summary>
+		/// 現在リセット中か設定。
+		/// </summary>
+		/// <param name="isReseting"></param>
+		void SetIsReseting(const bool& isReseting)
+		{
+			m_isReseting = isReseting;
+		}
 
 	private:
-		std::vector<const Matrix*>	m_playerWorldMatrix;					// プレイヤーのワールド行列
-		Matrix		m_rotationMatrix = Matrix::Identity;					// 世界の回転行列
-		std::vector<BackGround*> m_backGroundArray;							// 背景オブジェクトの配列
-		std::vector<Ring*> m_ringArray;										// リングの配列
-		Quaternion  m_matrixRot = Quaternion::Identity;						// 
-		Vector3		m_hitNormal = Vector3::Zero;							// プレイヤーが触れたオブジェクトの面の法線
-		Vector3		m_lastHitNormal = Vector3::Zero;						// 最後に記録されたプレイヤーが触れたオブジェクトの面の法線
-		bool		m_isGetNormal = false;									// 衝突した法線を取得するか
-		const Matrix*				m_groundWorldMatrix;
-		Vector3		m_groundNormal = Vector3::Up;		
+		std::vector<const Matrix*>	m_playerWorldMatrix;							// プレイヤーのワールド行列
+		Matrix						m_rotationMatrix = Matrix::Identity;			// 世界の回転行列
+		std::vector<BackGround*>	m_backGroundArray;								// 背景オブジェクトの配列
+		std::vector<Ring*>			m_ringArray;									// リングの配列
+		Quaternion					m_matrixRot = Quaternion::Identity;				// 回転行列を作るためのクォータニオン
+		Vector3						m_hitNormal = Vector3::Zero;					// プレイヤーが触れたオブジェクトの面の法線
+		Vector3						m_lastHitNormal = Vector3::Zero;				// 最後に記録されたプレイヤーが触れたオブジェクトの面の法線
+		bool						m_isGetNormal = false;							// 衝突した法線を取得するか
+		Vector3						m_directionOfCurrentReference = Vector3::Up;	// 現在の基準となる方向(リセット時に使用)
+		bool						m_isReseting = false;							// リセット中か
 	};
 
 	extern WorldRotation* g_worldRotation;

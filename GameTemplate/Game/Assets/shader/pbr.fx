@@ -87,11 +87,10 @@ Texture2D<float4> g_shadowMap_2 : register(t12);
 
 float3 GetNormal(float3 normal, float3 tangent, float3 biNormal, float2 uv)
 {
-    float3 binSpaceNormal = g_normalMap.SampleLevel(g_sampler, uv, 0.0f).xyz;
+    float3 binSpaceNormal = g_normalMap.SampleLevel(g_sampler, uv, 0.5f).xyz;
     binSpaceNormal = (binSpaceNormal * 2.0f) - 1.0f;
 
     float3 newNormal = tangent * binSpaceNormal.x + biNormal * binSpaceNormal.y + normal * binSpaceNormal.z;
-    
     return newNormal;
 }
 
@@ -273,7 +272,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 {
      // 法線を計算
     float3 normal = GetNormal(psIn.normal, psIn.tangent, psIn.biNormal, psIn.uv);
-
+    
     // アルベドカラー、スペキュラカラー、金属度、滑らかさをサンプリングする。
     // アルベドカラー（拡散反射光）
     float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
@@ -286,7 +285,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
     // 滑らかさ
     float smooth = g_metallicSmoothMap.Sample(g_sampler, psIn.uv).a;
-
+   
     // 視線に向かって伸びるベクトルを計算する
     float3 toEye = normalize(eyePos - psIn.worldPos);
 
@@ -317,11 +316,11 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
         // 滑らかさを使って、拡散反射光と鏡面反射光を合成する
         // 滑らかさが高ければ、拡散反射は弱くなる
-        lig += diffuse * (1.0f - smooth) + spec;
+       lig += diffuse * (1.0f - smooth) + spec;
     }
 
     // 環境光による底上げ
-    lig += ambientLight * albedoColor;
+    // lig += ambientLight * albedoColor;
 
     Texture2D<float4> shadowMapArray[3];
     shadowMapArray[0] = g_shadowMap_0;
@@ -370,6 +369,21 @@ float4 PSMain(SPSIn psIn) : SV_Target0
             }
         }
     }
+    float3 ambient = ambientLight;
+    // 環境光によるスペキュラ反射を計算する。
+    // 環境光の入射方向は法線の逆向きとする。
+    float3 spec = CookTorranceSpecular(normal, toEye, normal, 0.8);
+    
+        // 金属度が高ければ、鏡面反射はスペキュラカラー、低ければ白
+        // スペキュラカラーの強さを鏡面反射率として扱う
+    spec *= lerp(float3(1.0f, 1.0f, 1.0f), specColor, metallic);
+    ambient += spec;
+    
+    finalColor.xyz += ambient * albedoColor;
+    //float3 normalMap = g_normalMap.Sample(g_sampler, psIn.uv);
+    //return float4(normalMap, 1.0f);
+    //return albedoColor;
+    //return float4(normal, 1.0f);
     
     return finalColor;
 }

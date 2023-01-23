@@ -228,6 +228,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GravityGauge.cpp" />
+    <ClCompile Include="LockOn.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerFallInAirState.cpp" />
@@ -249,10 +250,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
+    <ClInclude Include="CommonDataForWorldRotation.h" />
     <ClInclude Include="EngineTest.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GravityGauge.h" />
+    <ClInclude Include="LockOn.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerFallInAirState.h" />
     <ClInclude Include="PlayerFallState.h" />

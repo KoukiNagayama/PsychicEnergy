@@ -7,7 +7,11 @@
 
 PlayerFallState::~PlayerFallState()
 {
-
+	if (m_player->IsOnGround()) {
+		m_landingSound = NewGO<SoundSource>(0);
+		m_landingSound->Init(2);
+		m_landingSound->Play(false);
+	}
 }
 
 void PlayerFallState::Enter()
@@ -18,12 +22,7 @@ void PlayerFallState::Enter()
 IPlayerState* PlayerFallState::StateChange()
 {
 	if (m_player->IsOnGround()){
-		if (fabsf(g_pad[0]->GetLStickXF()) >= 0.001f || fabsf(g_pad[0]->GetLStickYF()) >= 0.001f) {
-			return new PlayerWalkState(m_player);
-		}
-		else {
-			return new PlayerIdleState(m_player);
-		}
+		return new PlayerIdleState(m_player);
 	}
 	else if (g_pad[0]->IsTrigger(enButtonRB1)) {
 		return new PlayerIdleInAirState(m_player);

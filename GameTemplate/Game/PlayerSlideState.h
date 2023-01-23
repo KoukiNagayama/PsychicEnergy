@@ -1,6 +1,5 @@
 #pragma once
 #include "IPlayerState.h"
-
 class PlayerSlideState : public IPlayerState
 {
 public:

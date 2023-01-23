@@ -19,16 +19,6 @@ public:
 	/// </summary>
 	/// <param name="rc">レンダリングコンテキスト</param>
 	void Render(RenderContext& rc);
-	
-	// ↓どちらの単位が使い勝手が良いか分からないため両方用意
-	/// <summary>
-	/// Radian単位のゲージの表示範囲の角度を取得
-	/// </summary>
-	/// <returns></returns>
-	float GetDisplayAreaAngleRad() const
-	{
-		return m_displayAreaRad;
-	}
 	/// <summary>
 	/// Degree単位のゲージの表示範囲の角度を取得
 	/// </summary>

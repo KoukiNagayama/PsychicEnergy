@@ -63,6 +63,7 @@
       <Filter>player</Filter>
     </ClCompile>
     <ClCompile Include="Ring.cpp" />
+    <ClCompile Include="LockOn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -112,5 +113,7 @@
       <Filter>player</Filter>
     </ClInclude>
     <ClInclude Include="Ring.h" />
+    <ClInclude Include="CommonDataForWorldRotation.h" />
+    <ClInclude Include="LockOn.h" />
   </ItemGroup>
 </Project>

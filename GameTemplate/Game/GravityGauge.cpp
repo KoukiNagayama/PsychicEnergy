@@ -4,9 +4,15 @@
 
 namespace
 {
-	const float POS_X = -820.0f;
-	const float POS_Y = 410.0f;
-	const float SCALE = 0.59f;
+	const float POS_X = -820.0f;					// X座標
+	const float POS_Y = 410.0f;						// Y座標
+	const float SCALE = 0.59f;						// 拡大率
+	const float WIDTH = 512.0f;						// 横幅
+	const float HEIGHT = 512.0f;					// 縦幅
+	const float DECREASE_PER_FRAME = 0.2f;			// フレームごとの減少量
+	const float INCREASE_PER_FRAME = 5.0f;			// フレームごとの増加量
+	const float MAX_ANGLE_DEG_TO_DISPLAY = 360.0f;	// 表示する最大角度(Degree)
+	const float MIN_ANGLE_DEG_TO_DISPLAY = 0.0f;	// 表示する最小角度(Degree)
 }
 
 bool GravityGauge::Start()
@@ -15,8 +21,8 @@ bool GravityGauge::Start()
 	SpriteInitData spriteInitData;
 	spriteInitData.m_ddsFilePath[0] = "Assets/sprite/gravityGauge/gauge.DDS";
 	spriteInitData.m_fxFilePath = "Assets/shader/gravityGauge.fx";
-	spriteInitData.m_width = 512.0f;
-	spriteInitData.m_height = 512.0f;
+	spriteInitData.m_width = WIDTH;
+	spriteInitData.m_height = HEIGHT;
 	spriteInitData.m_expandConstantBuffer = &m_displayAreaRad;
 	spriteInitData.m_expandConstantBufferSize = sizeof(m_displayAreaRad);
 	spriteInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
@@ -40,7 +46,6 @@ bool GravityGauge::Start()
 
 void GravityGauge::Update()
 {
-
 	CalcDisplayArea(m_player->IsFloating());
 
 	m_gaugeSprite.Update();
@@ -49,17 +54,18 @@ void GravityGauge::Update()
 
 void GravityGauge::CalcDisplayArea(bool isFloating)
 {
+	// 
 	float displayAreaDeg = Math::RadToDeg(m_displayAreaRad);
 	if (isFloating) {
-		displayAreaDeg -= 0.2f;
-		if (displayAreaDeg < 0.0f) {
-			displayAreaDeg = 0.0f;
+		displayAreaDeg -= DECREASE_PER_FRAME;
+		if (displayAreaDeg < MIN_ANGLE_DEG_TO_DISPLAY) {
+			displayAreaDeg = MIN_ANGLE_DEG_TO_DISPLAY;
 		}
 	}
 	else {
-		displayAreaDeg += 5.0f;
-		if (displayAreaDeg >= 360.0f) {
-			displayAreaDeg = 360.0f;
+		displayAreaDeg += INCREASE_PER_FRAME;
+		if (displayAreaDeg >= MAX_ANGLE_DEG_TO_DISPLAY) {
+			displayAreaDeg = MAX_ANGLE_DEG_TO_DISPLAY;
 		}
 	}
 	m_displayAreaRad = Math::DegToRad(displayAreaDeg);

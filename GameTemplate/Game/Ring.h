@@ -33,6 +33,14 @@ public:
 	{
 		m_scale = scale;
 	}
+	/// <summary>
+	/// 座標を取得。
+	/// </summary>
+	/// <returns>座標。</returns>
+	const Vector3& GetPosition() const
+	{
+		return m_position;
+	}
 	ModelRender& GetModelRender()
 	{
 		return m_modelRender;

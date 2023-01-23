@@ -28,7 +28,7 @@ IPlayerState* PlayerJumpState::StateChange()
 	else if (g_pad[0]->IsTrigger(enButtonRB1)) {
 		return new PlayerIdleInAirState(m_player);
 	}
-	if (m_count >= 0.8f) {
+	if (m_count >= 0.9f) {
 		return new PlayerFallState(m_player);
 	}
 	return nullptr;

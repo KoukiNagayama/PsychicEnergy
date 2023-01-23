@@ -1,6 +1,7 @@
 #pragma once
 #include "WorldRotation.h"
 
+
 class Player;
 /// <summary>
 /// 背景モデルクラス
@@ -74,10 +75,6 @@ public:
 		m_nextMatrix = worldMat;
 		m_rotateTimer = 0.0f;
 	}
-	Matrix& GetInitialWorldMatrix()
-	{
-		return m_initialWorldMatrix;
-	}
 public:
 	enum enModelType
 	{
@@ -98,7 +95,5 @@ private:
 	Matrix					m_prevMatrix = Matrix::Identity;			// 直前のワールド行列
 	Matrix					m_nextMatrix = Matrix::Identity;			// 次のワールド行列
 	float					m_rotateTimer = 1.0f;						// 回転する時間
-	Matrix					m_initialWorldMatrix = Matrix::Identity;	// 初期のワールド行列
-
 };
 

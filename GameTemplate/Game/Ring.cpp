@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Ring.h"
 #include "Player.h"
+#include "CommonDataForWorldRotation.h"
 
 namespace
 {
@@ -36,20 +37,22 @@ void Ring::Update()
 
 void Ring::Rotation()
 {
-	constexpr float kRotateTime = 0.1f;
-	if (m_rotateTimer < kRotateTime)
+	if (m_rotateTimer < TIME_UNTIL_ROTATION_ENDS)
 	{
 		m_rotateTimer += g_gameTime->GetFrameDeltaTime();
-		m_rotateTimer = min(m_rotateTimer, kRotateTime);
+		m_rotateTimer = min(m_rotateTimer, TIME_UNTIL_ROTATION_ENDS);
 
-		const float rate = m_rotateTimer / kRotateTime;
+		const float rate = m_rotateTimer / TIME_UNTIL_ROTATION_ENDS;
 		Matrix mat;
-		mat.v[0].Lerp(rate, m_prevMatrix.v[0], m_nextMatrix.v[0]);
-		mat.v[1].Lerp(rate, m_prevMatrix.v[1], m_nextMatrix.v[1]);
-		mat.v[2].Lerp(rate, m_prevMatrix.v[2], m_nextMatrix.v[2]);
-		mat.v[3].Lerp(rate, m_prevMatrix.v[3], m_nextMatrix.v[3]);
-
+		for (int i = NUM_OF_FIRST_COMPONENT_IN_WORLD_MATRIX;
+			i <= NUM_OF_LAST_COMPONENT_IN_WORLD_MATRIX;
+			i++)
+		{
+			mat.v[i].Lerp(rate, m_prevMatrix.v[i], m_nextMatrix.v[i]);
+		}
 		m_modelRender.SetWorldMatrix(mat);
+
+		// ワールド行列から現在の座標を抽出する。
 		m_position.x = mat.m[3][0];
 		m_position.y = mat.m[3][1];
 		m_position.z = mat.m[3][2];
@@ -63,7 +66,7 @@ void Ring::Collision()
 		return;
 	}
 
-	DeleteGO(this);
+	Dead();
 }
 
 float Ring::CalcDistanceToPlayer()

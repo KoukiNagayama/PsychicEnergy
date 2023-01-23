@@ -39,6 +39,7 @@ IPlayerState* PlayerIdleInAirState::StateChange()
 		) {
 		// 通常の待機ステートに遷移する。
 		m_player->FloatModeChange(false);
+		g_worldRotation->SetIsReseting(true);
 		return new PlayerIdleState(m_player);
 	}
 	// ここまで来たらステートを遷移しない。
