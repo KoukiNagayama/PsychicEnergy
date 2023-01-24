@@ -7,6 +7,7 @@
 #include "Sight.h"
 #include "BackGround.h"
 #include "Ring.h"
+#include "LockOn.h"
 
 
 Game::Game()
@@ -86,6 +87,7 @@ bool Game::Start()
 	m_gravityGauge = NewGO<GravityGauge>(0, "gravityGauge");
 	// è∆èÄ
 	m_sight = NewGO<Sight>(0, "sight");
+	m_lockOn = NewGO<LockOn>(3, "lockOn");
 
 
 	return true;

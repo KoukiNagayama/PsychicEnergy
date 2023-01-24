@@ -9,6 +9,7 @@ class GravityGauge;
 class Sight;
 class BackGround;
 class Ring;
+class LockOn;
 
 class Game : public IGameObject
 {
@@ -42,5 +43,6 @@ private:
 	GravityGauge*	m_gravityGauge = nullptr;			// 重力ゲージ
 	Sight*			m_sight = nullptr;					// 照準
 	Ring*			m_ring = nullptr;					// リング
+	LockOn*			m_lockOn = nullptr;
 };
 
