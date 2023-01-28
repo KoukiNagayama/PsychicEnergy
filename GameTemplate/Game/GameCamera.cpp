@@ -7,7 +7,7 @@ namespace
 	const float TO_CAMERA_POS_X_FROM_TARGET = 0.0f;			// カメラの注視点から視点へのベクトルのX値
 	const float TO_CAMERA_POS_Y_FROM_TARGET = 70.0f;		// カメラの注視点から視点へのベクトルのY値
 	const float TO_CAMERA_POS_Z_FROM_TARGET = 150.0f;		// カメラの注視点から視点へのベクトルのZ値
-	const float FAR_CLIP = 15000.0f;						// 遠平面までの距離
+	const float FAR_CLIP = 30000.0f;						// 遠平面までの距離
 	const float NEAR_CLIP = 2.0f;							// 近平面までの距離
 	const float CAMERA_MAX_MOVE_SPEED = 10000.0f;			// カメラの移動の最高速度
 	const float CAMERA_COLLISION_RADIUS = 1.5f;				// カメラに使用するコリジョンの半径の値

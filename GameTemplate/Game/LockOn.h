@@ -28,18 +28,30 @@ private:
 	/// </summary>
 	void DecideTarget();
 	/// <summary>
-	/// スプライトの座標を計算する
+	/// 目標が視界内にあるか識別する
 	/// </summary>
-	void CalculatePositionOfSprite();
+	void IdentifyIfTargetIsInView();
+	/// <summary>
+	/// 矢印用スプライトのスクリーン座標を計算する
+	/// </summary>
+	void CalculateScreenPositionOfSpriteForArrow();
+	/// <summary>
+	/// どの端に近いか求める
+	/// </summary>
+	void SeekWhichEdgeIsClose();
 private:
-	SpriteRender				m_lockOnSprite;					// ロックオン時に使用する画像
-	std::vector<Ring*>			m_ringArray;					// リングの配列
-	Player*						m_player = nullptr;				// プレイヤー
-	bool						m_isLockOn = false;				// ロックオンしている？
-	Vector3						m_targetPos = Vector3::Zero;	// 目標となる座標
-	Ring*						m_targetRing = nullptr;			// 目標となるリング
-	float						m_minRatingPoint = 10000.0f;	// 最小の評価点
-	Vector2						m_screenPos = Vector2::Zero;	// スプライトを表示するスクリーン座標
-
+	SpriteRender				m_lockOnSprite;						// ロックオン時に使用する画像
+	SpriteRender				m_arrowSprite;						// 矢印の画像
+	std::vector<Ring*>			m_ringArray;						// リングの配列
+	Player*						m_player = nullptr;					// プレイヤー
+	bool						m_isLockOn = false;					// ロックオンしている？
+	Vector3						m_targetPos = Vector3::Zero;		// 目標となる座標
+	Ring*						m_targetRing = nullptr;				// 目標となるリング
+	float						m_minRatingPoint = 10000.0f;		// 最小の評価点
+	Vector2						m_screenPos = Vector2::Zero;		// スプライトを表示するスクリーン座標
+	bool						m_isTargetInView = false;			// 視界内にあるか？
+	Vector3						m_camForward = Vector3::AxisZ;		// カメラの正面方向
+	bool						m_isBehind = false;
+	bool						m_isNearRightEdge = false;
 };	
 

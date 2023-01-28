@@ -19,7 +19,7 @@ bool GravityGauge::Start()
 {
 	// スプライトの初期化データ
 	SpriteInitData spriteInitData;
-	spriteInitData.m_ddsFilePath[0] = "Assets/sprite/gravityGauge/gauge.DDS";
+	spriteInitData.m_ddsFilePath[0] = "Assets/sprite/gravityGauge/gauge2.DDS";
 	spriteInitData.m_fxFilePath = "Assets/shader/gravityGauge.fx";
 	spriteInitData.m_width = WIDTH;
 	spriteInitData.m_height = HEIGHT;

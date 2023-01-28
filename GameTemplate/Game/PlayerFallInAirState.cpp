@@ -35,11 +35,14 @@ IPlayerState* PlayerFallInAirState::StateChange()
 	}
 	if (g_pad[0]->IsTrigger(enButtonLB1)
 		|| m_gravityGauge->GetDisplayAreaAngleDeg() <= 0.0f
-		|| m_player->IsPlayerTouchObject()
 		) {
 		// 通常の待機ステートに遷移する。
 		m_player->FloatModeChange(false);
 		g_worldRotation->SetIsReseting(true);
+		return new PlayerIdleState(m_player);
+	}
+	if (m_player->IsPlayerTouchObject()) {
+		m_player->FloatModeChange(false);
 		return new PlayerIdleState(m_player);
 	}
 	// ここまで来たら遷移しない。
