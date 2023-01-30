@@ -104,11 +104,12 @@ void LockOn::DecideTarget()
 void LockOn::IdentifyIfTargetIsInView()
 {
 	Vector3 targetPos = m_targetRing->GetPosition();
-	Vector3 playerToTargetPos = targetPos - m_player->GetPosition();
 	g_camera3D->CalcScreenPositionFromWorldPosition(m_screenPos, targetPos);
+
+	m_playerToTargetPos = targetPos - m_player->GetPosition();
 	Vector3 camForward = g_camera3D->GetForward();
-	playerToTargetPos.Normalize();
-	if (camForward.Dot(playerToTargetPos) >= 0.0f) {
+	m_playerToTargetPos.Normalize();
+	if (camForward.Dot(m_playerToTargetPos) >= 0.0f) {
 		// スクリーン座標は中心が(0,0)のためフレームバッファのそれぞれの幅の半分の値を用意
 		if (HALF_HEIGHT_OF_FRAME_BUFFER >= m_screenPos.y
 			&& -HALF_HEIGHT_OF_FRAME_BUFFER <= m_screenPos.y
@@ -138,7 +139,9 @@ void LockOn::CalculateScreenPositionOfSpriteForArrow()
 		// 回転時に外側に向けるために逆にする
 		m_screenPos.x = -m_screenPos.x;
 		m_screenPos.y = -m_screenPos.y;
+
 		SeekWhichEdgeIsClose();
+
 		if (m_isNearRightEdge) {
 			m_screenPos.x = HALF_WIDTH_OF_FRAME_BUFFER - SPACING_FROM_EDGE_IN_SCREEN_POSITION;
 		}
@@ -178,17 +181,25 @@ void LockOn::SeekWhichEdgeIsClose()
 {
 	// 左右どちらの画面端に近いか求める
 	// 右
-	if (m_screenPos.x >= 0.0f
-		&& HALF_WIDTH_OF_FRAME_BUFFER - m_screenPos.x <= HALF_HEIGHT_OF_FRAME_BUFFER - m_screenPos.y
-			&& HALF_WIDTH_OF_FRAME_BUFFER - m_screenPos.x <= m_screenPos.x + HALF_WIDTH_OF_FRAME_BUFFER) {
+	//if (m_screenPos.x >= 0.0f
+	//	&& HALF_WIDTH_OF_FRAME_BUFFER - m_screenPos.x <= HALF_HEIGHT_OF_FRAME_BUFFER - m_screenPos.y
+	//		&& HALF_WIDTH_OF_FRAME_BUFFER - m_screenPos.x <= m_screenPos.x + HALF_WIDTH_OF_FRAME_BUFFER) {
+	//	m_isNearRightEdge = true;
+	//}
+	//// 左
+	//else if (m_screenPos.x < 0.0f
+	//	&& HALF_WIDTH_OF_FRAME_BUFFER + m_screenPos.x <= HALF_HEIGHT_OF_FRAME_BUFFER - m_screenPos.y
+	//		&& HALF_WIDTH_OF_FRAME_BUFFER + m_screenPos.x <= m_screenPos.x + HALF_WIDTH_OF_FRAME_BUFFER) {
+	//	m_isNearRightEdge = false;
+	//}
+
+	if (m_playerToTargetPos.Dot(g_camera3D->GetRight()) >= 0.0f) {
 		m_isNearRightEdge = true;
 	}
-	// 左
-	else if (m_screenPos.x < 0.0f
-		&& HALF_WIDTH_OF_FRAME_BUFFER + m_screenPos.x <= HALF_HEIGHT_OF_FRAME_BUFFER - m_screenPos.y
-			&& HALF_WIDTH_OF_FRAME_BUFFER + m_screenPos.x <= m_screenPos.x + HALF_WIDTH_OF_FRAME_BUFFER) {
+	else {
 		m_isNearRightEdge = false;
 	}
+
 }
 
 void LockOn::Render(RenderContext& rc)

@@ -251,6 +251,8 @@ private:
 	/// アニメーションを再生する。
 	/// </summary>
 	void PlayAnimation(EnAnimationClip currentAnimationClip);
+
+	void GenerateWindEffect();
 private:
 	ModelRender				m_modelRender;										// モデル
 	Vector3					m_position = Vector3::Zero;						// 座標

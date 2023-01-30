@@ -20,5 +20,7 @@ public:
 	/// ステートにおける更新処理。
 	/// </summary>
 	void Update() override;
+private:
+	float m_secToRegenerateWindEffect = 0.0f;
 };
 

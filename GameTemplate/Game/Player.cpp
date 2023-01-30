@@ -280,6 +280,17 @@ void Player::FloatModeChange(bool isFloating)
 	m_modeChangeSound->Play(false);
 }
 
+void Player::GenerateWindEffect()
+{
+	m_effectEmitterWind = NewGO<EffectEmitter>(0, "effectWind");
+	m_effectEmitterWind->Init(0);
+	m_effectEmitterWind->SetPosition(m_position);
+	m_effectEmitterWind->SetRotation(m_rotation);
+
+	m_effectEmitterWind->SetScale(Vector3::One * 100.0f);
+	m_effectEmitterWind->Play();
+}
+
 void Player::PlayAnimation(EnAnimationClip currentAnimationClip)
 {
 	// アニメーションを再生

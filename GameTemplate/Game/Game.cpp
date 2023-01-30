@@ -2,7 +2,6 @@
 #include "Game.h"
 #include "Player.h"
 #include "GameCamera.h"
-#include "TestModel.h"
 #include "GravityGauge.h"
 #include "Sight.h"
 #include "BackGround.h"

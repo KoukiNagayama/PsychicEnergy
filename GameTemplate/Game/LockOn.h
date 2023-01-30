@@ -54,5 +54,6 @@ private:
 	bool						m_isBehind = false;
 	bool						m_isNearRightEdge = false;
 	bool						m_isDisable = false;
+	Vector3						m_playerToTargetPos = Vector3::Zero;
 };	
 

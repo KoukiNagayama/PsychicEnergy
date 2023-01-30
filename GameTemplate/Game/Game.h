@@ -2,7 +2,6 @@
 #include "LevelRender.h"
 #include "SkyCube.h"
 #include "WorldRotation.h"
-class TestModel;
 class Player;
 class GameCamera;
 class GravityGauge;

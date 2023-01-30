@@ -23,7 +23,7 @@ void PlayerFallInAirState::Enter()
 	// 衝突した場合に法線を取得するように設定。
 	g_worldRotation->SetIsGetNormal(true);
 	// 風のエフェクトを生成。
-	GenerateWindEffect();
+	m_player->GenerateWindEffect();
 
 }
 
@@ -60,7 +60,7 @@ void PlayerFallInAirState::Update()
 
 	if (m_secToRegenerateWindEffect >= 0.8f) {
 		DeleteGO(m_player->m_effectEmitterWind);
-		GenerateWindEffect();
+		m_player->GenerateWindEffect();
 		m_secToRegenerateWindEffect = 0.0f;
 	}
 }

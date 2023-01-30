@@ -20,7 +20,6 @@ namespace nsK2EngineLow
 			&& m_hitNormal.y == m_lastHitNormal.y
 			&& m_hitNormal.z == m_lastHitNormal.z
 			) {
-			//m_ringArray.clear();
 			return;
 		}
 
