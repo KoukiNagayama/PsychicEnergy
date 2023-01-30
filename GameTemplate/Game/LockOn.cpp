@@ -14,20 +14,19 @@ namespace
 
 bool LockOn::Start()
 {
-	// 全てのリングを検索し、格納しておく
-	m_ringArray = FindGOs<Ring>("ring");
+
 	m_player = FindGO<Player>("player");
 
 	m_lockOnSprite.Init(
-		"Assets/sprite/sight/sight.DDS",
+		"Assets/sprite/lockOn/lockOn/lockOn.DDS",
 		512.0f,
 		512.0f
 	);
-	m_lockOnSprite.SetScale(Vector3(0.1f, 0.1f, 1.0f));
+	m_lockOnSprite.SetScale(Vector3(0.3f, 0.3f, 1.0f));
 	m_lockOnSprite.Update();
 
 	m_arrowSprite.Init(
-		"Assets/sprite/arrowTest.DDS",
+		"Assets/sprite/lockOn/arrow/arrow.DDS",
 		512.0f,
 		512.0f
 	);
@@ -48,6 +47,11 @@ void LockOn::Update()
 		|| g_pad[0]->IsTrigger(enButtonRB2)) {
 		DecideTarget();
 	}
+
+	if (m_isDisable) {
+		return;
+	}
+
 	IdentifyIfTargetIsInView();
 	if (m_isTargetInView) {
 		m_lockOnSprite.SetPosition(Vector3(m_screenPos.x, m_screenPos.y, 0.0f));
@@ -62,9 +66,15 @@ void LockOn::Update()
 
 void LockOn::DecideTarget()
 {
+	// 全てのリングを検索し、格納しておく
+	m_ringArray = FindGOs<Ring>("ring");
 	// 距離と角度から評価点を計算
 	// 距離が近く、角度が小さいものほど評価点が低い
 	// 評価点が一番低いものをロックオンする
+	//if (sizeof(m_ringArray) < sizeof(Ring)) {
+	//	m_isDisable = true;
+	//	return;
+	//}
 	
 	// 最小の評価点を高めに設定しておく
 	m_minRatingPoint = RESET_RATING_POINT;
@@ -98,8 +108,7 @@ void LockOn::IdentifyIfTargetIsInView()
 	g_camera3D->CalcScreenPositionFromWorldPosition(m_screenPos, targetPos);
 	Vector3 camForward = g_camera3D->GetForward();
 	playerToTargetPos.Normalize();
-	float dot = camForward.Dot(playerToTargetPos);
-	if (dot >= 0.0f) {
+	if (camForward.Dot(playerToTargetPos) >= 0.0f) {
 		// スクリーン座標は中心が(0,0)のためフレームバッファのそれぞれの幅の半分の値を用意
 		if (HALF_HEIGHT_OF_FRAME_BUFFER >= m_screenPos.y
 			&& -HALF_HEIGHT_OF_FRAME_BUFFER <= m_screenPos.y
@@ -116,6 +125,7 @@ void LockOn::IdentifyIfTargetIsInView()
 	else{
 		m_isTargetInView = false;
 		m_isBehind = true;
+
 	}
 }
 
@@ -183,6 +193,10 @@ void LockOn::SeekWhichEdgeIsClose()
 
 void LockOn::Render(RenderContext& rc)
 {
+	if (m_isDisable) {
+		// 描画しない
+		return;
+	}
 	if (m_isTargetInView) {
 		m_lockOnSprite.Draw(rc);
 	}

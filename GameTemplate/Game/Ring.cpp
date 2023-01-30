@@ -5,7 +5,7 @@
 
 namespace
 {
-	const float DIST_TO_JUDGE_TRUE = 100.0f;
+	const float DIST_TO_JUDGE_TRUE = 150.0f;
 }
 
 bool Ring::Start()

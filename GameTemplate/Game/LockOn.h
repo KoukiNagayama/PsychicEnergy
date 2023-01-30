@@ -53,5 +53,6 @@ private:
 	Vector3						m_camForward = Vector3::AxisZ;		// ƒJƒƒ‰‚Ì³–Ê•ûŒü
 	bool						m_isBehind = false;
 	bool						m_isNearRightEdge = false;
+	bool						m_isDisable = false;
 };	
 
