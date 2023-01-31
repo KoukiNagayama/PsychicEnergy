@@ -9,6 +9,7 @@ class Sight;
 class BackGround;
 class Ring;
 class LockOn;
+class DisplayGameTimer;
 
 class Game : public IGameObject
 {
@@ -43,5 +44,6 @@ private:
 	Sight*			m_sight = nullptr;					// è∆èÄ
 	Ring*			m_ring = nullptr;					// ÉäÉìÉO
 	LockOn*			m_lockOn = nullptr;
+	DisplayGameTimer* m_displayGameTimer = nullptr;
 };
 

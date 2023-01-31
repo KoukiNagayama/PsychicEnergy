@@ -109,7 +109,7 @@ void LockOn::IdentifyIfTargetIsInView()
 	m_playerToTargetPos = targetPos - m_player->GetPosition();
 	Vector3 camForward = g_camera3D->GetForward();
 	m_playerToTargetPos.Normalize();
-	if (camForward.Dot(m_playerToTargetPos) >= 0.0f) {
+	if (camForward.Dot(m_playerToTargetPos) > -0.102f) {
 		// スクリーン座標は中心が(0,0)のためフレームバッファのそれぞれの幅の半分の値を用意
 		if (HALF_HEIGHT_OF_FRAME_BUFFER >= m_screenPos.y
 			&& -HALF_HEIGHT_OF_FRAME_BUFFER <= m_screenPos.y
@@ -132,13 +132,17 @@ void LockOn::IdentifyIfTargetIsInView()
 
 void LockOn::CalculateScreenPositionOfSpriteForArrow()
 {
+	// y座標の修正方法は同じのため
+	if (HALF_HEIGHT_OF_FRAME_BUFFER - SPACING_FROM_EDGE_IN_SCREEN_POSITION < m_screenPos.y) {
+		m_screenPos.y = HALF_HEIGHT_OF_FRAME_BUFFER - SPACING_FROM_EDGE_IN_SCREEN_POSITION;
+	}
+	else if (-HALF_HEIGHT_OF_FRAME_BUFFER + SPACING_FROM_EDGE_IN_SCREEN_POSITION > m_screenPos.y) {
+		m_screenPos.y = -HALF_HEIGHT_OF_FRAME_BUFFER + SPACING_FROM_EDGE_IN_SCREEN_POSITION;
+	}
 
 	// x座標の修正
 	// 目標に対して逆向きの場合の修正
 	if (m_isBehind) {
-		// 回転時に外側に向けるために逆にする
-		m_screenPos.x = -m_screenPos.x;
-		m_screenPos.y = -m_screenPos.y;
 
 		SeekWhichEdgeIsClose();
 
@@ -148,6 +152,11 @@ void LockOn::CalculateScreenPositionOfSpriteForArrow()
 		else {
 			m_screenPos.x = -HALF_WIDTH_OF_FRAME_BUFFER + SPACING_FROM_EDGE_IN_SCREEN_POSITION;
 		}
+		// 回転時に外側に向けるために逆にする
+		//m_screenPos.x *= -1.0f;
+		m_screenPos.y *= -1.0f;
+
+
 	}
 	else {
 		// 正面向きの場合の修正
@@ -157,14 +166,6 @@ void LockOn::CalculateScreenPositionOfSpriteForArrow()
 		else if (-HALF_WIDTH_OF_FRAME_BUFFER + SPACING_FROM_EDGE_IN_SCREEN_POSITION > m_screenPos.x) {
 			m_screenPos.x = -HALF_WIDTH_OF_FRAME_BUFFER + SPACING_FROM_EDGE_IN_SCREEN_POSITION;
 		}
-	}
-
-	// y座標の修正方法は同じのため
-	if (HALF_HEIGHT_OF_FRAME_BUFFER - SPACING_FROM_EDGE_IN_SCREEN_POSITION < m_screenPos.y) {
-		m_screenPos.y = HALF_HEIGHT_OF_FRAME_BUFFER - SPACING_FROM_EDGE_IN_SCREEN_POSITION;
-	}
-	else if (-HALF_HEIGHT_OF_FRAME_BUFFER + SPACING_FROM_EDGE_IN_SCREEN_POSITION > m_screenPos.y) {
-		m_screenPos.y = -HALF_HEIGHT_OF_FRAME_BUFFER + SPACING_FROM_EDGE_IN_SCREEN_POSITION;
 	}
 
 	m_arrowSprite.SetPosition(Vector3(m_screenPos.x, m_screenPos.y, 0.0f));
@@ -192,10 +193,14 @@ void LockOn::SeekWhichEdgeIsClose()
 	//		&& HALF_WIDTH_OF_FRAME_BUFFER + m_screenPos.x <= m_screenPos.x + HALF_WIDTH_OF_FRAME_BUFFER) {
 	//	m_isNearRightEdge = false;
 	//}
+	
 
-	if (m_playerToTargetPos.Dot(g_camera3D->GetRight()) >= 0.0f) {
+
+	// 右側
+	if (m_playerToTargetPos.Dot(g_camera3D->GetRight()) > 0.0f) {
 		m_isNearRightEdge = true;
 	}
+	// 左側
 	else {
 		m_isNearRightEdge = false;
 	}

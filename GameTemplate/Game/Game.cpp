@@ -7,6 +7,7 @@
 #include "BackGround.h"
 #include "Ring.h"
 #include "LockOn.h"
+#include "DisplayGameTimer.h"
 
 
 Game::Game()
@@ -88,6 +89,7 @@ bool Game::Start()
 	m_sight = NewGO<Sight>(0, "sight");
 	m_lockOn = NewGO<LockOn>(3, "lockOn");
 
+	m_displayGameTimer = NewGO<DisplayGameTimer>(0, "gameTimer");
 
 	return true;
 }

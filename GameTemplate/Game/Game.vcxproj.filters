@@ -62,6 +62,7 @@
     </ClCompile>
     <ClCompile Include="Ring.cpp" />
     <ClCompile Include="LockOn.cpp" />
+    <ClCompile Include="DisplayGameTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -111,5 +112,6 @@
     <ClInclude Include="Ring.h" />
     <ClInclude Include="CommonDataForWorldRotation.h" />
     <ClInclude Include="LockOn.h" />
+    <ClInclude Include="DisplayGameTimer.h" />
   </ItemGroup>
 </Project>
