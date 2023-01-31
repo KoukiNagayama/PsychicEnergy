@@ -27,7 +27,7 @@ bool DisplayGameTimer::Start()
 	}
 	
 	// タイマーの背景のスプライトを初期化
-	m_timerBGSprite.Init("Assets/sprite/timerBG2.DDS", NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
+	m_timerBGSprite.Init("Assets/sprite/timerBG/timerBG.DDS", NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
 	m_timerBGSprite.SetPosition(TIMER_BG_SPRITE_POS);
 	m_timerBGSprite.SetScale(TIMER_BG_SPRITE_SCA);
 	m_timerBGSprite.SetMulColor(TIMER_BG_SPRITE_MUL_COLOR);
@@ -35,7 +35,7 @@ bool DisplayGameTimer::Start()
 
 	// タイマーの背景の枠のスプライトを初期化
 	// 背景のスプライトはα値を変更するためスプライトを分割
-	m_timerBGFrameSprite.Init("Assets/sprite/timerBGFrame.DDS", NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
+	m_timerBGFrameSprite.Init("Assets/sprite/timerBG/timerBGFrame.DDS", NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
 	m_timerBGFrameSprite.SetPosition(TIMER_BG_SPRITE_POS);
 	m_timerBGFrameSprite.SetScale(TIMER_BG_SPRITE_SCA);
 	m_timerBGFrameSprite.Update();
