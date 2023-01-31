@@ -40,11 +40,11 @@ void DisplayGameTimer::CalculateNumOfEachDigit()
 	
 	// スプライトの初期化処理を毎フレームやると処理が重い為、
 	// 1秒に1回だけ行わせるようにする
-	if (m_oldTime == currentTime) {
+	if (m_lastSecond == currentTime) {
 		return;
 	}
-	// 現在の時間を記録
-	m_oldTime = currentTime;
+	// 現在の時間(秒)を記録
+	m_lastSecond = currentTime;
 
 	// 現在求めようとしている桁
 	int calculationDigit = 1;
