@@ -4,15 +4,6 @@
 #include "Player.h"
 #include "CommonDataForWorldRotation.h"
 
-namespace
-{
-	const int MODEL_TYPE_GROUND = 0;
-	const int MODEL_TYPE_BOX1 = 1;
-	const int MODEL_TYPE_BOX2 = 2;
-	const int MODEL_TYPE_BOX3 = 3;
-
-
-}
 
 bool BackGround::Start()
 {
@@ -20,17 +11,17 @@ bool BackGround::Start()
 	const char* filePath = nullptr;
 
 	bool isShadowCaster = true;
-	if (m_typeNum == MODEL_TYPE_GROUND) {
+	if (m_typeNum == enModelType_Ground) {
 		filePath = "Assets/modelData/backGroundModel/ground.tkm";
 		isShadowCaster = false;
 	}
-	if (m_typeNum == MODEL_TYPE_BOX1) {
+	if (m_typeNum == enModelType_Box1) {
 		filePath = "Assets/modelData/backGroundModel/backGroundModel_box1.tkm";
 	}
-	else if (m_typeNum == MODEL_TYPE_BOX2) {
+	else if (m_typeNum == enModelType_Box2) {
 		filePath = "Assets/modelData/backGroundModel/backGroundModel_box2.tkm";
 	}
-	else if (m_typeNum == MODEL_TYPE_BOX3) {
+	else if (m_typeNum == enModelType_Box3) {
 		filePath ="Assets/modelData/backGroundModel/backGroundModel_box3.tkm";
 	}
 

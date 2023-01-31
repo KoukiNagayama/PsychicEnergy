@@ -238,6 +238,7 @@
     <ClCompile Include="PlayerJumpState.cpp" />
     <ClCompile Include="PlayerSlideState.cpp" />
     <ClCompile Include="PlayerWalkState.cpp" />
+    <ClCompile Include="Result.cpp" />
     <ClCompile Include="Ring.cpp" />
     <ClCompile Include="Sight.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -264,6 +265,7 @@
     <ClInclude Include="PlayerSlideState.h" />
     <ClInclude Include="IPlayerState.h" />
     <ClInclude Include="PlayerWalkState.h" />
+    <ClInclude Include="Result.h" />
     <ClInclude Include="Ring.h" />
     <ClInclude Include="Sight.h" />
     <ClInclude Include="stdafx.h" />

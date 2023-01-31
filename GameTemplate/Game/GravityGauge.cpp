@@ -4,8 +4,8 @@
 
 namespace
 {
-	const float POS_X = -820.0f;					// X座標
-	const float POS_Y = 410.0f;						// Y座標
+	const float POS_X = -740.0f;					// X座標
+	const float POS_Y = 330.0f;						// Y座標
 	const float SCALE = 0.59f;						// 拡大率
 	const float WIDTH = 512.0f;						// 横幅
 	const float HEIGHT = 512.0f;					// 縦幅

@@ -1,4 +1,7 @@
 #pragma once
+/// <summary>
+/// タイムアタック用タイマークラス
+/// </summary>
 class DisplayGameTimer : public IGameObject
 {
 public:
@@ -23,9 +26,16 @@ public:
 	/// 時間を取得。
 	/// </summary>
 	/// <returns>現在の時間。</returns>
-	const int GetTime() const
+	int GetTime() const
 	{
 		return (int)m_currentTime;
+	}
+	/// <summary>
+	/// 描画と更新を無効化する
+	/// </summary>
+	void Disable()
+	{
+		m_disable = true;
 	}
 private:
 	/// <summary>
@@ -34,7 +44,10 @@ private:
 	void CalculateNumOfEachDigit();
 private:
 	SpriteRender	m_numberSprite[3];				// 数字を表示するスプライト
+	SpriteRender	m_timerBGSprite;				
+	SpriteRender	m_timerBGFrameSprite;
 	float			m_currentTime = 0.0f;			// 現在の時間
-	int	  			m_lastSecond = -1;					// 	
+	int	  			m_lastSecond = -1;				// 直前の時間(秒)
+	bool			m_disable = false;
 };
 
