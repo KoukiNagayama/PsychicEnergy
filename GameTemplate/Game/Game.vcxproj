@@ -250,6 +250,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
+    <ClInclude Include="CommonDataForTimer.h" />
     <ClInclude Include="CommonDataForWorldRotation.h" />
     <ClInclude Include="DisplayGameTimer.h" />
     <ClInclude Include="Game.h" />

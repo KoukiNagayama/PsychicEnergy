@@ -3,21 +3,24 @@
 #include "Player.h"
 
 namespace {
-	const float SCALE = 0.3f;
-	const float MAX_MUL_ALPHA = 1.0f;
-	const float MIN_MUL_ALPHA = 0.0f;
-	const float CHANGE_ALPHA_PER_FRAME = 1.0f / 5.0f;
+	const Vector3 SPRITE_SCALE = { 0.3f, 0.3f, 1.0f };		// スプライトの拡大率
+	const float MAX_MUL_ALPHA = 1.0f;						// 乗算するα値の最大値
+	const float MIN_MUL_ALPHA = 0.0f;						// 乗算するα値の最小値
+	const float CHANGE_ALPHA_PER_FRAME = 1.0f / 5.0f;		// 1フレームごとのα値の変化量
+	const Vector2 SPRITE_SIZE = { 512.0f, 512.0f };			// スプライトのサイズ
+	const Vector3 SPRITE_MUL_RGB = { 1.0f, 1.0f, 1.0f };	// 乗算するRGB
 }
 
 bool Sight::Start()
 {
+	// スプライトを初期化
 	m_spriteRender.Init(
 		"Assets/sprite/sight/sight.DDS",
-		512.0f,
-		512.0f
+		SPRITE_SIZE.x,
+		SPRITE_SIZE.y
 	);
 
-	m_spriteRender.SetScale(Vector3(SCALE, SCALE, 1.0f));
+	m_spriteRender.SetScale(SPRITE_SCALE);
 	m_spriteRender.Update();
 
 	return true;
@@ -25,6 +28,7 @@ bool Sight::Start()
 
 void Sight::Update()
 {
+	// α値を変化させる
 	if (m_isDrawSight) {
 		m_currentAlpha += CHANGE_ALPHA_PER_FRAME;
 		if (m_currentAlpha >= MAX_MUL_ALPHA) {
@@ -43,6 +47,10 @@ void Sight::Update()
 
 void Sight::Render(RenderContext& rc)
 {
-	m_spriteRender.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, m_currentAlpha));
+	if (m_currentAlpha <= MIN_MUL_ALPHA) {
+		// α値が0.0以下ならば描画しない
+		return;
+	}
+	m_spriteRender.SetMulColor({ SPRITE_MUL_RGB.x, SPRITE_MUL_RGB.y, SPRITE_MUL_RGB.z, m_currentAlpha });
 	m_spriteRender.Draw(rc);
 }

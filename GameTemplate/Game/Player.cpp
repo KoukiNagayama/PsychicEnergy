@@ -267,6 +267,17 @@ void Player::RotationFallAir()
 	m_rotation.Apply(m_forward);
 }
 
+void Player::RotationToCorrectForward()
+{
+	Vector3 forwardXZ = m_forward;
+	forwardXZ.y = 0.0f;
+	m_rotation.SetRotationYFromDirectionXZ(forwardXZ);
+	m_modelRender.SetRotation(m_rotation);
+
+	m_forward = Vector3::AxisZ;
+	m_rotation.Apply(m_forward);
+}
+
 void Player::FloatModeChange(bool isFloating)
 {
 	// 各種クラスの浮遊状態の設定を変更

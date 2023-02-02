@@ -9,7 +9,7 @@ namespace
 	const float SCALE = 0.59f;						// 拡大率
 	const float WIDTH = 512.0f;						// 横幅
 	const float HEIGHT = 512.0f;					// 縦幅
-	const float DECREASE_PER_FRAME = 0.2f;			// フレームごとの減少量
+	const float DECREASE_PER_FRAME = 2.0f;			// フレームごとの減少量
 	const float INCREASE_PER_FRAME = 5.0f;			// フレームごとの増加量
 	const float MAX_ANGLE_DEG_TO_DISPLAY = 360.0f;	// 表示する最大角度(Degree)
 	const float MIN_ANGLE_DEG_TO_DISPLAY = 0.0f;	// 表示する最小角度(Degree)

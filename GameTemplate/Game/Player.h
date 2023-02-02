@@ -253,6 +253,10 @@ private:
 	void PlayAnimation(EnAnimationClip currentAnimationClip);
 
 	void GenerateWindEffect();
+	/// <summary>
+	/// ³–Ê‚ğC³‚·‚é‰ñ“]B
+	/// </summary>
+	void RotationToCorrectForward();
 private:
 	ModelRender				m_modelRender;										// ƒ‚ƒfƒ‹
 	Vector3					m_position = Vector3::Zero;						// À•W

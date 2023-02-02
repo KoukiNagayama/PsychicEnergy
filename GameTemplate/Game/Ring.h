@@ -4,7 +4,7 @@ class Ring : public IGameObject
 {
 public:
 	Ring() {}
-	~Ring() {}
+	~Ring();
 
 	bool Start();
 	void Update();

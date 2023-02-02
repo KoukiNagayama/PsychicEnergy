@@ -8,6 +8,14 @@ namespace
 	const float DIST_TO_JUDGE_TRUE = 150.0f;
 }
 
+Ring::~Ring()
+{
+	// todo 取得音を鳴らす
+
+	// todo エフェクト
+
+}
+
 bool Ring::Start()
 {
 	// モデルの初期化データ
@@ -66,7 +74,8 @@ void Ring::Collision()
 		return;
 	}
 
-	Dead();
+	// プレイヤーが取得したためオブジェクトを削除
+	DeleteGO(this);
 }
 
 float Ring::CalcDistanceToPlayer()

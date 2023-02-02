@@ -1,18 +1,17 @@
 #include "stdafx.h"
 #include "DisplayGameTimer.h"
+#include "CommonDataForTimer.h"
 
 namespace
 {
 	const int NUMBER_OF_DIGIT = 3;									// 桁数	
 	const Vector2 NUMBER_SPRITE_SIZE = { 512.0f,512.0f };			// スプライトのサイズ
 	const Vector3 NUMBER_SPRITE_SCALE = { 0.3f, 0.3f, 1.0f };
-	const float MAX_VALUE_OF_TIMER = 1000.0f;						// タイマーの最大値
 	const Vector3 HUNDREDS_DIGIT_POS = { 650.0f, 373.0f, 0.0f };	// 100の位の座標
 	const Vector3 VALUE_OF_POS_SHIFT = { 50.0f, 0.0f, 0.0f };		// 座標をずらす値
 	const Vector3 TIMER_BG_SPRITE_POS = { 700.0f, 360.0f, 0.0f };
 	const Vector3 TIMER_BG_SPRITE_SCA = { 0.9f, 0.9f, 1.0f };
 	const Vector4 TIMER_BG_SPRITE_MUL_COLOR = { 1.0f, 1.0f, 1.0f, 0.8f };
-
 }
 
 bool DisplayGameTimer::Start()

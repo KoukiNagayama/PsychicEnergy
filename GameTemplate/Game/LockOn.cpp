@@ -71,10 +71,10 @@ void LockOn::DecideTarget()
 	// 距離と角度から評価点を計算
 	// 距離が近く、角度が小さいものほど評価点が低い
 	// 評価点が一番低いものをロックオンする
-	//if (sizeof(m_ringArray) < sizeof(Ring)) {
-	//	m_isDisable = true;
-	//	return;
-	//}
+	if (m_ringArray.size() < 1) {
+		m_isDisable = true;
+		return;
+	}
 	
 	// 最小の評価点を高めに設定しておく
 	m_minRatingPoint = RESET_RATING_POINT;
@@ -115,16 +115,21 @@ void LockOn::IdentifyIfTargetIsInView()
 			&& -HALF_HEIGHT_OF_FRAME_BUFFER <= m_screenPos.y
 			&& HALF_WIDTH_OF_FRAME_BUFFER >= m_screenPos.x
 			&& -HALF_WIDTH_OF_FRAME_BUFFER <= m_screenPos.x) {
+			// 画面内に目標がある
 			m_isTargetInView = true;
 
 		}
 		else {
+			// 画面内に目標がない
 			m_isTargetInView = false;
 		}
+		// 目標は後ろにはない
 		m_isBehind = false;
 	}
 	else{
+		// 画面内に目標がない
 		m_isTargetInView = false;
+		// 目標は後ろにある
 		m_isBehind = true;
 
 	}
@@ -181,20 +186,6 @@ void LockOn::CalculateScreenPositionOfSpriteForArrow()
 void LockOn::SeekWhichEdgeIsClose()
 {
 	// 左右どちらの画面端に近いか求める
-	// 右
-	//if (m_screenPos.x >= 0.0f
-	//	&& HALF_WIDTH_OF_FRAME_BUFFER - m_screenPos.x <= HALF_HEIGHT_OF_FRAME_BUFFER - m_screenPos.y
-	//		&& HALF_WIDTH_OF_FRAME_BUFFER - m_screenPos.x <= m_screenPos.x + HALF_WIDTH_OF_FRAME_BUFFER) {
-	//	m_isNearRightEdge = true;
-	//}
-	//// 左
-	//else if (m_screenPos.x < 0.0f
-	//	&& HALF_WIDTH_OF_FRAME_BUFFER + m_screenPos.x <= HALF_HEIGHT_OF_FRAME_BUFFER - m_screenPos.y
-	//		&& HALF_WIDTH_OF_FRAME_BUFFER + m_screenPos.x <= m_screenPos.x + HALF_WIDTH_OF_FRAME_BUFFER) {
-	//	m_isNearRightEdge = false;
-	//}
-	
-
 
 	// 右側
 	if (m_playerToTargetPos.Dot(g_camera3D->GetRight()) > 0.0f) {

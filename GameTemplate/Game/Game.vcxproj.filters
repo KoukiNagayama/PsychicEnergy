@@ -123,5 +123,6 @@
     <ClInclude Include="LockOn.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="CommonDataForTimer.h" />
   </ItemGroup>
 </Project>

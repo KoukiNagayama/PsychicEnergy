@@ -25,7 +25,14 @@ public:
 private:
 
 private:
+	enum EnResultState
+	{
+		enResultState_GameClear,
+		enResultState_TimeUp
+	};
+	EnResultState	m_resultState;
 	int		m_recordedTime = -1;		// ‹L˜^‚³‚ê‚½ŽžŠÔ
-
+	float	m_pushDeltaTime = 10000.0f;	
+	bool	m_disable = true;
 };
 

@@ -113,15 +113,6 @@ void GameCamera::UpdateTouchingObject()
 	m_degreeX = x * 2.5f;
 	m_degreeY = y * 1.3f;
 
-	// 相対的にカメラとプレイヤーの位置関係がずれないように補正する
-	//m_toCameraPos.Set(
-	//	TO_CAMERA_POS_X_FROM_TARGET,
-	//	TO_CAMERA_POS_Y_FROM_TARGET,
-	//	TO_CAMERA_POS_Z_FROM_TARGET
-	//);
-
-	//rotation.Apply(m_toCameraPos);
-
 	// 上向きの軸回りの回転
 	Quaternion qRot;
 	qRot.SetRotationDeg(currentModelUpAxis, m_degreeX);
