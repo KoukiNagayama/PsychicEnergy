@@ -1,23 +1,32 @@
 #include "stdafx.h"
 #include "Ring.h"
+#include "Game.h"
 #include "Player.h"
 #include "CommonDataForWorldRotation.h"
+#include "CommonDataForSound.h"
 
 namespace
 {
 	const float DIST_TO_JUDGE_TRUE = 150.0f;
+	const float ACQUISITION_SOUND_VOLUME = 0.7f;
 }
 
 Ring::~Ring()
 {
-	// todo 取得音を鳴らす
+	// 取得したリングを増やす
+	m_game->GetRing();
 
-	// todo エフェクト
+	// 取得音を鳴らす
+	m_acquisitionSound = NewGO<SoundSource>(0);
+	m_acquisitionSound->Init(nsSound::enSoundNumber_Acquisition);
+	m_acquisitionSound->SetVolume(ACQUISITION_SOUND_VOLUME);
+	m_acquisitionSound->Play(false);
 
 }
 
 bool Ring::Start()
 {
+	m_game = FindGO<Game>("game");
 	// モデルの初期化データ
 	ModelInitData modelInitData;
 	modelInitData.m_tkmFilePath = "Assets/modelData/ring/ring.tkm";

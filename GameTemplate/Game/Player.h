@@ -22,7 +22,7 @@ public:
 	};
 public:
 	Player() {}
-	~Player() {}
+	~Player();
 
 	/// <summary>
 	/// ŠJnˆ—B
@@ -282,5 +282,6 @@ private:
 	float					m_lastMoveSpeedY = 0.0f;
 	EffectEmitter*			m_effectEmitterWind = nullptr;
 	bool					m_disablePlayerMove = false;
+	SoundSource*			m_windSound = nullptr;							// •—‚Ì‰¹
 };
 

@@ -9,7 +9,6 @@
 #include "graphics/effect/EffectEmitter.h"
 
 
-bool g_disablePlayerMove = false;
 namespace
 {
 	const float WALK_SPEED = 450.0f;		// 歩く速さ
@@ -23,8 +22,19 @@ namespace
 	const float ADD_SPEED = 10.0f;
 	const float GRAVITY = 14.0f;					// 重力
 	const float INERTIAL_FORCE = 0.99f;				// 慣性力
-	const float FOOTSTEP_VOLUME = 0.6f;
-	const float LANDING_VOLUME = 0.8f;
+	const float FOOTSTEP_VOLUME = 0.6f;				// 足音の音量
+	const float LANDING_VOLUME = 0.8f;				// 着地音の音量
+	const float WIND_VOLUME = 0.3f;					// 風の音量
+	const float SLIDING_VOLUME = 0.5f;				// スライディングの音量
+}
+
+Player::~Player()
+{
+	// サウンドオブジェクトを削除
+	DeleteGO(m_slideSound);
+	DeleteGO(m_landingSound);
+	DeleteGO(m_runFootstep);
+	DeleteGO(m_modeChangeSound);
 }
 
 bool Player::Start()
@@ -78,9 +88,6 @@ bool Player::Start()
 	m_playerState = new PlayerIdleState(this);
 	m_playerState->Enter();
 
-
-
-	//Matrix mat;
 	const Matrix& mat = m_modelRender.GetWorldMatrix();
 	g_worldRotation->InitPlayerWorldMatrix(mat);
 
@@ -89,6 +96,7 @@ bool Player::Start()
 	g_soundEngine->ResistWaveFileBank(nsSound::enSoundNumber_PlayerSliding, "Assets/sound/player/slide2.wav");
 	g_soundEngine->ResistWaveFileBank(nsSound::enSoundNumber_PlayerLanding, "Assets/sound/player/landing.wav");
 	g_soundEngine->ResistWaveFileBank(nsSound::enSoundNumber_PlayerModeChange, "Assets/sound/player/modeChange.wav");
+	g_soundEngine->ResistWaveFileBank(nsSound::enSoundNumber_Wind, "Assets/sound/other/wind.wav");
 
 	EffectEngine::GetInstance()->ResistEffect(0, u"Assets/effect/wind4.efk");
 	
@@ -207,8 +215,8 @@ void Player::Slide()
 		m_moveSpeed.y = 0;
 		if (m_isRingingSlideSound == false) {
 			m_slideSound = NewGO<SoundSource>(0);
-			m_slideSound->Init(1);
-			m_slideSound->SetVolume(0.5f);
+			m_slideSound->Init(nsSound::enSoundNumber_PlayerSliding);
+			m_slideSound->SetVolume(SLIDING_VOLUME);
 			m_slideSound->Play(true);
 			m_isRingingSlideSound = true;
 		}
@@ -303,6 +311,11 @@ void Player::GenerateWindEffect()
 
 	m_effectEmitterWind->SetScale(Vector3::One * 100.0f);
 	m_effectEmitterWind->Play();
+
+	//m_windSound = NewGO<SoundSource>(0);
+	//m_windSound->Init(nsSound::enSoundNumber_Wind);
+	//m_windSound->SetVolume(WIND_VOLUME);
+	//m_windSound->Play(false);
 }
 
 void Player::PlayAnimation(EnAnimationClip currentAnimationClip)

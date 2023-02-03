@@ -27,7 +27,7 @@ public:
 	/// <summary>
 	/// Bƒ{ƒ^ƒ“‚Í‰Ÿ‚³‚ê‚½‚©
 	/// </summary>
-	bool IsPushedB()
+	bool& IsPushedB()
 	{
 		return m_isPushedB;
 	}

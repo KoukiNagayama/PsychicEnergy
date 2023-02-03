@@ -17,6 +17,9 @@ namespace nsSound
 		enSoundNumber_TitleBGM,				// タイトルで流れるBGM
 		enSoundNumber_MainBGM,				// インゲーム中に流れるBGM
 		enSoundNumber_Decision,				// 決定音
+		enSoundNumber_Acquisition,			// リングの取得音
+		enSoundNumber_Wind,					// 風の音
+		enSoundNumber_ResultBGM,			// リザルトで流れるBGM
 	};
 
 	const float INITIAL_VOLUME = 0.0f;		// 最初の音量

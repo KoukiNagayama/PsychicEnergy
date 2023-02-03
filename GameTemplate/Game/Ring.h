@@ -1,4 +1,6 @@
 #pragma once
+#include "sound/SoundSource.h"
+class Game;
 class Player;
 class Ring : public IGameObject
 {
@@ -65,6 +67,7 @@ private:
 	/// </summary>
 	float CalcDistanceToPlayer();
 private:
+	Game*					m_game = nullptr;
 	ModelRender				m_modelRender;				// モデルレンダー
 	Vector3					m_position;					// 座標
 	Vector3					m_scale;					// 拡大率
@@ -73,5 +76,6 @@ private:
 	Matrix					m_prevMatrix = Matrix::Identity;
 	Matrix					m_nextMatrix = Matrix::Identity;
 	float					m_rotateTimer = 1.0f;
+	SoundSource*			m_acquisitionSound = nullptr;
 };
 

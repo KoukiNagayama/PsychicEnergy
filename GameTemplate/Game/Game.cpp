@@ -12,6 +12,7 @@
 #include "MainBGM.h"
 #include "CommonDataForBackGround.h"
 #include "CommonDataForSound.h"
+#include "CommonDataForTimer.h"
 #include "Fade.h"
 #include "MainBGM.h"
 
@@ -23,7 +24,25 @@ Game::Game()
 
 Game::~Game()
 {
-
+	// BGMをフェードアウトさせる
+	m_mainBGM->StartFadeOut();
+	// オブジェクトを削除する。
+	for (auto& backGround : m_backGroundArray) {
+		DeleteGO(backGround);
+	}
+	DeleteGO(m_player);
+	DeleteGO(m_gameCamera);
+	
+	const auto& ringArray = FindGOs<Ring>("ring");
+	const int arraySize = ringArray.size();
+	for (int i = 0; i < arraySize; i++) {
+		DeleteGO(ringArray[i]);
+	}
+	DeleteGO(m_fade);
+	DeleteGO(m_skyCube);
+	DeleteGO(m_gravityGauge);
+	DeleteGO(m_lockOn);
+	DeleteGO(m_sight);
 }
 
 bool Game::Start()
@@ -34,38 +53,42 @@ bool Game::Start()
 		{
 			// 地面
 			if (objData.EqualObjectName(L"ground") == true) {
-				m_backGround = NewGO<BackGround>(0, "ground");
-				m_backGround->SetTypeNum(nsBackGround::enModelType_Ground);
-				m_backGround->SetPosition(objData.position);
-				m_backGround->SetRotation(objData.rotation);
-				m_backGround->SetScale(objData.scale);
+				auto backGround = NewGO<BackGround>(0, "ground");
+				backGround->SetTypeNum(nsBackGround::enModelType_Ground);
+				backGround->SetPosition(objData.position);
+				backGround->SetRotation(objData.rotation);
+				backGround->SetScale(objData.scale);
+				m_backGroundArray.push_back(backGround);
 				return true;
 			}
 			// 箱1
 			else if (objData.ForwardMatchName(L"backGroundModel_box1") == true) {
-				m_backGround = NewGO<BackGround>(0, "box1");
-				m_backGround->SetTypeNum(nsBackGround::enModelType_Box1);
-				m_backGround->SetPosition(objData.position);
-				m_backGround->SetRotation(objData.rotation);
-				m_backGround->SetScale(objData.scale);
+				auto backGround = NewGO<BackGround>(0, "box1");
+				backGround->SetTypeNum(nsBackGround::enModelType_Box1);
+				backGround->SetPosition(objData.position);
+				backGround->SetRotation(objData.rotation);
+				backGround->SetScale(objData.scale);
+				m_backGroundArray.push_back(backGround);
 				return true;
 			}
 			// 箱2
 			else if (objData.ForwardMatchName(L"backGroundModel_box2") == true) {
-				m_backGround = NewGO<BackGround>(0, "box2");
-				m_backGround->SetTypeNum(nsBackGround::enModelType_Box2);
-				m_backGround->SetPosition(objData.position);
-				m_backGround->SetRotation(objData.rotation);
-				m_backGround->SetScale(objData.scale);
+				auto backGround = NewGO<BackGround>(0, "box2");
+				backGround->SetTypeNum(nsBackGround::enModelType_Box2);
+				backGround->SetPosition(objData.position);
+				backGround->SetRotation(objData.rotation);
+				backGround->SetScale(objData.scale);
+				m_backGroundArray.push_back(backGround);
 				return true;
 			}
 			// 箱3
 			else if (objData.ForwardMatchName(L"backGroundModel_box3") == true) {
-				m_backGround = NewGO<BackGround>(0, "box3");
-				m_backGround->SetTypeNum(nsBackGround::enModelType_Box3);
-				m_backGround->SetPosition(objData.position);
-				m_backGround->SetRotation(objData.rotation);
-				m_backGround->SetScale(objData.scale);
+				auto backGround = NewGO<BackGround>(0, "box3");
+				backGround->SetTypeNum(nsBackGround::enModelType_Box3);
+				backGround->SetPosition(objData.position);
+				backGround->SetRotation(objData.rotation);
+				backGround->SetScale(objData.scale);
+				m_backGroundArray.push_back(backGround);
 				return true;
 			}
 			// プレイヤーキャラクター
@@ -82,6 +105,7 @@ bool Game::Start()
 				m_ring->SetPosition(objData.position);
 				m_ring->SetRotation(objData.rotation);
 				m_ring->SetScale(objData.scale);
+				m_maxRing++;
 				return true;
 			}
 			return false;
@@ -103,10 +127,29 @@ bool Game::Start()
 	m_fade->StartFadeIn();
 
 	m_mainBGM = NewGO<MainBGM>(0, "mainBGM");
+
+	g_soundEngine->ResistWaveFileBank(nsSound::enSoundNumber_Acquisition, "Assets/sound/other/acquisition.wav");
 	return true;
 }
 
 void Game::Update()
 {
+	FadeOut();
 
+	// 取得したコインが
+	if (m_numOfGetRing == m_maxRing
+		|| m_displayGameTimer->GetTime() >= nsTimer::MAX_VALUE_OF_TIMER) {
+		m_isFinishedInGame = true;
+		m_fade->StartFadeOut();
+	}
+}
+
+void Game::FadeOut()
+{
+	if (m_isFinishedInGame) {
+		if (!m_fade->IsFade()) {
+			NewGO<Result>(0, "result");
+			DeleteGO(this);
+		}
+	}
 }

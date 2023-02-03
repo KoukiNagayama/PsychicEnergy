@@ -49,7 +49,7 @@ void DisplayGameTimer::Update()
 	}
 	// 現在の時間を計算
 	m_currentTime += g_gameTime->GetFrameDeltaTime();
-	if (m_currentTime >= MAX_VALUE_OF_TIMER) {
+	if (m_currentTime >= nsTimer::MAX_VALUE_OF_TIMER) {
 		return;
 	}
 	// 各桁の数値を計算する

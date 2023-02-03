@@ -13,17 +13,14 @@ class DisplayGameTimer;
 class Fade;
 class MainBGM;
 /// <summary>
-/// 
+/// インゲームクラス
 /// </summary>
 class Game : public IGameObject
 {
 public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
 	Game();
 	/// <summary>
-	/// デスストラクタ
+	/// デストラクタ
 	/// </summary>
 	~Game();	
 	/// <summary>
@@ -35,14 +32,30 @@ public:
 	/// 更新処理。
 	/// </summary>
 	void Update();
-
+	/// <summary>
+	/// リングを取得
+	/// </summary>
+	void GetRing()
+	{
+		m_numOfGetRing++;
+	}
+	/// <summary>
+	/// インゲームは終了しているか
+	/// </summary>
+	bool& IsFinishedInGame()
+	{
+		return m_isFinishedInGame;
+	}
 private:
-
+	/// <summary>
+	/// フェードアウト。
+	/// </summary>
+	void FadeOut();
 private:
 	LevelRender		m_levelRender;						// レベルレンダー
 	Player*			m_player = nullptr;					// プレイヤー
 	GameCamera*		m_gameCamera = nullptr;				// ゲームカメラ
-	BackGround*		m_backGround = nullptr;				// 背景
+	std::vector<BackGround*> m_backGroundArray;			// 背景
 	SkyCube*		m_skyCube = nullptr;				// スカイキューブ						
 	GravityGauge*	m_gravityGauge = nullptr;			// 重力ゲージ
 	Sight*			m_sight = nullptr;					// 照準
@@ -51,5 +64,8 @@ private:
 	DisplayGameTimer* m_displayGameTimer = nullptr;
 	Fade*			m_fade = nullptr;					// フェード
 	MainBGM*		m_mainBGM = nullptr;				// メインBGM
+	int				m_maxRing = 0;
+	int				m_numOfGetRing = 0;					// 取得したリングの数
+	bool			m_isFinishedInGame = false;			// インゲームは終了したか？
 };
 

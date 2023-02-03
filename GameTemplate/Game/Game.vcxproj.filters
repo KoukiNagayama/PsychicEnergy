@@ -94,6 +94,7 @@
       <Filter>title</Filter>
     </ClCompile>
     <ClCompile Include="MainBGM.cpp" />
+    <ClCompile Include="ResultBGM.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -183,5 +184,6 @@
       <Filter>title</Filter>
     </ClInclude>
     <ClInclude Include="MainBGM.h" />
+    <ClInclude Include="ResultBGM.h" />
   </ItemGroup>
 </Project>
