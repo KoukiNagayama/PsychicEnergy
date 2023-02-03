@@ -16,6 +16,12 @@
     <Filter Include="backGround">
       <UniqueIdentifier>{45da49e5-f867-46ad-a023-2e0f03a989bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="title">
+      <UniqueIdentifier>{690612fb-46cb-41bf-b3e7-39fd99684b9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommonData">
+      <UniqueIdentifier>{095ead17-ef06-47bd-8260-af222c53b5bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -68,6 +74,26 @@
     <ClCompile Include="LockOn.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="Title.cpp">
+      <Filter>title</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleCharacter.cpp">
+      <Filter>title</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleCamera.cpp">
+      <Filter>title</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleBackGround.cpp">
+      <Filter>title</Filter>
+    </ClCompile>
+    <ClCompile Include="Fade.cpp" />
+    <ClCompile Include="TitleSprite.cpp">
+      <Filter>title</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleBGM.cpp">
+      <Filter>title</Filter>
+    </ClCompile>
+    <ClCompile Include="MainBGM.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -115,7 +141,6 @@
       <Filter>player</Filter>
     </ClInclude>
     <ClInclude Include="Ring.h" />
-    <ClInclude Include="CommonDataForWorldRotation.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="DisplayGameTimer.h">
       <Filter>UI</Filter>
@@ -123,6 +148,40 @@
     <ClInclude Include="LockOn.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="CommonDataForTimer.h" />
+    <ClInclude Include="Title.h">
+      <Filter>title</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleCharacter.h">
+      <Filter>title</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleCamera.h">
+      <Filter>title</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonDataForWorldRotation.h">
+      <Filter>CommonData</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonDataForTimer.h">
+      <Filter>CommonData</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleBackGround.h">
+      <Filter>title</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonDataForBackGround.h">
+      <Filter>CommonData</Filter>
+    </ClInclude>
+    <ClInclude Include="Fade.h" />
+    <ClInclude Include="TitleSprite.h">
+      <Filter>title</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonDataForEffect.h">
+      <Filter>CommonData</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonDataForSound.h">
+      <Filter>CommonData</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleBGM.h">
+      <Filter>title</Filter>
+    </ClInclude>
+    <ClInclude Include="MainBGM.h" />
   </ItemGroup>
 </Project>

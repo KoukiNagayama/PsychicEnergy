@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "system/system.h"
 #include "Game.h"
+#include "Title.h"
 
 
 // K2EngineLowのグローバルアクセスポイント。
@@ -24,11 +25,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
 
 	//auto engineTest = NewGO<EngineTest>(0, "engineTest");
-	auto game = NewGO<Game>(0, "game");
+	//auto game = NewGO<Game>(0, "game");
+	auto title = NewGO<Title>(0, "title");
 
 	// レンダリングエンジンを初期化
 	g_renderingEngine = new RenderingEngine;
 	g_renderingEngine->Init();
+
+	g_worldRotation = new WorldRotation;
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())

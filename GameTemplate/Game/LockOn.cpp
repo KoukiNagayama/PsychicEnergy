@@ -10,6 +10,9 @@ namespace
 	const float HALF_HEIGHT_OF_FRAME_BUFFER = FRAME_BUFFER_H * 0.5f;	// フレームバッファの縦幅の半分
 	const float HALF_WIDTH_OF_FRAME_BUFFER = FRAME_BUFFER_W * 0.5f;		// フレームバッファの横幅の半分
 	const float SPACING_FROM_EDGE_IN_SCREEN_POSITION = 50.0f;			// スクリーン座標における画面端との間隔
+	const int	MIN_NUM_TARGET = 1;										// 目標の最少数
+	const Vector3 SPRITE_SCALE = { 0.3f, 0.3f, 1.0f };					// スプライトの拡大率
+	const Vector2 SPRITE_SIZE = { 512.0f, 512.0f };					// スプライトの幅
 }
 
 bool LockOn::Start()
@@ -19,18 +22,18 @@ bool LockOn::Start()
 
 	m_lockOnSprite.Init(
 		"Assets/sprite/lockOn/lockOn/lockOn.DDS",
-		512.0f,
-		512.0f
+		SPRITE_SIZE.x,
+		SPRITE_SIZE.y
 	);
-	m_lockOnSprite.SetScale(Vector3(0.3f, 0.3f, 1.0f));
+	m_lockOnSprite.SetScale(SPRITE_SCALE);
 	m_lockOnSprite.Update();
 
 	m_arrowSprite.Init(
-		"Assets/sprite/lockOn/arrow/arrow.DDS",
-		512.0f,
-		512.0f
+		"Assets/sprite/lockOn/arrow/arrow_2.DDS",
+		SPRITE_SIZE.x,
+		SPRITE_SIZE.y
 	);
-	m_arrowSprite.SetScale(Vector3(0.3f, 0.3f, 1.0f));
+	m_arrowSprite.SetScale(SPRITE_SCALE);
 	m_arrowSprite.Update();
 
 	m_camForward = g_camera3D->GetForward();
@@ -71,7 +74,7 @@ void LockOn::DecideTarget()
 	// 距離と角度から評価点を計算
 	// 距離が近く、角度が小さいものほど評価点が低い
 	// 評価点が一番低いものをロックオンする
-	if (m_ringArray.size() < 1) {
+	if (m_ringArray.size() < MIN_NUM_TARGET) {
 		m_isDisable = true;
 		return;
 	}
@@ -177,7 +180,7 @@ void LockOn::CalculateScreenPositionOfSpriteForArrow()
 
 	// オブジェクトに矢印を向ける
 	Quaternion rot;
-	rot.SetRotation(Vector3(0.0f, 1.0f, 0.0f), Vector3(m_screenPos.x, m_screenPos.y, 0.0f));
+	rot.SetRotation(Vector3::Up, Vector3(m_screenPos.x, m_screenPos.y, 0.0f));
 	m_arrowSprite.SetRotation(rot);
 
 	m_arrowSprite.Update();

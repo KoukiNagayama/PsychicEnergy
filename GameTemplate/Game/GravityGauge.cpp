@@ -4,12 +4,11 @@
 
 namespace
 {
-	const float POS_X = -740.0f;					// X座標
-	const float POS_Y = 330.0f;						// Y座標
-	const float SCALE = 0.59f;						// 拡大率
+	const Vector3 POS = { -740.0f, 330.0f, 0.0f };
+	const Vector3 SCALE = { 0.59f, 0.59f, 1.0f };
 	const float WIDTH = 512.0f;						// 横幅
 	const float HEIGHT = 512.0f;					// 縦幅
-	const float DECREASE_PER_FRAME = 2.0f;			// フレームごとの減少量
+	const float DECREASE_PER_FRAME = 0.2f;			// フレームごとの減少量
 	const float INCREASE_PER_FRAME = 5.0f;			// フレームごとの増加量
 	const float MAX_ANGLE_DEG_TO_DISPLAY = 360.0f;	// 表示する最大角度(Degree)
 	const float MIN_ANGLE_DEG_TO_DISPLAY = 0.0f;	// 表示する最小角度(Degree)
@@ -28,16 +27,16 @@ bool GravityGauge::Start()
 	spriteInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
 	// 初期化データをもとにスプライトを初期化する。
 	m_gaugeSprite.InitSpecialImage(spriteInitData);
-	m_gaugeSprite.SetPosition(Vector3{ POS_X, POS_Y, 0.0f });
-	m_gaugeSprite.SetScale(Vector3{ SCALE,SCALE,1.0f });
+	m_gaugeSprite.SetPosition(POS);
+	m_gaugeSprite.SetScale(SCALE);
 
 	m_gaugeFrameSprite.Init(
 		"Assets/sprite/gravityGauge/frame.DDS",
-		512.0f,
-		512.0f
+		WIDTH,
+		HEIGHT
 	);
-	m_gaugeFrameSprite.SetPosition(Vector3{ POS_X, POS_Y, 0.0f });
-	m_gaugeFrameSprite.SetScale(Vector3{ SCALE,SCALE,1.0f });
+	m_gaugeFrameSprite.SetPosition(POS);
+	m_gaugeFrameSprite.SetScale(SCALE);
 
 	m_player = FindGO<Player>("player");
 

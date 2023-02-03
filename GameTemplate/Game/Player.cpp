@@ -4,6 +4,7 @@
 #include "PlayerIdleState.h"
 #include "sound/SoundEngine.h"
 #include "WorldRotation.h"
+#include "CommonDataForSound.h"
 
 #include "graphics/effect/EffectEmitter.h"
 
@@ -22,6 +23,8 @@ namespace
 	const float ADD_SPEED = 10.0f;
 	const float GRAVITY = 14.0f;					// 重力
 	const float INERTIAL_FORCE = 0.99f;				// 慣性力
+	const float FOOTSTEP_VOLUME = 0.6f;
+	const float LANDING_VOLUME = 0.8f;
 }
 
 bool Player::Start()
@@ -82,10 +85,10 @@ bool Player::Start()
 	g_worldRotation->InitPlayerWorldMatrix(mat);
 
 	// wavファイルを登録する。
-	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/run_footstep.wav");
-	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/slide2.wav");
-	g_soundEngine->ResistWaveFileBank(2, "Assets/sound/landing.wav");
-	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/modeChange.wav");
+	g_soundEngine->ResistWaveFileBank(nsSound::enSoundNumber_PlayerFootStep, "Assets/sound/player/run_footstep.wav");
+	g_soundEngine->ResistWaveFileBank(nsSound::enSoundNumber_PlayerSliding, "Assets/sound/player/slide2.wav");
+	g_soundEngine->ResistWaveFileBank(nsSound::enSoundNumber_PlayerLanding, "Assets/sound/player/landing.wav");
+	g_soundEngine->ResistWaveFileBank(nsSound::enSoundNumber_PlayerModeChange, "Assets/sound/player/modeChange.wav");
 
 	EffectEngine::GetInstance()->ResistEffect(0, u"Assets/effect/wind4.efk");
 	
@@ -287,7 +290,7 @@ void Player::FloatModeChange(bool isFloating)
 
 	// モード変更の効果音を発生させる
 	m_modeChangeSound = NewGO<SoundSource>(0);
-	m_modeChangeSound->Init(3);
+	m_modeChangeSound->Init(nsSound::enSoundNumber_PlayerModeChange);
 	m_modeChangeSound->Play(false);
 }
 
@@ -312,23 +315,27 @@ void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 {
 	if (wcscmp(eventName, L"run_footstep1") == 0 || wcscmp(eventName, L"run_footstep2") == 0) {
 		m_runFootstep = NewGO<SoundSource>(0);
-		m_runFootstep->Init(0);
+		m_runFootstep->Init(nsSound::enSoundNumber_PlayerFootStep);
+		m_runFootstep->SetVolume(FOOTSTEP_VOLUME);
 		m_runFootstep->Play(false);
 	}
 	if (wcscmp(eventName, L"walk_footstep1") == 0 || wcscmp(eventName, L"walk_footstep2") == 0) {
 		m_runFootstep = NewGO<SoundSource>(0);
-		m_runFootstep->Init(0);
+		m_runFootstep->Init(nsSound::enSoundNumber_PlayerFootStep);
+		m_runFootstep->SetVolume(FOOTSTEP_VOLUME);
 		m_runFootstep->Play(false);
 	}
 	if (wcscmp(eventName, L"jump1_jump") == 0 || wcscmp(eventName, L"jump2_jump") == 0 ){
 		m_runFootstep = NewGO<SoundSource>(0);
-		m_runFootstep->Init(0);
+		m_runFootstep->Init(nsSound::enSoundNumber_PlayerFootStep);
+		m_runFootstep->SetVolume(FOOTSTEP_VOLUME);
 		m_runFootstep->Play(false);
 	}
 	if (m_charaCon.IsOnGround()) {
 		if (wcscmp(eventName, L"jump1_landing1") == 0 || wcscmp(eventName, L"jump1_landing2") == 0) {
 			m_landingSound = NewGO<SoundSource>(0);
-			m_landingSound->Init(2);
+			m_landingSound->Init(nsSound::enSoundNumber_PlayerLanding);
+			m_landingSound->SetVolume(LANDING_VOLUME);
 			m_landingSound->Play(false);
 		}
 	}

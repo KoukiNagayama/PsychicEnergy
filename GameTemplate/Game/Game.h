@@ -10,7 +10,11 @@ class BackGround;
 class Ring;
 class LockOn;
 class DisplayGameTimer;
-
+class Fade;
+class MainBGM;
+/// <summary>
+/// 
+/// </summary>
 class Game : public IGameObject
 {
 public:
@@ -45,5 +49,7 @@ private:
 	Ring*			m_ring = nullptr;					// リング
 	LockOn*			m_lockOn = nullptr;
 	DisplayGameTimer* m_displayGameTimer = nullptr;
+	Fade*			m_fade = nullptr;					// フェード
+	MainBGM*		m_mainBGM = nullptr;				// メインBGM
 };
 

@@ -225,11 +225,13 @@
   <ItemGroup>
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="DisplayGameTimer.cpp" />
+    <ClCompile Include="Fade.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GravityGauge.cpp" />
     <ClCompile Include="LockOn.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainBGM.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerFallInAirState.cpp" />
     <ClCompile Include="PlayerFallState.cpp" />
@@ -247,16 +249,27 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="Title.cpp" />
+    <ClCompile Include="TitleBackGround.cpp" />
+    <ClCompile Include="TitleBGM.cpp" />
+    <ClCompile Include="TitleCamera.cpp" />
+    <ClCompile Include="TitleCharacter.cpp" />
+    <ClCompile Include="TitleSprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
+    <ClInclude Include="CommonDataForBackGround.h" />
+    <ClInclude Include="CommonDataForEffect.h" />
+    <ClInclude Include="CommonDataForSound.h" />
     <ClInclude Include="CommonDataForTimer.h" />
     <ClInclude Include="CommonDataForWorldRotation.h" />
     <ClInclude Include="DisplayGameTimer.h" />
+    <ClInclude Include="Fade.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GravityGauge.h" />
     <ClInclude Include="LockOn.h" />
+    <ClInclude Include="MainBGM.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerFallInAirState.h" />
     <ClInclude Include="PlayerFallState.h" />
@@ -271,6 +284,12 @@
     <ClInclude Include="Sight.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
+    <ClInclude Include="Title.h" />
+    <ClInclude Include="TitleBackGround.h" />
+    <ClInclude Include="TitleBGM.h" />
+    <ClInclude Include="TitleCamera.h" />
+    <ClInclude Include="TitleCharacter.h" />
+    <ClInclude Include="TitleSprite.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,6 @@
 #pragma once
 #include "WorldRotation.h"
-
+#include "CommonDataForBackGround.h"
 
 class Player;
 /// <summary>
@@ -75,14 +75,6 @@ public:
 		m_nextMatrix = worldMat;
 		m_rotateTimer = 0.0f;
 	}
-public:
-	enum enModelType
-	{
-		enModelType_Ground,		// 地面
-		enModelType_Box1,		// 箱1
-		enModelType_Box2,		// 箱2
-		enModelType_Box3		// 箱3
-	};
 private:
 	ModelRender				m_modelRender;								// モデルレンダー
 	Vector3					m_position;									// 座標

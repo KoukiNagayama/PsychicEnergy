@@ -61,7 +61,7 @@ void DisplayGameTimer::CalculateNumOfEachDigit()
 	// 現在の時間
 	int currentTime = (int)m_currentTime;
 	
-	// スプライトの初期化処理を毎フレームやる必要性がなく処理も重い為、
+	// スプライトの初期化処理を毎フレームやる必要がなく処理も重い為、
 	// 1秒に1回だけ行わせるようにする
 	if (m_lastSecond == currentTime) {
 		return;

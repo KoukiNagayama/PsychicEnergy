@@ -9,6 +9,11 @@
 #include "LockOn.h"
 #include "DisplayGameTimer.h"
 #include "Result.h"
+#include "MainBGM.h"
+#include "CommonDataForBackGround.h"
+#include "CommonDataForSound.h"
+#include "Fade.h"
+#include "MainBGM.h"
 
 
 Game::Game()
@@ -23,14 +28,14 @@ Game::~Game()
 
 bool Game::Start()
 {
-	g_worldRotation = new WorldRotation();
+
 
 	m_levelRender.Init("Assets/level3D/stageLevel_3.tkl", [&](LevelObjectData& objData)
 		{
 			// 地面
 			if (objData.EqualObjectName(L"ground") == true) {
 				m_backGround = NewGO<BackGround>(0, "ground");
-				m_backGround->SetTypeNum(BackGround::enModelType_Ground);
+				m_backGround->SetTypeNum(nsBackGround::enModelType_Ground);
 				m_backGround->SetPosition(objData.position);
 				m_backGround->SetRotation(objData.rotation);
 				m_backGround->SetScale(objData.scale);
@@ -39,7 +44,7 @@ bool Game::Start()
 			// 箱1
 			else if (objData.ForwardMatchName(L"backGroundModel_box1") == true) {
 				m_backGround = NewGO<BackGround>(0, "box1");
-				m_backGround->SetTypeNum(BackGround::enModelType_Box1);
+				m_backGround->SetTypeNum(nsBackGround::enModelType_Box1);
 				m_backGround->SetPosition(objData.position);
 				m_backGround->SetRotation(objData.rotation);
 				m_backGround->SetScale(objData.scale);
@@ -48,7 +53,7 @@ bool Game::Start()
 			// 箱2
 			else if (objData.ForwardMatchName(L"backGroundModel_box2") == true) {
 				m_backGround = NewGO<BackGround>(0, "box2");
-				m_backGround->SetTypeNum(BackGround::enModelType_Box2);
+				m_backGround->SetTypeNum(nsBackGround::enModelType_Box2);
 				m_backGround->SetPosition(objData.position);
 				m_backGround->SetRotation(objData.rotation);
 				m_backGround->SetScale(objData.scale);
@@ -57,7 +62,7 @@ bool Game::Start()
 			// 箱3
 			else if (objData.ForwardMatchName(L"backGroundModel_box3") == true) {
 				m_backGround = NewGO<BackGround>(0, "box3");
-				m_backGround->SetTypeNum(BackGround::enModelType_Box3);
+				m_backGround->SetTypeNum(nsBackGround::enModelType_Box3);
 				m_backGround->SetPosition(objData.position);
 				m_backGround->SetRotation(objData.rotation);
 				m_backGround->SetScale(objData.scale);
@@ -71,6 +76,7 @@ bool Game::Start()
 				m_player->SetScale(objData.scale);
 				return true;
 			}
+			// リング
 			else if (objData.ForwardMatchName(L"ring") == true) {
 				m_ring = NewGO<Ring>(0, "ring");
 				m_ring->SetPosition(objData.position);
@@ -88,12 +94,15 @@ bool Game::Start()
 	m_gravityGauge = NewGO<GravityGauge>(0, "gravityGauge");
 	// 照準
 	m_sight = NewGO<Sight>(0, "sight");
-	m_lockOn = NewGO<LockOn>(3, "lockOn");
-
+	// ロックオン
+	m_lockOn = NewGO<LockOn>(0, "lockOn");
+	// タイマー
 	m_displayGameTimer = NewGO<DisplayGameTimer>(0, "gameTimer");
+	// フェード
+	m_fade = NewGO<Fade>(4,"fade");
+	m_fade->StartFadeIn();
 
-	NewGO<Result>(0, "result");
-
+	m_mainBGM = NewGO<MainBGM>(0, "mainBGM");
 	return true;
 }
 

@@ -11,17 +11,17 @@ bool BackGround::Start()
 	const char* filePath = nullptr;
 
 	bool isShadowCaster = true;
-	if (m_typeNum == enModelType_Ground) {
+	if (m_typeNum == nsBackGround::enModelType_Ground) {
 		filePath = "Assets/modelData/backGroundModel/ground.tkm";
 		isShadowCaster = false;
 	}
-	if (m_typeNum == enModelType_Box1) {
+	if (m_typeNum == nsBackGround::enModelType_Box1) {
 		filePath = "Assets/modelData/backGroundModel/backGroundModel_box1.tkm";
 	}
-	else if (m_typeNum == enModelType_Box2) {
+	else if (m_typeNum == nsBackGround::enModelType_Box2) {
 		filePath = "Assets/modelData/backGroundModel/backGroundModel_box2.tkm";
 	}
-	else if (m_typeNum == enModelType_Box3) {
+	else if (m_typeNum == nsBackGround::enModelType_Box3) {
 		filePath ="Assets/modelData/backGroundModel/backGroundModel_box3.tkm";
 	}
 
