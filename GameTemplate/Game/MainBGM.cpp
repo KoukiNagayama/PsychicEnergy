@@ -17,6 +17,7 @@ bool MainBGM::Start()
 
 void MainBGM::Update()
 {
+
 	// フェードアウト
 	if (m_isStartFadeOut) {
 		m_volume -= g_gameTime->GetFrameDeltaTime();

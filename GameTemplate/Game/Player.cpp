@@ -89,7 +89,7 @@ bool Player::Start()
 	m_playerState->Enter();
 
 	const Matrix& mat = m_modelRender.GetWorldMatrix();
-	g_worldRotation->InitPlayerWorldMatrix(mat);
+	g_worldRotation->RegisterPlayerWorldMatrix(mat);
 
 	// wavƒtƒ@ƒCƒ‹‚ð“o˜^‚·‚éB
 	g_soundEngine->ResistWaveFileBank(nsSound::enSoundNumber_PlayerFootStep, "Assets/sound/player/run_footstep.wav");

@@ -3,12 +3,12 @@
 
 namespace
 {
-	const Vector2 LOGO_SPRITE_SIZE = { 1280.0f, 720.0f };
-	const Vector3 LOGO_SPRITE_POS = { 560.0f, 300.0f, 0.0f };
-	const Vector3 LOGO_SPRITE_SCA = { 0.776f, 0.776f, 1.0f };
-	const Vector2 TEXT_SPRITE_SIZE = { 512.0f, 512.0f };
-	const Vector3 TEXT_SPRITE_POS = { 480.0f, -500.0f, 0.0f };
-	const Vector3 TEXT_SPRITE_SCA = { 1.84f, 1.84f, 1.0f };
+	const Vector2 LOGO_SPRITE_SIZE = { 1280.0f, 720.0f };			// ロゴのスプライトのサイズ
+	const Vector3 LOGO_SPRITE_POS = { 461.0f, 265.0f, 0.0f };		// ロゴのスプライトの座標
+	const Vector3 LOGO_SPRITE_SCA = { 1.0f, 1.0f, 1.0f };			// ロゴのスプライトの拡大率
+	const Vector2 TEXT_SPRITE_SIZE = { 512.0f, 512.0f };			// テキストのスプライトのサイズ
+	const Vector3 TEXT_SPRITE_POS = { 456.0f, -300.0f, 0.0f };		// テキストのスプライトの座標
+	const Vector3 TEXT_SPRITE_SCA = { 1.84f, 1.84f, 1.0f };			// テキストのスプライトの拡大率
 }
 
 bool TitleSprite::Start()

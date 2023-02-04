@@ -4,7 +4,6 @@
 
 namespace
 {
-	const int NUMBER_OF_DIGIT = 3;									// 桁数	
 	const Vector2 NUMBER_SPRITE_SIZE = { 512.0f,512.0f };			// スプライトのサイズ
 	const Vector3 NUMBER_SPRITE_SCALE = { 0.3f, 0.3f, 1.0f };
 	const Vector3 HUNDREDS_DIGIT_POS = { 650.0f, 373.0f, 0.0f };	// 100の位の座標
@@ -18,7 +17,7 @@ bool DisplayGameTimer::Start()
 {
 	// 各桁の表示位置を確定させる
 	Vector3 numberPos = HUNDREDS_DIGIT_POS;
-	for (int i = 0; i < NUMBER_OF_DIGIT; i++) {
+	for (int i = 0; i < nsTimer::NUMBER_OF_DIGIT; i++) {
 		m_numberSprite[i].SetPosition(numberPos);
 		m_numberSprite[i].SetScale(NUMBER_SPRITE_SCALE);
 		m_numberSprite[i].Update();
@@ -72,7 +71,7 @@ void DisplayGameTimer::CalculateNumOfEachDigit()
 	// 現在求めようとしている桁
 	int calculationDigit = 1;
 
-	for (int i = NUMBER_OF_DIGIT - 1; i >= 0; i--) {
+	for (int i = nsTimer::NUMBER_OF_DIGIT - 1; i >= 0; i--) {
 		int num = (currentTime / calculationDigit) % 10;
 		calculationDigit *= 10;
 
@@ -96,7 +95,7 @@ void DisplayGameTimer::Render(RenderContext& rc)
 	// 各種スプライトを描画
 	m_timerBGSprite.Draw(rc);
 	m_timerBGFrameSprite.Draw(rc);
-	for (int i = 0; i < NUMBER_OF_DIGIT; i++) {
+	for (int i = 0; i < nsTimer::NUMBER_OF_DIGIT; i++) {
 		m_numberSprite[i].Draw(rc);
 	}
 }

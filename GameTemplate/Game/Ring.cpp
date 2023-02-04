@@ -13,15 +13,7 @@ namespace
 
 Ring::~Ring()
 {
-	// 取得したリングを増やす
-	m_game->GetRing();
-
-	// 取得音を鳴らす
-	m_acquisitionSound = NewGO<SoundSource>(0);
-	m_acquisitionSound->Init(nsSound::enSoundNumber_Acquisition);
-	m_acquisitionSound->SetVolume(ACQUISITION_SOUND_VOLUME);
-	m_acquisitionSound->Play(false);
-
+	
 }
 
 bool Ring::Start()
@@ -44,7 +36,18 @@ bool Ring::Start()
 	m_player = FindGO<Player>("player");
 	return true;
 }
+void Ring::NotifyGet()
+{
+	// 取得したリングを増やす
+	m_game->GetRing();
 
+	// 取得音を鳴らす
+	m_acquisitionSound = NewGO<SoundSource>(0);
+	m_acquisitionSound->Init(nsSound::enSoundNumber_Acquisition);
+	m_acquisitionSound->SetVolume(ACQUISITION_SOUND_VOLUME);
+	m_acquisitionSound->Play(false);
+
+}
 void Ring::Update()
 {
 	Collision();
@@ -82,7 +85,7 @@ void Ring::Collision()
 		g_worldRotation->AddRing(this);
 		return;
 	}
-
+	NotifyGet();
 	// プレイヤーが取得したためオブジェクトを削除
 	DeleteGO(this);
 }

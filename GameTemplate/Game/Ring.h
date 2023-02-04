@@ -53,6 +53,10 @@ public:
 		m_nextMatrix = worldMat;
 		m_rotateTimer = 0.0f;
 	}
+	/// <summary>
+	/// ƒŠƒ“ƒO‚ðŽæ“¾‚µ‚½‚±‚Æ‚ð’Ê’m
+	/// </summary>
+	void NotifyGet();
 private:
 	/// <summary>
 	/// ‰ñ“]

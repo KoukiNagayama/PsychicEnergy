@@ -26,7 +26,7 @@ Game::~Game()
 {
 	// BGMをフェードアウトさせる
 	m_mainBGM->StartFadeOut();
-	// オブジェクトを削除する。
+	// 各オブジェクトを削除する。
 	for (auto& backGround : m_backGroundArray) {
 		DeleteGO(backGround);
 	}
@@ -43,6 +43,9 @@ Game::~Game()
 	DeleteGO(m_gravityGauge);
 	DeleteGO(m_lockOn);
 	DeleteGO(m_sight);
+
+	// 登録データの破棄。
+	g_worldRotation->DiscardRegisteredData();
 }
 
 bool Game::Start()
@@ -114,6 +117,7 @@ bool Game::Start()
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 	// スカイキューブ
 	m_skyCube = NewGO<SkyCube>(0, "skyCube");
+	//m_skyCube->SetScale();
 	// 重力ゲージ
 	m_gravityGauge = NewGO<GravityGauge>(0, "gravityGauge");
 	// 照準
@@ -141,6 +145,8 @@ void Game::Update()
 		|| m_displayGameTimer->GetTime() >= nsTimer::MAX_VALUE_OF_TIMER) {
 		m_isFinishedInGame = true;
 		m_fade->StartFadeOut();
+		m_displayGameTimer->Disable();
+		g_renderingEngine->SetIsFloating(false);
 	}
 }
 

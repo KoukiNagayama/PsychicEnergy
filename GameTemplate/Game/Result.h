@@ -2,11 +2,18 @@
 class Fade;
 class DisplayGameTimer;
 class ResultBGM;
+class ResultSprite;
 /// <summary>
 /// リザルトクラス
 /// </summary>
 class Result : public IGameObject
 {
+public:
+	enum EnResultState
+	{
+		enResultState_GameClear,
+		enResultState_TimeUp
+	};
 public:
 	Result() {}
 	~Result();
@@ -25,14 +32,21 @@ public:
 	/// </summary>
 	/// <param name="rc"></param>
 	void Render(RenderContext& rc);
+	/// <summary>
+	/// リザルトのステートを取得。
+	/// </summary>
+	EnResultState& GetResultState()
+	{
+		return m_resultState;
+	}
+	int& GetRecordedTime()
+	{
+		return m_recordedTime;
+	}
 private:
 	void FadeOut();
 private:
-	enum EnResultState
-	{
-		enResultState_GameClear,
-		enResultState_TimeUp
-	};
+
 	EnResultState		m_resultState;
 	SpriteRender		m_resultBGSprite;
 	int					m_recordedTime = -1;		// 記録された時間
@@ -43,5 +57,6 @@ private:
 	SoundSource*		m_decisionSound = nullptr;
 	DisplayGameTimer*	m_displayGameTimer = nullptr;
 	ResultBGM*			m_resultBGM = nullptr;
+	ResultSprite*		m_resultSprite = nullptr;
 };
 

@@ -35,7 +35,7 @@ namespace nsK2EngineLow
 		// プレイヤーのワールド行列をもとにワールド行列の逆行列を計算
 		Matrix playerTranslationMat = Matrix::Identity;
 		// 行列の回転成分と拡大成分を除去し、平行移動成分だけを抽出する。
-		playerTranslationMat.v[3] = m_playerWorldMatrix[0]->v[3];
+		playerTranslationMat.v[3] = m_playerWorldMatrix->v[3];
 		playerWorldMatInv.Inverse(playerTranslationMat);
 		
 		for (auto& backGround : m_backGroundArray) {
@@ -85,7 +85,7 @@ namespace nsK2EngineLow
 		// プレイヤーのワールド行列をもとにワールド行列の逆行列を計算
 		Matrix playerTranslationMat = Matrix::Identity;
 		// 行列の回転成分と拡大成分を除去し、平行移動成分だけを抽出する。
-		playerTranslationMat.v[3] = m_playerWorldMatrix[0]->v[3];
+		playerTranslationMat.v[3] = m_playerWorldMatrix->v[3];
 		playerWorldMatInv.Inverse(playerTranslationMat);
 
 		for (auto& backGround : m_backGroundArray) {
@@ -115,6 +115,13 @@ namespace nsK2EngineLow
 		// リセット中であるとフラグを設定。
 		m_isReseting = false;
 		m_directionOfCurrentReference = Vector3::Up;
+
+	}
+
+	void WorldRotation::DiscardRegisteredData()
+	{
+		m_playerWorldMatrix = nullptr;
+		m_backGroundArray.clear();
 
 	}
 

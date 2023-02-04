@@ -65,6 +65,7 @@ namespace nsK2EngineLow {
 		//}
 		m_position = g_camera3D->GetPosition();
 		m_modelRender.SetPosition(m_position);
+		m_modelRender.SetScale(m_scale);
 		m_modelRender.Update();
 	}
 

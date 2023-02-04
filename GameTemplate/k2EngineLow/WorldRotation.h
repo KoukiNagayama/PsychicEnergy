@@ -7,7 +7,14 @@ namespace nsK2EngineLow {
 	public:
 		WorldRotation() {}
 		~WorldRotation() {}
+		/// <summary>
+		/// 更新。
+		/// </summary>
 		void Update();
+		/// <summary>
+		/// 登録データを破棄する。
+		/// </summary>
+		void DiscardRegisteredData();
 		/// <summary>
 		/// 背景オブジェクトを回転する対象に追加
 		/// </summary>
@@ -28,9 +35,10 @@ namespace nsK2EngineLow {
 		/// プレイヤーのワールド行列を登録
 		/// </summary>
 		/// <param name="matrix"></param>
-		void InitPlayerWorldMatrix(const Matrix& matrix)
+		void RegisterPlayerWorldMatrix(const Matrix& matrix)
 		{
-			m_playerWorldMatrix.push_back(&matrix);
+			m_playerWorldMatrix = nullptr;
+			m_playerWorldMatrix = &matrix;
 		}
 		/// <summary>
 		/// 衝突した法線を設定。
@@ -69,7 +77,8 @@ namespace nsK2EngineLow {
 		}
 
 	private:
-		std::vector<const Matrix*>	m_playerWorldMatrix;							// プレイヤーのワールド行列
+		const Matrix*				m_playerWorldMatrix;
+		//std::vector<const Matrix*>	m_playerWorldMatrix;							// プレイヤーのワールド行列
 		Matrix						m_rotationMatrix = Matrix::Identity;			// 世界の回転行列
 		std::vector<BackGround*>	m_backGroundArray;								// 背景オブジェクトの配列
 		std::vector<Ring*>			m_ringArray;									// リングの配列

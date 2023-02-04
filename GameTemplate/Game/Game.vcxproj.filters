@@ -22,6 +22,9 @@
     <Filter Include="CommonData">
       <UniqueIdentifier>{095ead17-ef06-47bd-8260-af222c53b5bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="result">
+      <UniqueIdentifier>{c599b22e-5bd7-47df-9bc6-599133ece4bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -67,7 +70,6 @@
       <Filter>player</Filter>
     </ClCompile>
     <ClCompile Include="Ring.cpp" />
-    <ClCompile Include="Result.cpp" />
     <ClCompile Include="DisplayGameTimer.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -94,7 +96,15 @@
       <Filter>title</Filter>
     </ClCompile>
     <ClCompile Include="MainBGM.cpp" />
-    <ClCompile Include="ResultBGM.cpp" />
+    <ClCompile Include="ResultBGM.cpp">
+      <Filter>result</Filter>
+    </ClCompile>
+    <ClCompile Include="Result.cpp">
+      <Filter>result</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultSprite.cpp">
+      <Filter>result</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -142,7 +152,6 @@
       <Filter>player</Filter>
     </ClInclude>
     <ClInclude Include="Ring.h" />
-    <ClInclude Include="Result.h" />
     <ClInclude Include="DisplayGameTimer.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -184,6 +193,14 @@
       <Filter>title</Filter>
     </ClInclude>
     <ClInclude Include="MainBGM.h" />
-    <ClInclude Include="ResultBGM.h" />
+    <ClInclude Include="ResultBGM.h">
+      <Filter>result</Filter>
+    </ClInclude>
+    <ClInclude Include="Result.h">
+      <Filter>result</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultSprite.h">
+      <Filter>result</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

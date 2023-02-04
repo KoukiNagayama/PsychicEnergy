@@ -6,6 +6,7 @@
 #include "Title.h"
 #include "CommonDataForSound.h"
 #include "ResultBGM.h"
+#include "ResultSprite.h"
 namespace
 {
 	const Vector2 RESULT_BG_SPRITE_SIZE = { 1920.0f, 1080.0f };
@@ -16,6 +17,7 @@ Result::~Result()
 {
 	DeleteGO(m_displayGameTimer);
 	DeleteGO(m_fade);
+	DeleteGO(m_resultSprite);
 
 	m_resultBGM->StartFadeOut();
 }
@@ -23,8 +25,6 @@ Result::~Result()
 bool Result::Start()
 {
 	m_displayGameTimer = FindGO<DisplayGameTimer>("gameTimer");
-	// タイマーを止める
-	m_displayGameTimer->Disable();
 	// タイムアタック終了時の時間を取得する。
 	m_recordedTime = m_displayGameTimer->GetTime();
 
@@ -47,6 +47,7 @@ bool Result::Start()
 	m_resultBGSprite.Update();
 
 	m_resultBGM = NewGO<ResultBGM>(0, "resultBGM");
+	m_resultSprite = NewGO<ResultSprite>(0, "resultSprite");
 
 	return true;
 }
