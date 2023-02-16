@@ -16,6 +16,11 @@
 #include "Fade.h"
 #include "MainBGM.h"
 
+namespace
+{
+	const float SKY_CUBE_SCALE = 1500.0f;		// スカイキューブに設定するスケール
+}
+
 
 Game::Game()
 {
@@ -117,7 +122,7 @@ bool Game::Start()
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 	// スカイキューブ
 	m_skyCube = NewGO<SkyCube>(0, "skyCube");
-	//m_skyCube->SetScale();
+	m_skyCube->SetScale(SKY_CUBE_SCALE);
 	// 重力ゲージ
 	m_gravityGauge = NewGO<GravityGauge>(0, "gravityGauge");
 	// 照準

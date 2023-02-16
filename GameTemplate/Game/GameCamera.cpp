@@ -7,7 +7,7 @@ namespace
 	const float TO_CAMERA_POS_X_FROM_TARGET = 0.0f;			// カメラの注視点から視点へのベクトルのX値
 	const float TO_CAMERA_POS_Y_FROM_TARGET = 70.0f;		// カメラの注視点から視点へのベクトルのY値
 	const float TO_CAMERA_POS_Z_FROM_TARGET = 150.0f;		// カメラの注視点から視点へのベクトルのZ値
-	const float FAR_CLIP = 30000.0f;						// 遠平面までの距離
+	const float FAR_CLIP = 20000.0f;						// 遠平面までの距離
 	const float NEAR_CLIP = 2.0f;							// 近平面までの距離
 	const float CAMERA_MAX_MOVE_SPEED = 10000.0f;			// カメラの移動の最高速度
 	const float CAMERA_COLLISION_RADIUS = 1.5f;				// カメラに使用するコリジョンの半径の値
@@ -19,6 +19,8 @@ namespace
 	const float TARGET_Y = 70.0f;							// 注視点の高さを上げる値
 	const float TO_CAMERA_POS_CHANGE_SCALE = 1.208f;		// 注視点から視点へのベクトルの倍率の変更値 
 	const float TO_SLIDING_CAMERA_POS = 400.0f;				// 注視点からスライディング用カメラへのベクトル
+	const float ROTATION_LIMIT_VALUE = 0.9999f;				// 回転値のリミット
+	const float REVERSE_VECTOR_VALUE = -1.0f;
 }
 
 
@@ -61,7 +63,6 @@ void GameCamera::Init()
 
 void GameCamera::Update()
 {
-
 	// カメラ操作を切り替え
 	if (m_player->IsSlide()) {
 		UpdateOnSlide();
@@ -125,13 +126,16 @@ void GameCamera::UpdateTouchingObject()
 	qRot.SetRotationDeg(axisX, m_degreeY);
 	qRot.Apply(m_toCameraPos);
 
+	// カメラへの方向
+	Vector3 toPosDir = m_toCameraPos;
+	toPosDir.Normalize();
+
+
 	// カメラの回転範囲の上限値を超えないように補正する
-	if (m_degreeY < CAMERA_DOWN_ROTATION_LIMIT) {
-		m_degreeY += COMPENSATION_OF_ROTATION_RANGE;
+	if (toPosDir.y < -ROTATION_LIMIT_VALUE) {
 		m_toCameraPos = toCameraPosOld;
 	}
-	else if (m_degreeY > CAMERA_UP_ROTATION_LIMIT) {
-		m_degreeY -= COMPENSATION_OF_ROTATION_RANGE;
+	else if (toPosDir.y > ROTATION_LIMIT_VALUE) {
 		m_toCameraPos = toCameraPosOld;
 	}
 
@@ -225,16 +229,40 @@ void GameCamera::UpdateOnSlide()
 	qRot.SetRotationDeg(axisX, m_degreeY);
 	qRot.Apply(m_toCameraPos);
 
-	// カメラの回転範囲の上限値を超えないように補正する
-	if (m_degreeY < CAMERA_DOWN_ROTATION_LIMIT) {
-		m_degreeY += COMPENSATION_OF_ROTATION_RANGE;
-		m_toCameraPos = toCameraPosOld;
-	}
-	else if (m_degreeY > CAMERA_UP_ROTATION_LIMIT) {
-		m_degreeY -= COMPENSATION_OF_ROTATION_RANGE;
-		m_toCameraPos = toCameraPosOld;
-	}
+	// カメラへの方向
+	Vector3 toPosDir = m_toCameraPos;
+	toPosDir.Normalize();
 
+	// カメラの回転範囲の上限値を超えないように補正する
+	if (toPosDir.y < -ROTATION_LIMIT_VALUE) {
+		m_toCameraPos = toCameraPosOld;
+	}
+	else if (toPosDir.y > ROTATION_LIMIT_VALUE) {
+		m_toCameraPos = toCameraPosOld;
+	}
 	// 最終的なカメラの座標を指定する。
 	m_position = m_target + m_toCameraPos;
+}
+
+void GameCamera::FixFront()
+{
+	// プレイヤーの正面方向。
+	Vector3 playerForward = m_player->GetForward();
+	
+	// 視点から注視点へのベクトル
+	Vector3 toCameraPos = m_toCameraPos;
+	// ベクトルを反転させ、正規化する。
+	toCameraPos.Normalize();
+
+	// 回転に使用するクォータニオン
+	Quaternion qRot;
+	// クォータニオンを作成し、適用する。
+	qRot.SetRotation(toCameraPos, playerForward);
+	qRot.Apply(m_toCameraPos);
+
+	// このままではプレイヤーの正面側にカメラが移動してしまうため反転させる。
+	m_toCameraPos *= REVERSE_VECTOR_VALUE;
+	// 座標を更新。
+	m_position = m_target + m_toCameraPos;
+	m_springCamera.SetPosition(m_position);
 }

@@ -20,29 +20,35 @@ namespace nsK2EngineLow {
         // カメラの前方向、右方向、上方向を求める
         const auto& cameraForward = g_camera3D->GetForward();
         const auto& cameraRight = g_camera3D->GetRight();
-
         Vector3 cameraUp;
         cameraUp.Cross(cameraForward, cameraRight);
-        // nearDepthはエリアの最小深度値を表す
-        // 一番近いエリアの最小深度値はカメラのニアクリップ
+
+
+        // エリアの最小深度値
         float nearDepth = g_camera3D->GetNear();
+
         for (int areaNo = 0; areaNo < NUM_SHADOW_MAP; areaNo++)
         {
             // エリアを内包する視錐台の8頂点を求める
             // エリアの近平面の中心からの上面、下面までの距離を求める
+
+            // エリアの近平面のY値
             float nearY = tanf(g_camera3D->GetViewAngle() * 0.5f) * nearDepth;
 
+            // エリアの近平面のX値
             float nearX = nearY * g_camera3D->GetAspect();
 
+            // エリアの遠平面のY値
             float farY = tanf(g_camera3D->GetViewAngle() * 0.5f) * cascadeAreaTbl[areaNo];
 
+            // エリアの遠平面のX値
             float farX = farY * g_camera3D->GetAspect();
 
             Vector3 nearPos = g_camera3D->GetPosition() + cameraForward * nearDepth;
 
             Vector3 farPos = g_camera3D->GetPosition() + cameraForward * cascadeAreaTbl[areaNo];
 
-            // 8頂点を求める
+            // 8頂点
             Vector3 vertex[8];
 
             vertex[0] += nearPos + cameraUp * nearY + cameraRight * nearX;
@@ -76,6 +82,8 @@ namespace nsK2EngineLow {
             float yScale = 2.0f / (vMax.y - vMin.y);
             float xOffset = (vMax.x + vMin.x) * -0.5f * xScale;
             float yOffset = (vMax.y + vMin.y) * -0.5f * yScale;
+            
+            // クロップ行列
             Matrix clopMatrix;
             clopMatrix.m[0][0] = xScale;
             clopMatrix.m[1][1] = yScale;

@@ -106,13 +106,21 @@ void LockOn::DecideTarget()
 
 void LockOn::IdentifyIfTargetIsInView()
 {
+	// 目標のワールド座標。
 	Vector3 targetPos = m_targetRing->GetPosition();
+	// 目標のワールド座標からスクリーン座標を計算する。
 	g_camera3D->CalcScreenPositionFromWorldPosition(m_screenPos, targetPos);
 
+	// ワールド空間でのプレイヤーの座標から目標の座標へのベクトルを求める。
 	m_playerToTargetPos = targetPos - m_player->GetPosition();
+	// カメラの正面座標。
 	Vector3 camForward = g_camera3D->GetForward();
 	m_playerToTargetPos.Normalize();
+	
+	// カメラの正面方向が目標へのベクトルに対して、どれほど離れているか。
+	// 目標に近い。
 	if (camForward.Dot(m_playerToTargetPos) > -0.102f) {
+
 		// スクリーン座標は中心が(0,0)のためフレームバッファのそれぞれの幅の半分の値を用意
 		if (HALF_HEIGHT_OF_FRAME_BUFFER >= m_screenPos.y
 			&& -HALF_HEIGHT_OF_FRAME_BUFFER <= m_screenPos.y
@@ -129,22 +137,26 @@ void LockOn::IdentifyIfTargetIsInView()
 		// 目標は後ろにはない
 		m_isBehind = false;
 	}
+	// カメラの正面方向が目標に対して遠い。
 	else{
 		// 画面内に目標がない
 		m_isTargetInView = false;
 		// 目標は後ろにある
 		m_isBehind = true;
-
 	}
 }
 
 void LockOn::CalculateScreenPositionOfSpriteForArrow()
 {
-	// y座標の修正方法は同じのため
+	// 矢印を表示する場合のy座標の修正方法はどの場合でも同じ
+	// y座標が画面上部の範囲を超えた場合。
 	if (HALF_HEIGHT_OF_FRAME_BUFFER - SPACING_FROM_EDGE_IN_SCREEN_POSITION < m_screenPos.y) {
+		// 上部に固定。
 		m_screenPos.y = HALF_HEIGHT_OF_FRAME_BUFFER - SPACING_FROM_EDGE_IN_SCREEN_POSITION;
 	}
+	// y座標が画面下部の範囲を超えた場合。
 	else if (-HALF_HEIGHT_OF_FRAME_BUFFER + SPACING_FROM_EDGE_IN_SCREEN_POSITION > m_screenPos.y) {
+		// 下部に固定。
 		m_screenPos.y = -HALF_HEIGHT_OF_FRAME_BUFFER + SPACING_FROM_EDGE_IN_SCREEN_POSITION;
 	}
 
@@ -152,34 +164,43 @@ void LockOn::CalculateScreenPositionOfSpriteForArrow()
 	// 目標に対して逆向きの場合の修正
 	if (m_isBehind) {
 
+		// どの端に近いか求める。
 		SeekWhichEdgeIsClose();
 
+		// 画面右にスクリーン座標が近い場合。
 		if (m_isNearRightEdge) {
+			// 画面右に固定。
 			m_screenPos.x = HALF_WIDTH_OF_FRAME_BUFFER - SPACING_FROM_EDGE_IN_SCREEN_POSITION;
 		}
+		// 画面左にスクリーン座標が近い場合。
 		else {
+			// 画面左に固定。
 			m_screenPos.x = -HALF_WIDTH_OF_FRAME_BUFFER + SPACING_FROM_EDGE_IN_SCREEN_POSITION;
 		}
 		// 回転時に外側に向けるために逆にする
-		//m_screenPos.x *= -1.0f;
-		m_screenPos.y *= -1.0f;
+		m_screenPos.y = -m_screenPos.y;
 
 
 	}
+	// 正面向きの場合の修正
 	else {
-		// 正面向きの場合の修正
+		// x座標が画面右の範囲を超えた場合。
 		if (HALF_WIDTH_OF_FRAME_BUFFER - SPACING_FROM_EDGE_IN_SCREEN_POSITION < m_screenPos.x) {
+			// 画面右に固定。
 			m_screenPos.x = HALF_WIDTH_OF_FRAME_BUFFER - SPACING_FROM_EDGE_IN_SCREEN_POSITION;
 		}
+		// x座標が画面左の範囲を超えた場合。
 		else if (-HALF_WIDTH_OF_FRAME_BUFFER + SPACING_FROM_EDGE_IN_SCREEN_POSITION > m_screenPos.x) {
+			// 画面左に固定。
 			m_screenPos.x = -HALF_WIDTH_OF_FRAME_BUFFER + SPACING_FROM_EDGE_IN_SCREEN_POSITION;
 		}
 	}
-
+	// スプライトの表示座標を更新。
 	m_arrowSprite.SetPosition(Vector3(m_screenPos.x, m_screenPos.y, 0.0f));
 
-	// オブジェクトに矢印を向ける
+	// オブジェクトに矢印を向ける。
 	Quaternion rot;
+	// 
 	rot.SetRotation(Vector3::Up, Vector3(m_screenPos.x, m_screenPos.y, 0.0f));
 	m_arrowSprite.SetRotation(rot);
 

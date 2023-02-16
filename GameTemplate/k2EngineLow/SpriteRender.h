@@ -39,6 +39,15 @@ namespace nsK2EngineLow
 			m_position = pos;
 		}
 		/// <summary>
+		/// 座標を設定。
+		/// </summary>
+		/// <param name="posX">X座標。</param>
+		/// <param name="posY">Y座標。</param>
+		void SetPosition(const float& posX, const float& posY)
+		{
+			SetPosition(Vector3(posX, posY, 0.0f));
+		}
+		/// <summary>
 		/// 座標を取得。
 		/// </summary>
 		/// <returns>座標。</returns>
@@ -47,12 +56,21 @@ namespace nsK2EngineLow
 			return m_position;
 		}
 		/// <summary>
-		/// 大きさを設定。zは1.0fで。
+		/// 拡大率を設定。zは1.0fで。
 		/// </summary>
 		/// <param name="scale">大きさ。</param>
 		void SetScale(const Vector3& scale)
 		{
 			m_scale = scale;
+		}
+		/// <summary>
+		/// 拡大率を設定。
+		/// </summary>
+		/// <param name="scaX">X成分。</param>
+		/// <param name="scaY">Y成分。</param>
+		void SetScale(const float& scaX, const float& scaY)
+		{
+			SetScale(Vector3(scaX, scaY, 1.0f));
 		}
 		/// <summary>
 		/// 大きさを取得。

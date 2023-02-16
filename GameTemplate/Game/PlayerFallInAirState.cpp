@@ -4,6 +4,7 @@
 #include "PlayerIdleState.h"
 #include "GravityGauge.h"
 #include "PlayerJumpState.h"
+#include "GameCamera.h"
 
 PlayerFallInAirState::~PlayerFallInAirState()
 {
@@ -25,6 +26,8 @@ void PlayerFallInAirState::Enter()
 	// 風のエフェクトを生成。
 	m_player->GenerateWindEffect();
 
+	m_gameCamera = FindGO<GameCamera>("gameCamera");
+
 }
 
 IPlayerState* PlayerFallInAirState::StateChange()
@@ -39,12 +42,13 @@ IPlayerState* PlayerFallInAirState::StateChange()
 		// 通常の待機ステートに遷移する。
 		m_player->FloatModeChange(false);
 		g_worldRotation->SetIsReseting(true);
-		m_player->RotationToCorrectForward();
 		return new PlayerIdleState(m_player);
 	}
 	if (m_player->IsPlayerTouchObject()) {
+		// モードを変更する。
 		m_player->FloatModeChange(false);
-		m_player->RotationToCorrectForward();
+		// カメラを修正する。
+		m_gameCamera->FixFront();
 		return new PlayerIdleState(m_player);
 	}
 	// ここまで来たら遷移しない。
@@ -56,6 +60,7 @@ void PlayerFallInAirState::Update()
 	// 空中での移動処理。
 	m_player->MoveOnAirspace();
 
+	// 風のエフェクトの座標を更新する。
 	m_player->m_effectEmitterWind->SetPosition(m_player->m_position);
 
 	m_secToRegenerateWindEffect += g_gameTime->GetFrameDeltaTime();

@@ -93,65 +93,6 @@ float4x4 CalcSkinMatrix(SSkinVSIn skinVert)
 	
     return skinning;
 }
-int CheckRecieveShadow(SPSIn psIn)
-{
-    Texture2D<float4> shadowMapArray[3];
-    shadowMapArray[0] = g_shadowMap_0;
-    shadowMapArray[1] = g_shadowMap_1;
-    shadowMapArray[2] = g_shadowMap_2;
-
-    int recieveShadow = 0;
-    
-    for (int cascadeIndex = 0; cascadeIndex < 3; cascadeIndex++)
-    {
-
-        
-        // シャドウマップの範囲内かどうか
-        //要修正箇所----------------------------------
-        //if (farClip[cascadeIndex] > psIn.posInCamera.z)
-        //-----------------------------------------------
-        {
-            // ライトビュースクリーン空間でのZ値を計算する
-            float zInLVP = psIn.posInLVP[cascadeIndex].z / psIn.posInLVP[cascadeIndex].w;
-            if (zInLVP >= 0.0f && zInLVP <= 1.0f)
-            {
-                // Zの値を見て、このピクセルがこのシャドウマップに含まれているか判定
-                float2 shadowMapUV = psIn.posInLVP[cascadeIndex].xy / psIn.posInLVP[cascadeIndex].w;
-                shadowMapUV *= float2(0.5f, -0.5f);
-                shadowMapUV += 0.5f;
-
-                // シャドウマップUVが範囲内か判定
-                if (shadowMapUV.x >= 0.0f && shadowMapUV.x <= 1.0f
-                    && shadowMapUV.y >= 0.0f && shadowMapUV.y <= 1.0f)
-                {
-                    // シャドウマップから値をサンプリング
-                    float2 shadowValue = shadowMapArray[cascadeIndex].Sample(g_sampler, shadowMapUV).xy;
-
-                    // まずこのピクセルが遮蔽されているか調べる
-                    if (zInLVP >= shadowValue.r + 0.0002f)
-                    {
-                        //recieveShadow += 1;
-                    }
-                    break;
-                }
-            }
-        }
-    }
-            
-    // トゥーンマップにて影が落ちているか
-    float p = dot(psIn.normal * -1.0f, directionalLight[0].direction.xyz);
-    p = p * 0.2f + 0.5f;
-        //p = p * 0.5f + 0.5f;
-        //p = p * p;
-    p = p * p + 0.45f;
-        
-    if (p > (1.0f / 3.0f) && p < (1.0 / 3.0f * 2.0f))
-    {
-        recieveShadow += 1;
-    }
-        
-    return recieveShadow;
-};
 
 /// <summary>
 /// 頂点シェーダーのコア関数。
@@ -216,37 +157,16 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
     //ハーフランバート拡散照明によるライティング計算
     float p = dot(psIn.normal * -1.0f, directionalLight[0].direction.xyz);
-    p = p * 0.2f + 0.5f;
-    //p = p * 0.5f + 0.5f;
-    //p = p * p;
-    p = p * p + 0.45f;
+    p = p * 0.5f + 0.5f;
+    p = p * p;
+    //p = 1.0f - p;
     
-    //計算結果よりトゥーンシェーダー用のテクスチャから色をフェッチする
+    //計算結果よりトゥーンシェーダー用のランプテクスチャから色をフェッチする
     float4 Col = g_toonTexture.Sample(g_sampler, float2(p, 0.0f));
 
     albedoColor.x *= Col.x;
     albedoColor.y *= Col.y;
     albedoColor.z *= Col.z;
     return albedoColor;
-    
-    //float4 Col;
-    //switch (CheckRecieveShadow(psIn))
-    //{
-    //    case 1:
-    //        Col = g_toonTexture.Sample(g_sampler, float2(0.0f, 0.0f));
-    //        albedoColor.x *= Col.x;
-    //        albedoColor.y *= Col.y;
-    //        albedoColor.z *= Col.z;
-    //        return albedoColor;
-    //    case 2:
-    //        Col = g_toonTexture.Sample(g_sampler, float2(-0.5f, 0.0f));
-    //        albedoColor.x *= Col.x;
-    //        albedoColor.y *= Col.y;
-    //        albedoColor.z *= Col.z;
-    //        return albedoColor;
-    //    default:
-    //        return albedoColor;
-    //}
-
 
 }

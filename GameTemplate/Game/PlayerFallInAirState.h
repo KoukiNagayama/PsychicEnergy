@@ -1,6 +1,7 @@
 #pragma once
 #include "IPlayerState.h"
 
+class GameCamera;
 class GravityGauge;
 /// <summary>
 /// プレイヤーが浮かんでいる状態での落下ステート
@@ -29,5 +30,6 @@ public:
 private:
 	float				m_secToRegenerateWindEffect = 0.0f;
 	GravityGauge*		m_gravityGauge = nullptr;
+	GameCamera*			m_gameCamera = nullptr;
 };
 

@@ -18,6 +18,10 @@ public:
 	/// 更新。
 	/// </summary>
 	void Update();
+	/// <summary>
+	/// 正面を修正。
+	/// </summary>
+	void FixFront();
 private:
 	/// <summary>
 	/// 初期化。
@@ -31,7 +35,11 @@ private:
 	/// プレイヤーが空中にいる時の更新処理。
 	/// </summary>
 	void UpdateOnAirspace();
+	/// <summary>
+	/// スライディング時の更新処理。
+	/// </summary>
 	void UpdateOnSlide();
+
 
 private:
 	Player*			m_player = nullptr;								// プレイヤー

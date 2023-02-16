@@ -7,7 +7,7 @@
 
 namespace
 {
-	const float DIST_TO_JUDGE_TRUE = 150.0f;
+	const float DIST_TO_JUDGE_TRUE = 120.0f;
 	const float ACQUISITION_SOUND_VOLUME = 0.7f;
 }
 
@@ -76,6 +76,8 @@ void Ring::Rotation()
 		m_position.x = mat.m[3][0];
 		m_position.y = mat.m[3][1];
 		m_position.z = mat.m[3][2];
+
+		m_modelRender.SetPosition(m_position);
 	}
 }
 

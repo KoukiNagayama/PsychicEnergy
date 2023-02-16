@@ -3,15 +3,12 @@
 #include "PlayerIdleState.h"
 #include "PlayerWalkState.h"
 #include "PlayerIdleInAirState.h"
+#include "CommonDataForSound.h"
 
 
 PlayerFallState::~PlayerFallState()
 {
-	if (m_player->IsOnGround()) {
-		m_landingSound = NewGO<SoundSource>(0);
-		m_landingSound->Init(2);
-		m_landingSound->Play(false);
-	}
+
 }
 
 void PlayerFallState::Enter()
@@ -22,6 +19,11 @@ void PlayerFallState::Enter()
 IPlayerState* PlayerFallState::StateChange()
 {
 	if (m_player->IsOnGround()){
+		if (m_player->IsOnGround()) {
+			m_landingSound = NewGO<SoundSource>(0);
+			m_landingSound->Init(nsSound::enSoundNumber_PlayerLanding);
+			m_landingSound->Play(false);
+		}
 		return new PlayerIdleState(m_player);
 	}
 	else if (g_pad[0]->IsTrigger(enButtonRB1)) {

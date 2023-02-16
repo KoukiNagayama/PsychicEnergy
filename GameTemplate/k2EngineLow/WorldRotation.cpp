@@ -30,9 +30,10 @@ namespace nsK2EngineLow
 		m_matrixRot.SetRotation(m_hitNormal, Vector3::Up);
 		m_rotationMatrix.MakeRotationFromQuaternion(m_matrixRot);
 
+
 		// プレイヤーのワールド行列の逆行列
 		Matrix playerWorldMatInv;
-		// プレイヤーのワールド行列をもとにワールド行列の逆行列を計算
+		// プレイヤーのワールド行列をもとに平行移動行列の逆行列を計算
 		Matrix playerTranslationMat = Matrix::Identity;
 		// 行列の回転成分と拡大成分を除去し、平行移動成分だけを抽出する。
 		playerTranslationMat.v[3] = m_playerWorldMatrix->v[3];
@@ -122,7 +123,10 @@ namespace nsK2EngineLow
 	{
 		m_playerWorldMatrix = nullptr;
 		m_backGroundArray.clear();
-
+		m_directionOfCurrentReference = Vector3::Up;
+		m_hitNormal = Vector3::Zero;
+		m_lastHitNormal = Vector3::Zero;
+		m_rotationMatrix = Matrix::Identity;
 	}
 
 	WorldRotation* g_worldRotation = nullptr;

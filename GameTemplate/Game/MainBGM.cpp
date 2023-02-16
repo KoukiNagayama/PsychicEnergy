@@ -5,9 +5,13 @@
 
 bool MainBGM::Start()
 {
+	// 音量を設定。
 	m_volume = nsSound::INITIAL_VOLUME;
 
+	// waveファイルを登録する。
 	g_soundEngine->ResistWaveFileBank(nsSound::enSoundNumber_MainBGM, "Assets/sound/bgm/MainBGM.wav");
+	
+	// メインBGMを生成する。
 	m_mainBGM = NewGO<SoundSource>(0);
 	m_mainBGM->Init(nsSound::enSoundNumber_MainBGM);
 	m_mainBGM->SetVolume(m_volume);
@@ -33,6 +37,6 @@ void MainBGM::Update()
 			m_volume = nsSound::BGM_MAX_VOLUME;
 		}
 	}
-
+	// 音量を更新。
 	m_mainBGM->SetVolume(m_volume);
 }

@@ -26,6 +26,7 @@ namespace
 	const float LANDING_VOLUME = 0.8f;				// 着地音の音量
 	const float WIND_VOLUME = 0.3f;					// 風の音量
 	const float SLIDING_VOLUME = 0.5f;				// スライディングの音量
+	const float MOVE_SPEED_IN_AIR = 1500.0f;		// 空中での移動速度
 }
 
 Player::~Player()
@@ -143,9 +144,12 @@ void Player::MoveOnGround()
 
 void Player::SelectAnimationOnGround()
 {
+	// アニメーションを選択。
+	// 歩き。
 	if (m_moveSpeed.LengthSq() <= MIN_SPEED_FOR_RUN * MIN_SPEED_FOR_RUN) {
 		m_currentAnimationClip = enAnimationClip_Walk;
 	}
+	// 走り。
 	else {
 		m_currentAnimationClip = enAnimationClip_Run;
 	}
@@ -163,30 +167,48 @@ void Player::MoveOnAirspace()
 	m_moveSpeed = Vector3::Zero;
 
 	// 移動速度を求める。
-	m_moveSpeed += m_moveVectorInAir * 1500.0f;
-
+	m_moveSpeed += m_moveVectorInAir * MOVE_SPEED_IN_AIR;
+	
+	// 1フレームあたりの移動距離
 	Vector3 move = m_moveSpeed * g_gameTime->GetFrameDeltaTime();
 	
+	// 衝突点の座標と法線
 	Vector3 hitPos, hitNormal;
+
+	// レイを飛ばして着地を判断する。
 	if( PhysicsWorld::GetInstance()->RayTest(
 		m_position,
 		m_position + move,
 		hitPos,
 		hitNormal))
 	{
+		// プレイヤーの向きから回転を求める。
 		Vector3 playerDir = m_moveSpeed;
 		playerDir.y = 0.0f;
 		playerDir.Normalize();
 		m_rotation.SetRotationYFromDirectionXZ(playerDir);
 		m_modelRender.SetRotation(m_rotation);
+
+		// 正面方向を更新する。
+		m_forward = Vector3::AxisZ;
+		m_rotation.Apply(m_forward);
+
+		// プレイヤーの座標はレイが衝突した座標。
 		m_position = hitPos;
 		m_moveSpeed = Vector3::Zero;
+		
+		// 取得した衝突点の法線を世界の回転に使用する。
 		g_worldRotation->SetHitNormal(hitNormal);
+
+		// プレイヤーがオブジェクトに接地していると設定する。
 		SetIsTouchObject(true);
 	}
 	else {
+		// レイが衝突していないため、着地していないと判断。
 		m_position += move;
 	}
+
+	// 座標を更新。
 	m_charaCon.SetPosition(m_position);
 	m_modelRender.SetPosition(m_position);
 	
@@ -211,8 +233,11 @@ void Player::Slide()
 	// 重力を加算。
 	m_moveSpeed.y -= GRAVITY;
 
+	// プレイヤーが地面上にいるか判断。
 	if (m_charaCon.IsOnGround()) {
+
 		m_moveSpeed.y = 0;
+		// スライディングの音がなっていない場合は音を鳴らす。
 		if (m_isRingingSlideSound == false) {
 			m_slideSound = NewGO<SoundSource>(0);
 			m_slideSound->Init(nsSound::enSoundNumber_PlayerSliding);
@@ -239,6 +264,7 @@ void Player::Jump()
 	// 慣性
 	m_moveSpeed *= INERTIAL_FORCE;
 
+	// 移動させる。
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 
 	m_modelRender.SetPosition(m_position);
@@ -246,9 +272,12 @@ void Player::Jump()
 
 void Player::SelectJumpAnimation()
 {
+	// ジャンプ時のアニメーションを選択。
+	// XZ方面に移動していれば、移動時用ジャンプアニメーション。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f) {
 		m_currentAnimationClip = enAnimationClip_DashJump;
 	}
+	// 通常のジャンプアニメーション。
 	else {
 		m_currentAnimationClip = enAnimationClip_NormalJump;
 	}
@@ -256,14 +285,17 @@ void Player::SelectJumpAnimation()
 
 void Player::Rotation()
 {
+	// 通常の回転。
 	if (
 		fabsf(m_moveSpeed.x) >= MIN_INPUT_AMOUNT 
 		|| fabsf(m_moveSpeed.z) >= MIN_INPUT_AMOUNT
 	)
 	{
+		// 移動方向に向く。
 		m_rotation.SetRotationYFromDirectionXZ(m_moveSpeed);
 		m_modelRender.SetRotation(m_rotation);
 
+		// 正面方向を更新する。
 		m_forward = Vector3::AxisZ;
 		m_rotation.Apply(m_forward);
 	}
@@ -271,22 +303,24 @@ void Player::Rotation()
 
 void Player::RotationFallAir()
 {
+	// 空中での回転。
+	// 移動方向に向く。
 	m_rotation.SetRotation(Vector3::AxisZ, m_moveVectorInAir);
 	m_modelRender.SetRotation(m_rotation);
-
+	// 正面方向を更新する。
 	m_forward = Vector3::AxisZ;
 	m_rotation.Apply(m_forward);
 }
 
 void Player::RotationToCorrectForward()
 {
-	Vector3 forwardXZ = m_forward;
-	forwardXZ.y = 0.0f;
-	m_rotation.SetRotationYFromDirectionXZ(forwardXZ);
-	m_modelRender.SetRotation(m_rotation);
+	//Vector3 forwardXZ = m_forward;
+	//forwardXZ.y = 0.0f;
+	//m_rotation.SetRotationYFromDirectionXZ(forwardXZ);
+	//m_modelRender.SetRotation(m_rotation);
 
-	m_forward = Vector3::AxisZ;
-	m_rotation.Apply(m_forward);
+	//m_forward = Vector3::AxisZ;
+	//m_rotation.Apply(m_forward);
 }
 
 void Player::FloatModeChange(bool isFloating)
@@ -304,18 +338,15 @@ void Player::FloatModeChange(bool isFloating)
 
 void Player::GenerateWindEffect()
 {
+	// 風のエフェクトを生成する。
 	m_effectEmitterWind = NewGO<EffectEmitter>(0, "effectWind");
 	m_effectEmitterWind->Init(0);
+	// エフェクトの座標と回転と拡大率を設定する。
 	m_effectEmitterWind->SetPosition(m_position);
 	m_effectEmitterWind->SetRotation(m_rotation);
-
 	m_effectEmitterWind->SetScale(Vector3::One * 100.0f);
+	// エフェクトを再生。
 	m_effectEmitterWind->Play();
-
-	//m_windSound = NewGO<SoundSource>(0);
-	//m_windSound->Init(nsSound::enSoundNumber_Wind);
-	//m_windSound->SetVolume(WIND_VOLUME);
-	//m_windSound->Play(false);
 }
 
 void Player::PlayAnimation(EnAnimationClip currentAnimationClip)
