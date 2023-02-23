@@ -1,25 +1,42 @@
 #pragma once
 #include "IPlayerState.h"
 /// <summary>
-/// プレイヤーの地上での歩行ステートクラス
+/// PsychicEnergyの名前空間。
 /// </summary>
-class PlayerWalkState : public IPlayerState
+namespace nsPsychicEnergy
 {
-public:
-	PlayerWalkState(Player* player) :
-		IPlayerState(player) {}
 	/// <summary>
-	/// ステート開始時の処理。
+	/// プレイヤーの名前空間。
 	/// </summary>
-	void Enter() override;
-	/// <summary>
-	/// ステートの遷移処理。
-	/// </summary>
-	/// <returns>遷移するステート</returns>
-	IPlayerState* StateChange() override;
-	/// <summary>
-	/// ステートにおける更新処理。
-	/// </summary>
-	void Update() override;
-};
+	namespace nsPlayer
+	{
+		/// <summary>
+		/// プレイヤーの地上での歩行ステートクラス。
+		/// </summary>
+		class PlayerWalkState : public IPlayerState
+		{
+		public:
+			/// <summary>
+			/// コンストラクタ。
+			/// </summary>
+			/// <param name="player">プレイヤーのインスタンス。</param>
+			PlayerWalkState(Player* player) :
+				IPlayerState(player) {}
+			/// <summary>
+			/// ステート開始時の処理。
+			/// </summary>
+			void Enter() override;
+			/// <summary>
+			/// ステートの遷移処理。
+			/// </summary>
+			/// <returns>遷移するステート</returns>
+			IPlayerState* StateChange() override;
+			/// <summary>
+			/// ステートにおける更新処理。
+			/// </summary>
+			void Update() override;
+		};
+	}
+}
+
 

@@ -202,5 +202,14 @@
     <ClInclude Include="ResultSprite.h">
       <Filter>result</Filter>
     </ClInclude>
+    <ClInclude Include="CommonDataForPriority.h">
+      <Filter>CommonData</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonDataForPlayer.h">
+      <Filter>CommonData</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonDataForModel.h">
+      <Filter>CommonData</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

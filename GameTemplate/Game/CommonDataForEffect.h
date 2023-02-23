@@ -9,6 +9,6 @@ namespace nsEffect
 	/// </summary>
 	enum EnEffectNumber
 	{
-
+		enEffectNumber_Wind,
 	};
 }

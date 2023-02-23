@@ -1,32 +1,53 @@
 #pragma once
 #include "IPlayerState.h"
-
-class Sight;
-class GravityGauge;
 /// <summary>
-/// プレイヤーの空中での待機ステートクラス
+/// PsychicEnergyの名前空間。
 /// </summary>
-class PlayerIdleInAirState : public IPlayerState
+namespace nsPsychicEnergy
 {
-public:
-	PlayerIdleInAirState(Player* player) :
-		IPlayerState(player) {}
-	~PlayerIdleInAirState();
+	// 前方宣言。
+	namespace nsSight { class Sight; }
+	namespace nsGravityGauge { class GravityGauge; }
+
 	/// <summary>
-	/// ステート開始時の処理。
+	/// プレイヤーの名前空間。
 	/// </summary>
-	void Enter() override;
-	/// <summary>
-	/// ステートの遷移処理。
-	/// </summary>
-	/// <returns>遷移するステート</returns>
-	IPlayerState* StateChange() override;
-	/// <summary>
-	/// ステートにおける更新処理。
-	/// </summary>
-	void Update() override;
-private:
-	Sight* m_sight = nullptr;
-	GravityGauge* m_gravityGauge = nullptr;
-};
+	namespace nsPlayer
+	{
+		/// <summary>
+		/// プレイヤーの空中での待機ステートクラス
+		/// </summary>
+		class PlayerIdleInAirState : public IPlayerState
+		{
+		public:
+			/// <summary>
+			/// コンストラクタ。
+			/// </summary>
+			/// <param name="player">プレイヤーのインスタンス。</param>
+			PlayerIdleInAirState(Player* player) :
+				IPlayerState(player) {}
+			/// <summary>
+			/// デストラクタ。
+			/// </summary>
+			~PlayerIdleInAirState();
+			/// <summary>
+			/// ステート開始時の処理。
+			/// </summary>
+			void Enter() override;
+			/// <summary>
+			/// ステートの遷移処理。
+			/// </summary>
+			/// <returns>遷移するステート</returns>
+			IPlayerState* StateChange() override;
+			/// <summary>
+			/// ステートにおける更新処理。
+			/// </summary>
+			void Update() override;
+		private:
+			nsSight::Sight*					m_sight = nullptr;				// 照準
+			nsGravityGauge::GravityGauge*	m_gravityGauge = nullptr;		// 重力ゲージ
+		};
+	}
+}
+
 

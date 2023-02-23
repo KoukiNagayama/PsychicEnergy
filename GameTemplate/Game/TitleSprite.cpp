@@ -11,40 +11,45 @@ namespace
 	const Vector3 TEXT_SPRITE_SCA = { 1.84f, 1.84f, 1.0f };			// テキストのスプライトの拡大率
 }
 
-bool TitleSprite::Start()
+namespace nsPsychicEnergy
 {
-	// タイトルロゴ用スプライトを初期化。
-	m_titleLogoSprite.Init("Assets/sprite/title/logo/titleLogo.DDS",
-		LOGO_SPRITE_SIZE.x,
-		LOGO_SPRITE_SIZE.y
-	);
-	// 座標と拡大率を設定。
-	m_titleLogoSprite.SetPosition(LOGO_SPRITE_POS);
-	m_titleLogoSprite.SetScale(LOGO_SPRITE_SCA);
 
-	// テキストのスプライトを初期化。
-	m_textSprite.Init("Assets/sprite/title/text/text.DDS",
-		TEXT_SPRITE_SIZE.x,
-		TEXT_SPRITE_SIZE.y
-	);
-	// 座標と拡大率を設定。
-	m_textSprite.SetPosition(TEXT_SPRITE_POS);
-	m_textSprite.SetScale(TEXT_SPRITE_SCA);
+	namespace nsTitle
+	{
 
-	// スプライトを更新。
-	m_titleLogoSprite.Update();
-	m_textSprite.Update();
+		bool TitleSprite::Start()
+		{
+			// タイトルロゴ用スプライトを初期化。
+			m_titleLogoSprite.Init("Assets/sprite/title/logo/titleLogo.DDS",
+				LOGO_SPRITE_SIZE.x,
+				LOGO_SPRITE_SIZE.y
+			);
+			// 座標と拡大率を設定。
+			m_titleLogoSprite.SetPosition(LOGO_SPRITE_POS);
+			m_titleLogoSprite.SetScale(LOGO_SPRITE_SCA);
 
-	return true;
-}
+			// テキストのスプライトを初期化。
+			m_textSprite.Init("Assets/sprite/title/text/text.DDS",
+				TEXT_SPRITE_SIZE.x,
+				TEXT_SPRITE_SIZE.y
+			);
+			// 座標と拡大率を設定。
+			m_textSprite.SetPosition(TEXT_SPRITE_POS);
+			m_textSprite.SetScale(TEXT_SPRITE_SCA);
 
-void TitleSprite::Update()
-{
-	
-}
+			// スプライトを更新。
+			m_titleLogoSprite.Update();
+			m_textSprite.Update();
 
-void TitleSprite::Render(RenderContext& rc)
-{
-	m_titleLogoSprite.Draw(rc);
-	m_textSprite.Draw(rc);
+			return true;
+		}
+
+		void TitleSprite::Render(RenderContext& rc)
+		{
+			// 描画。
+			m_titleLogoSprite.Draw(rc);
+			m_textSprite.Draw(rc);
+		}
+
+	}
 }

@@ -13,7 +13,7 @@ K2EngineLow* g_k2EngineLow = nullptr;
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
 	// ゲームの初期化。
-	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("Game"));
+	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("PsychicEnergy"));
 	
 	// k2EngineLowの初期化。
 	g_k2EngineLow = new K2EngineLow();
@@ -26,13 +26,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//auto engineTest = NewGO<EngineTest>(0, "engineTest");
 	//auto game = NewGO<Game>(0, "game");
-	auto title = NewGO<Title>(0, "title");
+	auto title = NewGO<nsPsychicEnergy::nsTitle::Title>(0, "title");
 
 	// レンダリングエンジンを初期化
 	g_renderingEngine = new RenderingEngine;
 	g_renderingEngine->Init();
 
-	g_worldRotation = new WorldRotation;
+	// 世界の回転クラスのインスタンスを生成。
+	nsK2EngineLow::nsWorldRotation::g_worldRotation = new nsK2EngineLow::nsWorldRotation::WorldRotation;
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
@@ -44,9 +45,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_k2EngineLow->ExecuteUpdate();
 
 		// 世界の回転
-		g_worldRotation->RotationWorldMatrix();
+		nsK2EngineLow::nsWorldRotation::g_worldRotation->RotationWorldMatrix();
 
-		g_worldRotation->ResetWorldMatrix();
+		nsK2EngineLow::nsWorldRotation::g_worldRotation->ResetWorldMatrix();
 
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
@@ -54,7 +55,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// レンダリングエンジンの描画処理を実行。
 		g_renderingEngine->Execute(renderContext);
 
-		g_worldRotation->Update();
+		// 世界の回転クラスの更新処理を実行。
+		nsK2EngineLow::nsWorldRotation::g_worldRotation->Update();
 
 		// デバッグ描画処理を実行する。
 		g_k2EngineLow->DebubDrawWorld();
@@ -65,6 +67,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	delete g_k2EngineLow;
 	delete g_renderingEngine;
+	delete nsK2EngineLow::nsWorldRotation::g_worldRotation;
 
 	return 0;
 }

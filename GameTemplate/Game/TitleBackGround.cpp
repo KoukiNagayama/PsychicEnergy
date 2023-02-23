@@ -1,47 +1,65 @@
 #include "stdafx.h"
 #include "TitleBackGround.h"
+#include "CommonDataForModel.h"
 
-bool TitleBackGround::Start()
+namespace nsPsychicEnergy
 {
-	// tkmファイルパスを指定。
-	const char* filePath = nullptr;
 
-	// 影をキャストするか。
-	bool isShadowCaster = true;
+	namespace nsTitle
+	{
+		bool TitleBackGround::Start()
+		{
+			// tkmファイルパスの文字列。
+			const char* filePath = nullptr;
 
-	// tkmファイルパスを指定する。
-	if (m_typeNum == nsBackGround::enModelType_Ground) {
-		filePath = "Assets/modelData/backGroundModel/ground.tkm";
-		// 地面オブジェクトだけは影をキャストしない。
-		isShadowCaster = false;
-	}
-	if (m_typeNum == nsBackGround::enModelType_Box1) {
-		filePath = "Assets/modelData/backGroundModel/backGroundModel_box1.tkm";
-	}
-	else if (m_typeNum == nsBackGround::enModelType_Box2) {
-		filePath = "Assets/modelData/backGroundModel/backGroundModel_box2.tkm";
-	}
-	else if (m_typeNum == nsBackGround::enModelType_Box3) {
-		filePath = "Assets/modelData/backGroundModel/backGroundModel_box3.tkm";
-	}
+			// 影をキャストするか。
+			bool isShadowCaster = true;
 
-	// モデルを初期化。
-	m_modelRender.Init(
-		filePath,
-		nullptr,
-		0,
-		enModelUpAxisZ,
-		false,
-		false,
-		isShadowCaster,
-		false
-	);
-	m_modelRender.SetTRS(m_position, m_rotation, m_scale);
-	m_modelRender.Update();
-	return true;
-}
+			// tkmファイルパスを指定する。
+			// 地面
+			if (m_typeNum == nsBackGround::enModelType_Ground) {
+				filePath = "Assets/modelData/backGroundModel/ground.tkm";
+				// 地面オブジェクトだけは影をキャストしない。
+				isShadowCaster = false;
+			}
+			// 箱1
+			else if (m_typeNum == nsBackGround::enModelType_Box1) {
+				filePath = "Assets/modelData/backGroundModel/backGroundModel_box1.tkm";
+			}
+			// 箱2
+			else if (m_typeNum == nsBackGround::enModelType_Box2) {
+				filePath = "Assets/modelData/backGroundModel/backGroundModel_box2.tkm";
+			}
+			// 箱3
+			else if (m_typeNum == nsBackGround::enModelType_Box3) {
+				filePath = "Assets/modelData/backGroundModel/backGroundModel_box3.tkm";
+			}
 
-void TitleBackGround::Render(RenderContext& rc)
-{
-	m_modelRender.Draw(rc);
+			// モデルを初期化。
+			m_modelRender.Init(
+				filePath,
+				nullptr,
+				nsModel::NO_ANIMATION_CLIPS,
+				enModelUpAxisZ,
+				false,
+				false,
+				isShadowCaster,
+				false
+			);
+
+			// モデルの座標、回転、拡大率を設定。
+			m_modelRender.SetTRS(m_position, m_rotation, m_scale);
+
+			// モデルを更新。
+			m_modelRender.Update();
+			return true;
+		}
+
+		void TitleBackGround::Render(RenderContext& rc)
+		{
+			// 描画。
+			m_modelRender.Draw(rc);
+
+		}
+	}
 }

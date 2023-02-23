@@ -262,6 +262,9 @@
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="CommonDataForBackGround.h" />
     <ClInclude Include="CommonDataForEffect.h" />
+    <ClInclude Include="CommonDataForModel.h" />
+    <ClInclude Include="CommonDataForPlayer.h" />
+    <ClInclude Include="CommonDataForPriority.h" />
     <ClInclude Include="CommonDataForSound.h" />
     <ClInclude Include="CommonDataForTimer.h" />
     <ClInclude Include="CommonDataForWorldRotation.h" />
